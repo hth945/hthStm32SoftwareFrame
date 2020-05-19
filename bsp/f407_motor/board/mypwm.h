@@ -7,6 +7,12 @@
 void TIM8_PWM_Init(u16 arr,u16 psc);
 void TIM9_PWM_Init(u16 arr,u16 psc);
 
+void TIM10_PWM_Init(u16 arr,u16 psc);
+void TIM11_PWM_Init(u16 arr,u16 psc);
+
+void TIM10_PWM_setarr(int v);
+void TIM11_PWM_setarr(int v);
+
 //	舵机常用
 //	TIM8_PWM_Init(9999,167);	//100hz.
 //	

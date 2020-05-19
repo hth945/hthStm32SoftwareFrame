@@ -214,6 +214,26 @@ int main()
 				len = sprintf(buf, "ok\n");
 				uart1Dri->write(uart1Dri, (u8 *)buf, len);
 			}
+			else if (P_StringCmdScan(&scmd, "setmotorB%d:%d", &ch, &value) >= 0) //每秒脉冲数
+			{
+				if ((ch >= 8) && (ch <= 9) && (value >= 0) && (value <= 100000))
+				{
+					if (ch == 8)
+					{
+						TIM10_PWM_setarr(value);
+					}else
+					{
+						TIM11_PWM_setarr(value);
+					}
+					len = sprintf(buf, "ok value< 20 value=0\n");
+					uart1Dri->write(uart1Dri, (u8 *)buf, len);
+				}
+				else
+				{
+					len = sprintf(buf, "ch is 2~3, value is 0~100000\n");
+					uart1Dri->write(uart1Dri, (u8 *)buf, len);
+				}
+			}
 			else if (P_StringCmdScan(&scmd, "setPwmA%d:%d", &ch, &value) >= 0)
 			{
 				if ((ch >= 2) && (ch <= 3) && (value >= 0) && (value <= 99))
