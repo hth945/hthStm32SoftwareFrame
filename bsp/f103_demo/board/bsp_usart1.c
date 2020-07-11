@@ -3,7 +3,7 @@
 #include "commonIOInterface.h"
   
 static sky_comDriver Usart1_Driver;
-static int uart1Write(uint8_t *data,int len);
+static int uart1Write(struct _Tsky_comDriver *self, uint8_t *data,int len);
 
 sky_comDriver* uart_init(uint32_t bound)
 {
@@ -51,7 +51,7 @@ sky_comDriver* uart_init(uint32_t bound)
 	return &Usart1_Driver;
 }
 
-static int uart1Write(uint8_t *data,int len)
+static int uart1Write(struct _Tsky_comDriver *self, uint8_t *data,int len)
 {
 	while(len > 0)
 	{
