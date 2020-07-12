@@ -173,10 +173,11 @@ void LED_Init(void)
 
 int main()
 {
+	char buf[32];
 	int ch, value, re, len;
 	sky_comDriver *uart1Dri;
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1); //
-	char buf[32];
+	
 
 	//	RCC_Config();
 	SysTick_Init();
@@ -196,6 +197,8 @@ int main()
 	TIM_SetCompare2(TIM8, 2499); //2.5ms
 	TIM_SetCompare3(TIM8, 1499); //1.5ms
 	TIM_SetCompare4(TIM8, 4999); //5ms
+	
+	//TIM_SetCompare1(TIM8, 1499);	 //0.5ms
 
 	//	TIM8_PWM_Init(167,0);	//TIM4 PWM初始化, Fpwm=168M/168=1000Khz.
 	//	TIM_SetCompare2(TIM8,83);	//输出
@@ -204,6 +207,9 @@ int main()
 	TIM9_PWM_Init(99, 167);	   //10Khz.
 	TIM_SetCompare2(TIM9, 49); //输出
 	TIM_SetCompare1(TIM9, 89); //输出GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3)
+	
+	TIM10_PWM_Init(1000,167);
+	TIM11_PWM_Init(1000,167);
 
 	while (1)
 	{
@@ -252,7 +258,7 @@ int main()
 			{
 				if ((ch >= 6) && (ch <= 9) && (value >= 0) && (value <= 9999))
 				{
-					*((u32 *)(&TIM8->CCR1) + ch - 1) = value;
+					*((u32 *)(&TIM8->CCR1) + ch - 6) = value;
 					len = sprintf(buf, "ok\n");
 					uart1Dri->write(uart1Dri, (u8 *)buf, len);
 				}
