@@ -10,12 +10,13 @@
       <TargetName>Target 1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060300::V5.06 update 3 (build 300)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F103C8</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F1xx_DFP.2.1.0</PackID>
+          <PackID>Keil.STM32F1xx_DFP.2.2.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x5000) IROM(0x08000000,0x10000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -272,7 +273,7 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x8000000</StartAddress>
+                <StartAddress>0x8008000</StartAddress>
                 <Size>0x10000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
@@ -323,6 +324,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>0</uC99>
+            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -335,7 +337,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER, STM32F10X_MD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\stm32Lib\f103\inc;.\user;.\board;..\stm32Lib\f103\CMSIS;..\stm32Lib\f103\SYS;..\..\skySoftware\include;..\..\examples;..\..\rtthreadNano3.1.3\include</IncludePath>
+              <IncludePath>..\stm32Lib\f103\inc;.\user;.\board;..\stm32Lib\f103\CMSIS;..\stm32Lib\f103\SYS;..\..\skySoftware\include;..\..\examples;..\..\rtthreadNano3.1.3\include;..\stm32Lib\f103\ku\md</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -414,6 +416,11 @@
               <FileType>1</FileType>
               <FilePath>.\board\bsp_cmdCtl.c</FilePath>
             </File>
+            <File>
+              <FileName>stmflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\stm32Lib\f103\ku\md\stmflash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -438,6 +445,11 @@
               <FileName>Public_util.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\skySoftware\src\Public_util.c</FilePath>
+            </File>
+            <File>
+              <FileName>Public_SoftStringCmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\skySoftware\src\Public_SoftStringCmd.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,8 +1,6 @@
 #include "mypwm.h"
 
-//PWMÊä³ö³õÊ¼»¯
-//arr£º×Ô¶¯ÖØ×°Öµ
-//psc£ºÊ±ÖÓÔ¤·ÖÆµÊý
+
 void TIM1_PWM_Init(u16 arr,u16 psc)
 {  
 	 GPIO_InitTypeDef GPIO_InitStructure;

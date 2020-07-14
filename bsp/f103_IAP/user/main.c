@@ -14,7 +14,7 @@ int main()
 	
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	
 	SysTick_Init();
-	uartDev = uart5_init(460800);
+	uartDev = uart1_init(460800);
 	
 	iap_Init(&iapA, uartDev, 200, 0x08008000, "hth+V1.0.0");
 	

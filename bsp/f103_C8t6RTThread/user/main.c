@@ -8,7 +8,7 @@
 #include "communication.h"
 #include <rtthread.h>
 #include "mypwm.h"
-
+#include "stmflash.h"
 
 
 void $Sub$$SystemInit (void)
@@ -33,7 +33,7 @@ int main()
 	char *str = "hello\r\n";
 	sky_comDriver *uart1Dri;
 	
-	uart1Dri = uart5_init(115200);
+	uart1Dri = uart1_init(115200);
 	
 	P_StringCmdBindFifo(&scmd, uart1Dri, fifoBuf, sizeof(fifoBuf), cmdBuf, sizeof(cmdBuf));
 
@@ -51,6 +51,7 @@ int main()
 	
 	while (1)
 	{
+		EncryRun();
 		if (P_StringCmdReadCMD(&scmd) > 0)
 		{
 			if (P_StringCmdScan(&scmd, "connection") >= 0)
