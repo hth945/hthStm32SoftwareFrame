@@ -49,6 +49,7 @@ int main()
 	len = sprintf(buf, "hello\n");
 	uart1Dri->write(uart1Dri, (u8 *)buf, len);
 	
+	TIM3_Int_Init(72, 0);
 	while (1)
 	{
 		if (P_StringCmdReadCMD(&scmd) > 0)

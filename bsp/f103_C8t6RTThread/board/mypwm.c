@@ -1,11 +1,45 @@
 #include "mypwm.h"
 
-//PWMÊä³ö³õÊ¼»¯
-//arr£º×Ô¶¯ÖØ×°Öµ
-//psc£ºÊ±ÖÓÔ¤·ÖÆµÊý
+
+void TIM3_Int_Init(u16 arr,u16 psc) //72M
+{
+    TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
+
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE); 
+	
+	TIM_TimeBaseStructure.TIM_Period = arr; 	
+	TIM_TimeBaseStructure.TIM_Prescaler =psc; 
+	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; 
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  
+	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure); 
+ 
+	TIM_ITConfig(TIM3,TIM_IT_Update,ENABLE ); 
+
+	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn; 
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; 
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;  
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; 
+	NVIC_Init(&NVIC_InitStructure);  
+
+
+	TIM_Cmd(TIM3, ENABLE);  
+}
+
+void TIM3_IRQHandler(void)   //TIM3ÖÐ¶Ï
+{
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)  //¼ì²éTIM3¸üÐÂÖÐ¶Ï·¢ÉúÓë·ñ
+	{
+		TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  //Çå³ýTIMx¸üÐÂÖÐ¶Ï±êÖ¾ 
+	
+	}
+}
+
+
+
 void TIM1_PWM_Init(u16 arr,u16 psc)
 {  
-	 GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitTypeDef GPIO_InitStructure;
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 	TIM_OCInitTypeDef  TIM_OCInitStructure;
 
