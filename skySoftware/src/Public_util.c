@@ -7,7 +7,7 @@ unsigned int hash_index(unsigned int *data, int len)
 	int i;
 	for (i = 0; i < len; i++)
 	{
-		h = h *31 + data[len];
+		h = h *31 + data[i];
 	}
 	return h;
 }
