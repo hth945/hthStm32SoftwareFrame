@@ -70,7 +70,11 @@ void USART1_IRQHandler(void)                	//串口1中断服务程序
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
 	{
 		Res =USART_ReceiveData(USART1);	//读取接收到的数据
-		Write2dev(&Usart1_Driver, &Res, 1);
+		if (Usart1_Driver.fifo != 0)
+			myFIFOWrite(Usart1_Driver.fifo, &Res, 1);
+
+		if (Usart1_Driver.single != 0)
+			Usart1_Driver.single(Usart1_Driver.userData, &Res, 1);
 		 
      } 
 } 
