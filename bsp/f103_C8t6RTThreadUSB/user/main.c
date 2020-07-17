@@ -9,9 +9,9 @@
 #include <rtthread.h>
 #include "mypwm.h"
 #include "stmflash.h"
-
-
-
+#include "usb_lib.h"
+#include "hw_config.h"
+#include "usb_pwr.h"	
 
 
 void $Sub$$SystemInit (void)
@@ -52,7 +52,17 @@ int main()
 	len = sprintf(buf, "hello\n");
 	uart1Dri->write(uart1Dri, (u8 *)buf, len);
 	
-	TIM3_Int_Init(72, 0);
+//	TIM3_Int_Init(72, 0);
+
+
+	rt_thread_mdelay(1800);
+	USB_Port_Set(0); 	//USBÏÈ¶Ï¿ª
+	rt_thread_mdelay(700);
+	USB_Port_Set(1);	//USBÔÙ´ÎÁ¬½Ó
+ 	Set_USBClock();   
+ 	USB_Interrupts_Config();    
+ 	USB_Init();	
+//	
 	while (1)
 	{
 		EncryRun();

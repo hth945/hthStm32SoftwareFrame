@@ -65,13 +65,13 @@ void TIM3_IRQHandler(void)   //TIM3ÖÐ¶Ï
 	{
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  //Çå³ýTIMx¸üÐÂÖÐ¶Ï±êÖ¾ 
 		
-		ServoCount++;
-		if (ServoCount > 20000)
-			ServoCount = 0;
-		for (int i = 0; i < 10; i++)
-		{
-			
-		}
+//		ServoCount++;
+//		if (ServoCount > 20000)
+//			ServoCount = 0;
+//		for (int i = 0; i < 10; i++)
+//		{
+//			
+//		}
 	
 	}
 }
