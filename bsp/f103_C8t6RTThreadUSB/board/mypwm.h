@@ -28,14 +28,15 @@ typedef struct
 	
 }StepperMotor;
 
-
-typedef struct
+struct _TServo;
+typedef struct _TServo
 {
 	//void* next;     //链表 中断里根据它来循环IO设置
 	uint8_t run_state; //是否使能
 	uint32_t HighTime; //高电平时间  单位 us
+	uint32_t bitBand;     //位带操作写io 更快
+//	int (*pinWrite)(struct _TServo *self, int);
 //	uint32_t TTime;  //一个周期时间  单位 us  固定20000 us
-	
 //	uint32_t count; //当前时间计数 单位:最小时间精度
 }Servo;
 

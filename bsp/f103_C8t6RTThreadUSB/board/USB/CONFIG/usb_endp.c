@@ -57,30 +57,36 @@ uint8_t USB_Rx_Buffer[VIRTUAL_COM_PORT_DATA_SIZE];
 *******************************************************************************/
 void EP1_IN_Callback (void)
 {
-	u16 USB_Tx_ptr;
-	u16 USB_Tx_length; 
-	if(uu_txfifo.readptr==uu_txfifo.writeptr)		//无任何数据要发送,直接退出
-	{
+//	u16 USB_Tx_ptr;
+//	u16 USB_Tx_length; 
+//	if(uu_txfifo.readptr==uu_txfifo.writeptr)		//无任何数据要发送,直接退出
+//	{
+//		return;
+//	}
+//	if(uu_txfifo.readptr<uu_txfifo.writeptr)		//没有超过数组,读指针<写指针
+//	{
+//		USB_Tx_length=uu_txfifo.writeptr-uu_txfifo.readptr;//得到要发送的数据长度
+//	}else											//超过数组了 读指针>写指针
+//	{
+//		USB_Tx_length=USB_USART_TXFIFO_SIZE-uu_txfifo.readptr;//得到要发送的数据长度 
+//	} 
+//	if(USB_Tx_length>VIRTUAL_COM_PORT_DATA_SIZE)	//超过64字节?
+//	{
+//		USB_Tx_length=VIRTUAL_COM_PORT_DATA_SIZE;	//此次发送数据量
+//	}
+//	USB_Tx_ptr=uu_txfifo.readptr;					//发送起始地址		
+//	uu_txfifo.readptr+=USB_Tx_length;				//读指针偏移  
+//	if(uu_txfifo.readptr>=USB_USART_TXFIFO_SIZE)	//读指针归零
+//	{
+//		uu_txfifo.readptr=0;
+//	} 
+
+	
+	int USB_Tx_length = myFIFORead(&usbvcom.sendFIFO, USB_Rx_Buffer, 64);
+	if (USB_Tx_length <= 0)
 		return;
-	}
-	if(uu_txfifo.readptr<uu_txfifo.writeptr)		//没有超过数组,读指针<写指针
-	{
-		USB_Tx_length=uu_txfifo.writeptr-uu_txfifo.readptr;//得到要发送的数据长度
-	}else											//超过数组了 读指针>写指针
-	{
-		USB_Tx_length=USB_USART_TXFIFO_SIZE-uu_txfifo.readptr;//得到要发送的数据长度 
-	} 
-	if(USB_Tx_length>VIRTUAL_COM_PORT_DATA_SIZE)	//超过64字节?
-	{
-		USB_Tx_length=VIRTUAL_COM_PORT_DATA_SIZE;	//此次发送数据量
-	}
-	USB_Tx_ptr=uu_txfifo.readptr;					//发送起始地址		
-	uu_txfifo.readptr+=USB_Tx_length;				//读指针偏移  
-	if(uu_txfifo.readptr>=USB_USART_TXFIFO_SIZE)	//读指针归零
-	{
-		uu_txfifo.readptr=0;
-	} 
-	UserToPMABufferCopy(&uu_txfifo.buffer[USB_Tx_ptr], ENDP1_TXADDR, USB_Tx_length);
+	UserToPMABufferCopy(USB_Rx_Buffer, ENDP1_TXADDR, USB_Tx_length);
+	
 	SetEPTxCount(ENDP1, USB_Tx_length);
 	SetEPTxValid(ENDP1);   
 }
@@ -96,7 +102,8 @@ void EP3_OUT_Callback(void)
 {
 	u16 USB_Rx_Cnt; 
 	USB_Rx_Cnt = USB_SIL_Read(EP3_OUT, USB_Rx_Buffer);	//得到USB接收到的数据及其长度  
-	USB_To_USART_Send_Data(USB_Rx_Buffer, USB_Rx_Cnt);	//处理数据（其实就是保存数据） 
+//	USB_To_USART_Send_Data(USB_Rx_Buffer, USB_Rx_Cnt);	//处理数据（其实就是保存数据） 
+	Write2dev(&usbvcom.driver, USB_Rx_Buffer, USB_Rx_Cnt);
 	SetEPRxValid(ENDP3);								//时能端点3的数据接收
 }
 

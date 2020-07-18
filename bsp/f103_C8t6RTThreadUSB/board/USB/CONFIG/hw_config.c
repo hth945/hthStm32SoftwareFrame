@@ -4,35 +4,13 @@
 #include "usb_istr.h"
 #include "hw_config.h"
 #include "usb_pwr.h" 
-
+#include <rtthread.h>
 #include "string.h"	
 #include "stdarg.h"		 
 #include "stdio.h"	
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK战舰STM32开发板V3
-//USB-hw_config 代码	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//创建日期:2015/1/28
-//版本：V1.0
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2009-2019
-//All rights reserved									  
-////////////////////////////////////////////////////////////////////////////////// 
- 
-_usb_usart_fifo uu_txfifo;					//USB串口发送FIFO结构体 
-u8  USART_PRINTF_Buffer[USB_USART_REC_LEN];	//usb_printf发送缓冲区
 
-//用类似串口1接收数据的方法,来处理USB虚拟串口接收到的数据.
-u8 USB_USART_RX_BUF[USB_USART_REC_LEN]; 	//接收缓冲,最大USART_REC_LEN个字节.
-//接收状态
-//bit15，	接收完成标志
-//bit14，	接收到0x0d
-//bit13~0，	接收到的有效字节数目
-u16 USB_USART_RX_STA=0;       				//接收状态标记	 
+USBVCOM_adapter usbvcom;
 
-extern LINE_CODING linecoding;							//USB虚拟串口配置信息
 /////////////////////////////////////////////////////////////////////////////////
 //各USB例程通用部分代码,ST各各USB例程,此部分代码都可以共用.
 //此部分代码一般不需要修改!
@@ -61,7 +39,7 @@ void Set_USBClock(void)
 //需自行添加低功耗代码(比如关时钟等)
 void Enter_LowPowerMode(void)
 {
- 	printf("usb enter low power mode\r\n");
+// 	printf("usb enter low power mode\r\n");
 	bDeviceState=SUSPENDED;
 }
 
@@ -70,8 +48,9 @@ void Enter_LowPowerMode(void)
 void Leave_LowPowerMode(void)
 {
 	DEVICE_INFO *pInfo=&Device_Info;
-	printf("leave low power mode\r\n"); 
-	if (pInfo->Current_Configuration!=0)bDeviceState=CONFIGURED; 
+//	printf("leave low power mode\r\n"); 
+	if (pInfo->Current_Configuration!=0)
+		bDeviceState=CONFIGURED; 
 	else bDeviceState = ATTACHED; 
 }
 
@@ -108,8 +87,8 @@ void USB_Interrupts_Config(void)
 //         ENABLE,上拉
 void USB_Cable_Config (FunctionalState NewState)
 {
-	if (NewState!=DISABLE)printf("usb pull up enable\r\n"); 
-	else printf("usb pull up disable\r\n"); 
+//	if (NewState!=DISABLE)printf("usb pull up enable\r\n"); 
+//	else printf("usb pull up disable\r\n"); 
 }
 
 //USB使能连接/断线
@@ -167,79 +146,35 @@ void IntToUnicode (u32 value , u8 *pbuf , u8 len)
 }
 /////////////////////////////////////////////////////////////////////////////////
  
-//USB COM口的配置信息,通过此函数打印出来. 
+static int USBComWrite(struct _Tsky_comDriver *self, uint8_t *data,int len)
+{
+	return myFIFOWrite(&usbvcom.sendFIFO, data, len);
+}
+
+sky_comDriver * USBComInit(void)
+{
+	memset(&usbvcom, 0, sizeof(usbvcom));
+	usbvcom.driver.write = USBComWrite;
+	myFIFOInit(&usbvcom.sendFIFO, usbvcom.sendFIFOBuf, sizeof(usbvcom.sendFIFOBuf));
+	
+	rt_thread_mdelay(100);
+	USB_Port_Set(0); 	
+	rt_thread_mdelay(300);
+	USB_Port_Set(1);	
+ 	Set_USBClock();   
+ 	USB_Interrupts_Config();    
+ 	USB_Init();	
+	
+	return &usbvcom.driver;
+}
+
+
 bool USART_Config(void)
 {
-	uu_txfifo.readptr=0;	//清空读指针
-	uu_txfifo.writeptr=0;	//清空写指针
-	USB_USART_RX_STA=0;		//USB USART接收状态清零
-	printf("linecoding.format:%d\r\n",linecoding.format);
-  	printf("linecoding.paritytype:%d\r\n",linecoding.paritytype);
-	printf("linecoding.datatype:%d\r\n",linecoding.datatype);
-	printf("linecoding.bitrate:%d\r\n",linecoding.bitrate);
+	
 	return (TRUE);
 }
  
-//处理从USB虚拟串口接收到的数据
-//databuffer:数据缓存区
-//Nb_bytes:接收到的字节数.
-void USB_To_USART_Send_Data(u8* data_buffer, u8 Nb_bytes)
-{ 
-	u8 i;
-	u8 res;
-	for(i=0;i<Nb_bytes;i++)
-	{  
-		res=data_buffer[i]; 
-		if((USB_USART_RX_STA&0x8000)==0)		//接收未完成
-		{
-			if(USB_USART_RX_STA&0x4000)			//接收到了0x0d
-			{
-				if(res!=0x0a)USB_USART_RX_STA=0;//接收错误,重新开始
-				else USB_USART_RX_STA|=0x8000;	//接收完成了 
-			}else //还没收到0X0D
-			{	
-				if(res==0x0d)USB_USART_RX_STA|=0x4000;
-				else
-				{
-					USB_USART_RX_BUF[USB_USART_RX_STA&0X3FFF]=res;
-					USB_USART_RX_STA++;
-					if(USB_USART_RX_STA>(USB_USART_REC_LEN-1))USB_USART_RX_STA=0;//接收数据错误,重新开始接收	
-				}					
-			}
-		}   
-	}  
-} 
-
-//发送一个字节数据到USB虚拟串口
-void USB_USART_SendData(u8 data)
-{
-	uu_txfifo.buffer[uu_txfifo.writeptr]=data;
-	uu_txfifo.writeptr++;
-	if(uu_txfifo.writeptr==USB_USART_TXFIFO_SIZE)//超过buf大小了,归零.
-	{
-		uu_txfifo.writeptr=0;
-	} 
-}
-
-////usb虚拟串口,printf 函数
-////确保一次发送数据不超USB_USART_REC_LEN字节
-//void usb_printf(char* fmt,...)  
-//{  
-//	u16 i,j;
-//	va_list ap;
-//	va_start(ap,fmt);
-//	vsprintf((char*)USART_PRINTF_Buffer,fmt,ap);
-//	va_end(ap);
-//	i=strlen((const char*)USART_PRINTF_Buffer);//此次发送数据的长度
-//	for(j=0;j<i;j++)//循环发送数据
-//	{
-//		USB_USART_SendData(USART_PRINTF_Buffer[j]); 
-//	}
-//} 
-
-
-
-
 
 
 

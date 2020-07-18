@@ -12,6 +12,7 @@ int P_StringCmdBindFifo(stringCMD_t *scmd,sky_comDriver* driver, uint8_t *fifoBu
 	myFIFOInit(&scmd->fifo,fifoBuf, fifolen);
 	driver->fifo = &scmd->fifo;
 	
+	scmd->dev = driver;
 	scmd->CMDBuf = data;
 	scmd->CMDBufLen = len;
 

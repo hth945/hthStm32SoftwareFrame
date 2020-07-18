@@ -12,7 +12,8 @@ typedef struct
 	MyFIFO_t fifo;   //不再使用fifo， 直接使用通用驱动的中断
 	int CMDBufLen;    //缓冲区的长度
 	uint8_t *CMDBuf;       //收到命令时存放命令的缓冲区
-
+	
+	sky_comDriver *dev;
 }stringCMD_t;
 
 

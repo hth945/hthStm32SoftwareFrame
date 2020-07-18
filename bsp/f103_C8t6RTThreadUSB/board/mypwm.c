@@ -1,4 +1,6 @@
 #include "mypwm.h"
+#include "string.h"
+#include "Public_util.h"
 
 //开方
 uint32_t axis_sqrt(uint32_t x)
@@ -29,15 +31,34 @@ uint32_t axis_sqrt(uint32_t x)
   }
   else{
     return xr;
-	  }
+  }
 }
+Servo servos[16];
 
 void TIM3_Int_Init(u16 arr,u16 psc) //72M
 {
+	int i = 0;
     TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
-
+	GPIO_InitTypeDef  GPIO_InitStructure;
+	
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE); 
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB|RCC_APB2Periph_GPIOA, ENABLE);	
+	
+	
+	memset(servos, 0, sizeof(servos));
+	
+//	GPIOB->CRL&=0XFF0FFFFF; 
+//	GPIOB->CRL|=0X00300000;//PB.5 推挽输出  
+	
+	GPIOA->CRL=0X33333333; 
+	GPIOB->CRL=0X33333333; 
+	for (i = 0; i < 8; i++)
+	{
+		servos[i].bitBand = BITBAND(GPIOA_ODR_Addr, i);
+		servos[i+8].bitBand = BITBAND(GPIOB_ODR_Addr, i);
+	}
+	
 	
 	TIM_TimeBaseStructure.TIM_Period = arr; 	
 	TIM_TimeBaseStructure.TIM_Prescaler =psc; 
@@ -53,26 +74,45 @@ void TIM3_Int_Init(u16 arr,u16 psc) //72M
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; 
 	NVIC_Init(&NVIC_InitStructure);  
 
-
 	TIM_Cmd(TIM3, ENABLE);  
+	
+	servos[0].HighTime =  0;//20000-1;
+	servos[0].run_state = 1;
+	
 }
 
-Servo servos[10];
+
 uint32_t ServoCount = 0; //当前时间计数 单位:最小时间精度
 void TIM3_IRQHandler(void)   //TIM3ÖÐ¶Ï
 {
-	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)  //¼ì²éTIM3¸üÐÂÖÐ¶Ï·¢ÉúÓë·ñ
+	int i;
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)  
 	{
-		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  //Çå³ýTIMx¸üÐÂÖÐ¶Ï±êÖ¾ 
+		TIM_ClearITPendingBit(TIM3, TIM_IT_Update); 
 		
-//		ServoCount++;
-//		if (ServoCount > 20000)
-//			ServoCount = 0;
-//		for (int i = 0; i < 10; i++)
-//		{
-//			
-//		}
-	
+		ServoCount++;
+		if (ServoCount > 20000)  //20ms
+		{
+			ServoCount = 0;
+			GPIOA->ODR = 0;
+			GPIOB->ODR = 0;
+//			for (i = 0; i < 16; i++)
+//			{
+//				if (servos[i].run_state != 0)
+//					MEM_ADDR(servos[i].bitBand) = 1;
+//			}
+		}
+		
+		for (i = 0; i < 16; i++)
+		{
+			if (servos[i].run_state != 0)
+			{
+				if (servos[i].HighTime == ServoCount)
+				{
+					MEM_ADDR(servos[i].bitBand) = 1;
+				}
+			}
+		}
 	}
 }
 
