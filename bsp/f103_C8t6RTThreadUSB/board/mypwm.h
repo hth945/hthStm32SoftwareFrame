@@ -40,7 +40,7 @@ typedef struct _TServo
 //	uint32_t count; //当前时间计数 单位:最小时间精度
 }Servo;
 
-
+extern Servo servos[16];
 //72M
 void TIM3_Int_Init(u16 arr,u16 psc);
 

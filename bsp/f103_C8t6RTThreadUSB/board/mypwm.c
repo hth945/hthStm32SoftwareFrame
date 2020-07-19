@@ -76,8 +76,8 @@ void TIM3_Int_Init(u16 arr,u16 psc) //72M
 
 	TIM_Cmd(TIM3, ENABLE);  
 	
-	servos[0].HighTime =  0;//20000-1;
-	servos[0].run_state = 1;
+//	servos[0].HighTime =  20000-1500;//20000-1;
+//	servos[0].run_state = 1;
 	
 }
 
@@ -91,18 +91,13 @@ void TIM3_IRQHandler(void)   //TIM3ÖÐ¶Ï
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update); 
 		
 		ServoCount++;
-		if (ServoCount > 20000)  //20ms
+		if (ServoCount > 2000)  //20ms
 		{
 			ServoCount = 0;
 			GPIOA->ODR = 0;
 			GPIOB->ODR = 0;
-//			for (i = 0; i < 16; i++)
-//			{
-//				if (servos[i].run_state != 0)
-//					MEM_ADDR(servos[i].bitBand) = 1;
-//			}
 		}
-		
+//		
 		for (i = 0; i < 16; i++)
 		{
 			if (servos[i].run_state != 0)
