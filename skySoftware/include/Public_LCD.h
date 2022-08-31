@@ -5,19 +5,19 @@
 
 
 typedef struct{
-    uint16_t real_width;//çœŸå®å®½åº¦
-    uint16_t real_high; //çœŸå®é«˜åº¦ 
+    uint16_t real_width;//ÕæÊµ¿í¶È
+    uint16_t real_high; //ÕæÊµ¸ß¶È 
 
-    void (* lcd_setpoint)(void*,uint16_t,uint16_t,uint32_t);//è¦å®ç°çš„æ‰“ç‚¹å‡½æ•°  å¿…è¦ ä¸€åˆ‡å‡½æ•°å®ç°çš„æ¥æº
-    uint32_t (* lcd_getpoint)(void*,uint16_t,uint16_t);//æ¢å–é¢œè‰² éå¿…è¦
-    void (* lcd_setwindow)(void*,uint16_t,uint16_t,uint16_t,uint16_t);//éå¿…è¦
-    void (* lcd_rgbdat)(void*,uint32_t);//è¦ä½¿ç”¨è¿™ä¸ªå¿…é¡»å®ç°lcd_setwindowå‡½æ•°  éå¿…è¦
+    void (* lcd_setpoint)(void*,uint16_t,uint16_t,uint32_t);//ÒªÊµÏÖµÄ´òµãº¯Êı  ±ØÒª Ò»ÇĞº¯ÊıÊµÏÖµÄÀ´Ô´
+    uint32_t (* lcd_getpoint)(void*,uint16_t,uint16_t);//»»È¡ÑÕÉ« ·Ç±ØÒª
+    void (* lcd_setwindow)(void*,uint16_t,uint16_t,uint16_t,uint16_t);//·Ç±ØÒª
+    void (* lcd_rgbdat)(void*,uint32_t);//ÒªÊ¹ÓÃÕâ¸ö±ØĞëÊµÏÖlcd_setwindowº¯Êı  ·Ç±ØÒª
 }lcd_interface;
 
 typedef enum{
-    Normal_Mode  = 0x00,//ä¼šç”¨èƒŒæ™¯è‰²è¦†ç›–æ‰“å­—çš„åŒºåŸŸ
-    Cover_Mode   = 0x01,//é‡å æ¨¡å¼ ä¼šåœ¨åŸæœ‰çš„å›¾ä¸Šæ‰“ç‚¹
-    NumZero_Mode = 0x02,//æ•°å­—è¡¥0æ¨¡å¼
+    Normal_Mode  = 0x00,//»áÓÃ±³¾°É«¸²¸Ç´ò×ÖµÄÇøÓò
+    Cover_Mode   = 0x01,//ÖØµşÄ£Ê½ »áÔÚÔ­ÓĞµÄÍ¼ÉÏ´òµã
+    NumZero_Mode = 0x02,//Êı×Ö²¹0Ä£Ê½
 }Show_Mode;
 
 typedef enum{
@@ -27,22 +27,22 @@ typedef enum{
 }Font_Size;
 
 typedef struct{
-    uint16_t virtual_width;//è™šæ‹Ÿæ¡†çš„å¤§å°
+    uint16_t virtual_width;//ĞéÄâ¿òµÄ´óĞ¡
     uint16_t virtual_high;
-    uint16_t x_offset;//åœ¨çœŸå®å±å¹•ä¸Šçš„ä½ç½®
+    uint16_t x_offset;//ÔÚÕæÊµÆÁÄ»ÉÏµÄÎ»ÖÃ
     uint16_t y_offset;
     
-    uint32_t front_color;//å‰æ™¯è‰²
-    uint32_t back_color;//èƒŒæ™¯è‰²
+    uint32_t front_color;//Ç°¾°É«
+    uint32_t back_color;//±³¾°É«
     Font_Size fontsize;
     Show_Mode mode;
     
-    lcd_interface *drive;//çœŸå®å±å¹•çš„æ¥å£
+    lcd_interface *drive;//ÕæÊµÆÁÄ»µÄ½Ó¿Ú
 }lcd_adapter;
 
 
 
-//RGB565 å¸¸ç”¨é¢œè‰²
+//RGB565 ³£ÓÃÑÕÉ«
 #define WHITE         	 0xFFFF
 #define BLACK         	 0x0000	 
 #define RED           	 0xF800
@@ -54,34 +54,34 @@ typedef struct{
 #define MAGENTA       	 0xF81F
 #define CYAN          	 0x7FFF
 #define YELLOW        	 0xFFE0
-#define BROWN 			 0XBC40 //æ£•è‰²
-#define BRRED 			 0XFC07 //æ£•çº¢è‰²
-#define GRAY       	  	 0X8430 //ç°è‰²
+#define BROWN 			 0XBC40 //×ØÉ«
+#define BRRED 			 0XFC07 //×ØºìÉ«
+#define GRAY       	  	 0X8430 //»ÒÉ«
 
-//åˆå§‹åŒ–
+//³õÊ¼»¯
 void P_LCD_Drv_DeInit(lcd_interface *drv);
 void P_LCD_Drv(lcd_interface *drv);
 void P_LCD_Adap_DeInit(lcd_adapter *adap);
 void P_LCD_Adap(lcd_adapter *adap);
 
-//åŸºç¡€å‡½æ•°
+//»ù´¡º¯Êı
 int P_LCD_Point(lcd_adapter *adap,uint16_t x,uint16_t y,uint32_t color);
 int P_LCD_SetWindow(lcd_adapter *adap,uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2);
 int P_LCD_RGBDat(lcd_adapter *adap,uint32_t color);
 
-//ç»˜å›¾å‡½æ•°
-void P_LCD_Clr(lcd_adapter *adap,uint32_t color);//æ¸…å±
-void P_LCD_Box(lcd_adapter *adap,uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2,uint32_t color);//ç”»å—
-void P_LCD_Line(lcd_adapter *adap,uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2,uint32_t color);//åˆ’çº¿
-void P_LCD_DrawCircle(lcd_adapter *adap,uint16_t x,uint16_t y,uint16_t r,uint32_t rgb);//ç”»å›­
-void P_LCD_DrawRectangle(lcd_adapter *adap,uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2,uint32_t rgb);//ç”»çŸ©å½¢
-void P_LCD_Pic(lcd_adapter *adap,uint16_t x,uint16_t y,uint16_t XSize,uint16_t YSize,uint16_t offset,uint8_t *pic);//ç”»å›¾
+//»æÍ¼º¯Êı
+void P_LCD_Clr(lcd_adapter *adap,uint32_t color);//ÇåÆÁ
+void P_LCD_Box(lcd_adapter *adap,uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2,uint32_t color);//»­¿é
+void P_LCD_Line(lcd_adapter *adap,uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2,uint32_t color);//»®Ïß
+void P_LCD_DrawCircle(lcd_adapter *adap,uint16_t x,uint16_t y,uint16_t r,uint32_t rgb);//»­Ô°
+void P_LCD_DrawRectangle(lcd_adapter *adap,uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2,uint32_t rgb);//»­¾ØĞÎ
+void P_LCD_Pic(lcd_adapter *adap,uint16_t x,uint16_t y,uint16_t XSize,uint16_t YSize,uint16_t offset,uint8_t *pic);//»­Í¼
 
-//å­—ç¬¦æ˜¾ç¤ºå‡½æ•°
+//×Ö·ûÏÔÊ¾º¯Êı
 void P_LCD_OneChar(lcd_adapter *adap,uint16_t x,uint16_t y,uint16_t chr);
-void P_LCD_String(lcd_adapter *adap,uint16_t x,uint16_t y,char *str);//æ˜¾ç¤ºå­—ç¬¦ä¸²	  
-void P_LCD_ShowHex(lcd_adapter *adap,uint16_t x,uint16_t y,uint8_t len,uint32_t val);//æ˜¾ç¤ºHex
-void P_LCD_Num(lcd_adapter *adap,uint16_t x,uint16_t y,uint8_t len,uint32_t num);//æ˜¾ç¤ºæ•°å­—
+void P_LCD_String(lcd_adapter *adap,uint16_t x,uint16_t y,char *str);//ÏÔÊ¾×Ö·û´®	  
+void P_LCD_ShowHex(lcd_adapter *adap,uint16_t x,uint16_t y,uint8_t len,uint32_t val);//ÏÔÊ¾Hex
+void P_LCD_Num(lcd_adapter *adap,uint16_t x,uint16_t y,uint8_t len,uint32_t num);//ÏÔÊ¾Êı×Ö
 
 
 

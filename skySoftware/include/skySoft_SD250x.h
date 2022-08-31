@@ -22,12 +22,12 @@
 #define		CTR3            0x11
 
 /******************** Battery Register ********************/
-#define		Chg_MG          0x18		//å……ç”µç®¡ç†å¯„å­˜å™¨åœ°å€
-#define		Bat_H8          0x1A		//ç”µé‡æœ€é«˜ä½å¯„å­˜å™¨åœ°å€
-#define		Bat_L8          0x1B		//ç”µé‡ä½å…«ä½å¯„å­˜å™¨åœ°å€
+#define		Chg_MG          0x18		//³äµç¹ÜÀí¼Ä´æÆ÷µØÖ·
+#define		Bat_H8          0x1A		//µçÁ¿×î¸ßÎ»¼Ä´æÆ÷µØÖ·
+#define		Bat_L8          0x1B		//µçÁ¿µÍ°ËÎ»¼Ä´æÆ÷µØÖ·
 
 /*********************** ID Register **********************/
-#define		ID_Address			0x72		//IDå·èµ·å§‹åœ°å€
+#define		ID_Address			0x72		//IDºÅÆğÊ¼µØÖ·
 
 /********************************************************/
 #define		Chg_enable			0x82
@@ -39,7 +39,7 @@ enum Freq{F_0Hz, F32KHz, F4096Hz, F1024Hz, F64Hz, F32Hz, F16Hz, F8Hz, \
 
 enum clk_Souce{S_4096Hz, S_1024Hz, S_1s, S_1min};
 
-/*æ­¤ç»“æ„ä½“å®šä¹‰äº†æ—¶é—´ä¿¡æ¯åŒ…æ‹¬å¹´ã€æœˆã€æ—¥ã€æ˜ŸæœŸã€æ—¶ã€åˆ†ã€ç§’*/
+/*´Ë½á¹¹Ìå¶¨ÒåÁËÊ±¼äĞÅÏ¢°üÀ¨Äê¡¢ÔÂ¡¢ÈÕ¡¢ĞÇÆÚ¡¢Ê±¡¢·Ö¡¢Ãë*/
 typedef	struct{
 	uint8_t	second;
 	uint8_t	minute;
@@ -50,11 +50,11 @@ typedef	struct{
 	uint8_t	year;
 } Time_Def;
 
-/*æ­¤ç»“æ„ä½“å®šä¹‰äº†å€’è®¡æ—¶ä¸­æ–­å¯ä¾›é…ç½®çš„é¢‘ç‡æºã€IMå’Œåˆå€¼ä¸»è¦å‚æ•°*/
+/*´Ë½á¹¹Ìå¶¨ÒåÁËµ¹¼ÆÊ±ÖĞ¶Ï¿É¹©ÅäÖÃµÄÆµÂÊÔ´¡¢IMºÍ³õÖµÖ÷Òª²ÎÊı*/
 typedef	struct
 {
 	enum clk_Souce d_clk;
-	uint8_t   IM;	//IM=1:å‘¨æœŸæ€§ä¸­æ–­
+	uint8_t   IM;	//IM=1:ÖÜÆÚĞÔÖĞ¶Ï
 	uint32_t  init_val;
 } CountDown_Def;
 

@@ -10,41 +10,51 @@ typedef enum{
     CPHA_2Edge =1,
     First_MSB =0,
     First_LSB =1,
+    DataSize_8b=8,
+    DataSize_9b=9,
 }spi_mode;
 
-typedef struct{
-    void (* mosi_set)(uint8_t);//è®¾ç½®mosiç”µå¹³
-    uint8_t (* miso_read)(void);//è¯»å–misoç”µå¹³
-    void (* sck_set)(uint8_t);//è®¾ç½®sckç”µå¹³
-    void (* cs_set)(uint8_t);//è®¾ç½®csç”µå¹³
-    void (* delay)(void);//å»¶æ—¶
-    uint8_t (* rwbyte)(uint8_t);//åº•å±‚é€šä¿¡,å¯å¯¹æ¥ç¡¬ä»¶spi
+struct _Tspi_adapter;
+typedef struct _Tspi_adapter{
+	void *userData;
+    void (* mosi_set)(struct _Tspi_adapter *self, uint8_t);//ÉèÖÃmosiµçÆ½
+    uint8_t (* miso_read)(struct _Tspi_adapter *self);//¶ÁÈ¡misoµçÆ½
+    void (* sck_set)(struct _Tspi_adapter *self, uint8_t);//ÉèÖÃsckµçÆ½
+    void (* cs_set)(struct _Tspi_adapter *self, uint8_t);//ÉèÖÃcsµçÆ½
+    void (* delay)(struct _Tspi_adapter *self);//ÑÓÊ±
+    uint8_t (* rwbyte)(struct _Tspi_adapter *self, uint8_t);//µ×²ãÍ¨ĞÅ,¿É¶Ô½ÓÓ²¼şspi.·Ç0¼ÈÊÇµ÷ÓÃÓ²¼şSPI
     
-    spi_mode CPOL;    //æ—¶é’Ÿé»˜è®¤ææ€§
-    spi_mode CPHA;    //ç¬¬å‡ è¾¹ç¼˜é‡‡æ ·
-    spi_mode FirstBit;//é¦–ä½æ˜¯é«˜
+    spi_mode CPOL;    //Ê±ÖÓÄ¬ÈÏ¼«ĞÔ
+    spi_mode CPHA;    //µÚ¼¸±ßÔµ²ÉÑù
+    spi_mode FirstBit;//Ê×Î»ÊÇMSB»òÕßLSB Ä¬ÈÏÊÇMSB
+    spi_mode DataSize;//Ä¬ÈÏÊÇ8Î»Ä£Ê½,9Î»Ä£Ê½ÆôÓÃdc
 }spi_adapter;
 
 typedef enum{
-    SPI_WR           =0x0000,//åŒå‘ä¼ è¾“
-    SPI_OnlyW        =0x0001,//åªå‘é€
-    SPI_OnlyR        =0x0002,//åªæ¥æ”¶
+    SPI_WR           =0x0000,//Ë«Ïò´«Êä
+    SPI_OnlyW        =0x0001,//Ö»·¢ËÍ
+    SPI_OnlyR        =0x0002,//Ö»½ÓÊÕ
     
-    SPI_MidConti     =0x0000,//è¿ç»­åŒ…ä¸­é—´csä½¿èƒ½
-    SPI_MidStop      =0x0100,//è¿ç»­åŒ…ä¸­é—´csä¸ä½¿èƒ½
+    SPI_MidConti     =0x0000,//Á¬Ğø°üÖĞ¼äcsÊ¹ÄÜ
+    SPI_MidStop      =0x0100,//Á¬Ğø°üÖĞ¼äcs²»Ê¹ÄÜ
+    SPI_ExitConti    =0x0200,//ÍË³ö°ü¼ÌĞøcsÊ¹ÄÜ
 }spi_type;
 
 typedef struct{
-    uint16_t type;    
-    uint32_t len;
-    uint8_t  *txbuf;
-    uint8_t  *rxbuf;
+    uint16_t type;   
+    uint32_t len;    //Êı¾İ°üµÄ³¤¶È
+    uint8_t  dc;     //Ö»ÓĞ9Î»spiµÄÊ±ºòÊ¹ÓÃ
+    uint8_t  *txbuf; //Ö»ÓĞË«Ïò´«ÊäÓëÖ»·¢ËÍµÄÊ±ºòÊ¹ÓÃ
+    uint8_t  *rxbuf; //Ö»ÓĞË«Ïò´«ÊäÓëÖ»½ÓÊÕµÄÊ±ºòÊ¹ÓÃ
 }spi_msg;
 
+//Ä¬ÈÏ³õÊ¼»¯»á¸øÒ»Ğ©³õÖµº¯ÊıÖ¸Õë»á¸ø¿Õº¯Êı,·ÀÖ¹Î´¶¨ÒåÅÜ·É.Ê¹ÓÃInitÖ®Ç°ÏÈµ÷ÓÃ
 void P_SPI_DeInit(spi_adapter *adap);
+
+//³õÊ¼»¯,°ÑÒı½ÅÉèÖÃµ½Ïà¶ÔÓ¦Ä£Ê½µÄµçÆ½
 void P_SPI_Init(spi_adapter *adap);
 
-
+//´«Êäº¯Êı
 int P_SPI_transfer(spi_adapter *adap,spi_msg *msgs,uint16_t msgs_num);
 
 #endif

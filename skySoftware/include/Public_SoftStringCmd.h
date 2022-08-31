@@ -7,43 +7,46 @@
 
 typedef struct
 {
-	int cmdNum;     //uartCMDå½“å‰é•¿åº¦
-	int cmdFlag;    //uartCMDå½“å‰æŽ¥æ”¶çŠ¶æ€
-	MyFIFO_t fifo;   //ä¸å†ä½¿ç”¨fifoï¼Œ ç›´æŽ¥ä½¿ç”¨é€šç”¨é©±åŠ¨çš„ä¸­æ–­
-	int CMDBufLen;    //ç¼“å†²åŒºçš„é•¿åº¦
-	uint8_t *CMDBuf;       //æ”¶åˆ°å‘½ä»¤æ—¶å­˜æ”¾å‘½ä»¤çš„ç¼“å†²åŒº
-	
+	void *userData;       //bsp²ã×Ô¼ºÊ¹ÓÃµÄÖ¸Õë(¿É¸Ä±äÀàÐÍ), Íâ²¿Ó¦ÓÃ²ã¾¡Á¿²»ÒªÊ¹ÓÃ           
+	void *Parent;         //Ò»µ©ÓÐÆäËû½á¹¹Ìå°üº¬ÁË sky_comDriver,¾ÍÓ¦¸Ã¸ø´Ë±äÁ¿¸³Öµ
 	sky_comDriver *dev;
+	
+	int cmdNum;     //uartCMDµ±Ç°³¤¶È
+	int cmdFlag;    //uartCMDµ±Ç°½ÓÊÕ×´Ì¬
+	MyFIFO_t fifo;   //²»ÔÙÊ¹ÓÃfifo£¬ Ö±½ÓÊ¹ÓÃÍ¨ÓÃÇý¶¯µÄÖÐ¶Ï
+	int CMDBufLen;    //»º³åÇøµÄ³¤¶È
+	uint8_t *CMDBuf;       //ÊÕµ½ÃüÁîÊ±´æ·ÅÃüÁîµÄ»º³åÇø
+
 }stringCMD_t;
 
 
 /*
-*å‡½æ•°å: P_StringCmdBindFifo
-*æè¿°  : stringCMD_tæŽ§åˆ¶å™¨åˆå§‹åŒ–å‡½æ•°
-*å‚æ•°  : scmd ï¼šæŽ§åˆ¶å™¨çš„æŒ‡é’ˆ
-*		 fifo : è¦ç»‘å®šåˆ°çš„fifoï¼Œå¤–éƒ¨åº”è¯¥å·²ç»åˆå§‹åŒ–å®Œæˆ
-*		 data : ä¿å­˜æŽ¥æ”¶åˆ°å‘½ä»¤çš„ç¼“å†²åŒº
-*		 len :  ç¼“å†²åŒºçš„é•¿åº¦
-*è¿”å›ž  : =0 æˆåŠŸï¼Œ<0 å¤±è´¥
+*º¯ÊýÃû: P_StringCmdBindFifo
+*ÃèÊö  : stringCMD_t¿ØÖÆÆ÷³õÊ¼»¯º¯Êý
+*²ÎÊý  : scmd £º¿ØÖÆÆ÷µÄÖ¸Õë
+*		 fifo : Òª°ó¶¨µ½µÄfifo£¬Íâ²¿Ó¦¸ÃÒÑ¾­³õÊ¼»¯Íê³É
+*		 data : ±£´æ½ÓÊÕµ½ÃüÁîµÄ»º³åÇø
+*		 len :  »º³åÇøµÄ³¤¶È
+*·µ»Ø  : =0 ³É¹¦£¬<0 Ê§°Ü
 */
 int P_StringCmdBindFifo(stringCMD_t *scmd,sky_comDriver* driver, uint8_t *fifoBuf, int fifolen, uint8_t *data, int len);
 
 
 
 /*
-*å‡½æ•°å: P_StringCmdReadCMD
-*æè¿°  : è¯»å–ä¸€å¸§å®Œæ•´çš„æ•°æ®ï¼Œä»¥\r\nåšç»“æŸç¬¦
-*å‚æ•°  : userCmd ï¼šæŽ§åˆ¶å™¨çš„æŒ‡é’ˆ
-*è¿”å›ž  : >=0 è¯»å–åˆ°ä¸€å¸§æ•°æ®ï¼Œ<0 æ•°æ®ä¸å®Œæ•´
+*º¯ÊýÃû: P_StringCmdReadCMD
+*ÃèÊö  : ¶ÁÈ¡Ò»Ö¡ÍêÕûµÄÊý¾Ý£¬ÒÔ\r\n×ö½áÊø·û
+*²ÎÊý  : userCmd £º¿ØÖÆÆ÷µÄÖ¸Õë
+*·µ»Ø  : >=0 ¶ÁÈ¡µ½Ò»Ö¡Êý¾Ý£¬<0 Êý¾Ý²»ÍêÕû
 */
 int P_StringCmdReadCMD(stringCMD_t *userCmd);
 	
 /*
-*å‡½æ•°å: P_StringCmdScan
-*æè¿°  : å½“å‰æŽ¥æ”¶çš„å®Œæ•´çš„ä¸€å¸§æ•°æ®ï¼ŒæŒ‰æŒ‡å®šæ ¼å¼è§£æžåˆ°å˜é‡ä¸­ï¼Œç±»ä¼¼æ ‡å‡†cçš„scanf
-*å‚æ•°  : userCmd ï¼šæŽ§åˆ¶å™¨çš„æŒ‡é’ˆ
-		 fmt     : å…¶ä»–ï¼Œç±»ä¼¼scanfã€‚
-*è¿”å›ž  : =0 æˆåŠŸï¼Œ<0 å¤±è´¥
+*º¯ÊýÃû: P_StringCmdScan
+*ÃèÊö  : µ±Ç°½ÓÊÕµÄÍêÕûµÄÒ»Ö¡Êý¾Ý£¬°´Ö¸¶¨¸ñÊ½½âÎöµ½±äÁ¿ÖÐ£¬ÀàËÆ±ê×¼cµÄscanf
+*²ÎÊý  : userCmd £º¿ØÖÆÆ÷µÄÖ¸Õë
+		 fmt     : ÆäËû£¬ÀàËÆscanf¡£
+*·µ»Ø  : =0 ³É¹¦£¬<0 Ê§°Ü
 */
 int P_StringCmdScan(stringCMD_t *userCmd,char *fmt, ...);
 

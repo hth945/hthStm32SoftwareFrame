@@ -22,7 +22,7 @@ static int P_CAN_AddFilter(can_adapter *adap,uint32_t id, uint32_t mask)
 {
 	int re;
 	
-	//è¿™é‡Œéœ€è¦ä¿è¯è¿‡æ»¤å™¨ä¸ä¼šé‡å¤æ·»åŠ 
+	//ÕâÀïÐèÒª±£Ö¤¹ýÂËÆ÷²»»áÖØ¸´Ìí¼Ó
 	
 	re = adap->addFilter(adap->filterN, id, mask);
 	if (re >= 0)
@@ -60,6 +60,7 @@ int P_CAN_AddNode(can_adapter *adap,can_node *node)
 	can_node *p; 
 	if (adap->srcNode != 0)
 	{
+		p = adap->srcNode;
 		while(p->nextNode != 0)
 		{
 			p = p->nextNode;
@@ -83,8 +84,8 @@ int P_CAN_AddNode(can_adapter *adap,can_node *node)
 
 int P_CAN_SetNodeByBus(can_node *node, bus_config *bc)
 {
-	//å‘é€ä¸ŽæŽ¥æ”¶çš„é«˜3ä½å›ºå®šä¸ºb001ï¼Œ
-	//ä½Ž3ä½å›ºå®šä½b100ï¼Œ ä½2è¡¨ç¤ºæ‰©å±•å¸§  ä½1è¡¨ç¤ºæ•°æ®å¸§ï¼Œ ä½0ä¸ºæŽ§åˆ¶å‘é€ä½ç¡¬ä»¶è‡ªåŠ¨æ¸…é›¶
+	//·¢ËÍÓë½ÓÊÕµÄ¸ß3Î»¹Ì¶¨Îªb001£¬
+	//µÍ3Î»¹Ì¶¨Î»b100£¬ Î»2±íÊ¾À©Õ¹Ö¡  Î»1±íÊ¾Êý¾ÝÖ¡£¬ Î»0Îª¿ØÖÆ·¢ËÍÎ»Ó²¼þ×Ô¶¯ÇåÁã
 	//uint32_t mask=0xE0000006, maskId=0x20000004, sendId=0x20000004;
 	//maskId |=  ((bc->dst_type&0x3f)<<(7+16)) | ((bc->dst_id&0x07)<<(4+16))| ((bc->src_id&0x07)<<14)| ((bc->src_id&0x07)<<11);
 	uint32_t tem;
@@ -93,12 +94,12 @@ int P_CAN_SetNodeByBus(can_node *node, bus_config *bc)
 	memcpy(&bcTem, bc, sizeof(bus_config));
 	bc = &bcTem;
 	
-	/******è¿‡æ»¤å™¨id****/
+	/******¹ýÂËÆ÷id****/
 	bc->resev = 4;
 	bc->resev2 = 1;
 	node->maskId = *(uint32_t *)(bc);
 	
-	/******å‘é€id****/
+	/******·¢ËÍid****/
 	tem = bc->dst_id;
 	bc->dst_id = bc->src_id;
 	bc->src_id = tem;
@@ -107,22 +108,22 @@ int P_CAN_SetNodeByBus(can_node *node, bus_config *bc)
 	bc->src_type = tem;
 	node->sendId = *(uint32_t *)(bc);
 	
-	/******æŽ©ç ****/
+	/******ÑÚÂë****/
 	*(uint32_t *)(bc) = 0xffffffff;
 	bc->resev = 6;
 	bc->resev2 = 1;
 	
-	if (bc->filt_dst == 1)  //éƒ½è¿‡æ»¤
+	if (bc->filt_dst == 1)  //¶¼¹ýÂË
 	{
 		
-	}else if (bc->filt_dst == 0) //éƒ½ä¸è¿‡æ»¤
+	}else if (bc->filt_dst == 0) //¶¼²»¹ýÂË
 	{
 		bc->dst_id = 0;
 		bc->dst_type = 0;
-	}else if (bc->filt_dst == 2) //åªè¿‡æ»¤ç±»åž‹ å¿½è§†id
+	}else if (bc->filt_dst == 2) //Ö»¹ýÂËÀàÐÍ ºöÊÓid
 	{
 		bc->dst_id = 0;
-	}else if (bc->filt_dst == 3) //åªè¿‡æ»¤id
+	}else if (bc->filt_dst == 3) //Ö»¹ýÂËid
 	{
 		bc->dst_type = 0;
 	}else 
@@ -130,17 +131,17 @@ int P_CAN_SetNodeByBus(can_node *node, bus_config *bc)
 		while(1);
 	}
 	
-	if (bc->filt_src == 1)  //éƒ½è¿‡æ»¤
+	if (bc->filt_src == 1)  //¶¼¹ýÂË
 	{
 		
-	}else if (bc->filt_src == 0) //éƒ½ä¸è¿‡æ»¤
+	}else if (bc->filt_src == 0) //¶¼²»¹ýÂË
 	{
 		bc->src_id = 0;
 		bc->src_type = 0;
-	}else if (bc->filt_src == 2) //åªè¿‡æ»¤ç±»åž‹ å¿½è§†id
+	}else if (bc->filt_src == 2) //Ö»¹ýÂËÀàÐÍ ºöÊÓid
 	{
 		bc->src_id = 0;
-	}else if (bc->filt_src == 3) //åªè¿‡æ»¤id
+	}else if (bc->filt_src == 3) //Ö»¹ýÂËid
 	{
 		bc->src_type = 0;
 	}else 
@@ -159,7 +160,7 @@ int P_CAN_IRQHandler(can_adapter *adap,uint32_t id, uint8_t *data, int len)
 	
 	while(p != 0)
 	{
-		if (((p->maskId ^ (id<<3)) & p->mask& 0xffffff8) == 0) //å¯¹æ¯”é€šè¿‡ ä¼ å…¥çš„idä½Ž3ä½ä¸å­˜åœ¨å› æ­¤å·¦ç§»ä¸‰ä½
+		if (((p->maskId ^ (id<<3)) & p->mask& 0xffffff8) == 0) //¶Ô±ÈÍ¨¹ý ´«ÈëµÄidµÍ3Î»²»´æÔÚÒò´Ë×óÒÆÈýÎ»
 		{
 			Write2dev(&p->dev, data, len);
 		}

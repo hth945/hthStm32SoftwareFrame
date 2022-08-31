@@ -4,28 +4,28 @@
 #include "stdint.h"
 
 typedef struct{
-    void (* sda_set)(uint8_t);//è®¾ç½®sdaç”µå¹³
-    uint8_t (* sda_read)(void);//è¯»å–sdaç”µå¹³
-    void (* sda_outmode)(void);//è¯»å–sdaè¾“å‡ºæ¨¡å¼
-    void (* sda_inmode)(void);//è¯»å–sdaè¾“äººæ¨¡å¼
-    void (* scl_set)(uint8_t);//è®¾ç½®sclç”µå¹³
-    void (* delay)(void);//å»¶æ—¶
-    uint16_t wait_overtime_cnt;//è¯»ackç­‰å¾…è®¡æ•°
+    void (* sda_set)(uint8_t);//ÉèÖÃsdaµçÆ½
+    uint8_t (* sda_read)(void);//¶ÁÈ¡sdaµçÆ½
+    void (* sda_outmode)(void);//¶ÁÈ¡sdaÊä³öÄ£Ê½
+    void (* sda_inmode)(void);//¶ÁÈ¡sdaÊäÈËÄ£Ê½
+    void (* scl_set)(uint8_t);//ÉèÖÃsclµçÆ½
+    void (* delay)(void);//ÑÓÊ±
+    uint16_t wait_overtime_cnt;//¶ÁackµÈ´ı¼ÆÊı
 }i2c_adapter;
 
 typedef enum{
-    //è¿™äº›ä¸èƒ½æˆ–
+    //ÕâĞ©²»ÄÜ»ò
     I2C_S_W         =0x0000,//Start+WAddr+WDat
     I2C_W           =0x0001,//WDat
 
     I2C_S_R		    =0x0100,//Start+RAddr+RDat
     I2C_R           =0x0200,//RDat
     
-    //è¿™äº›èƒ½æˆ–
-    I2C_P           =0x8000,//Stop ä¸­é€”éœ€è¦å‘é€åœæ­¢ä½
+    //ÕâĞ©ÄÜ»ò
+    I2C_P           =0x8000,//Stop ÖĞÍ¾ĞèÒª·¢ËÍÍ£Ö¹Î»
     
 }i2c_type;
-//æ³¨:P_I2C_transferå‡½æ•°ç»“æŸä¼šè‡ªåŠ¨æ·»åŠ åœæ­¢ä½
+//×¢:P_I2C_transferº¯Êı½áÊøºó»á×Ô¶¯Ìí¼ÓÍ£Ö¹Î»
 
 typedef struct{
     uint16_t type;
@@ -34,10 +34,41 @@ typedef struct{
     uint8_t  *buf;
 }i2c_msg;
 
-//iicæ¥å£
+//µ×²ã»ù´¡º¯Êı Ò»°ã²»ÓÃ,Óöµ½Ææİâ¸ñÊ½µÄÊ±ºò¿ÉÒÔÓÃ
+void P_I2C_Start(i2c_adapter *adap);
+void P_I2C_Stop(i2c_adapter *adap);
+void P_I2C_SendByte(i2c_adapter *adap,uint8_t dat);
+int P_I2C_WaitAck(i2c_adapter *adap);
+uint8_t P_I2C_ReadByte(i2c_adapter *adap);
+void P_I2C_ReplyAck(i2c_adapter *adap,uint8_t ack);
+
+/*---iic½Ó¿Ú---*/
+
+//ÅäÖÃÄ¬ÈÏÖµ,P_I2C_InitÇ°µ÷ÓÃ
 void P_I2C_DeInit(i2c_adapter *adap);
+
+//ÅäÖÃ½Ó¿Ú
 void P_I2C_Init(i2c_adapter *adap);
+
+//»ù±¾Í¨ĞÅº¯Êı
 int P_I2C_transfer(i2c_adapter *adap,i2c_msg *msgs,uint16_t msgs_num);
 
+//ÅĞ¶ÏÆ÷¼şµØÖ·ÊÇ·ñ´æÔÚ
+int P_I2C_DevExist(i2c_adapter *adap,uint8_t dev_addr);
+
+//µ¥×Ö½ÚĞ´
+int P_I2C_WriteReg(i2c_adapter *adap,uint8_t slave_addr,uint8_t reg,uint8_t dat);
+
+//¶à×Ö½ÚĞ´
+int P_I2C_WriteRegBuf(i2c_adapter *adap,uint8_t slave_addr,uint8_t reg,uint16_t len,uint8_t *dat);
+
+//µ¥×Ö½Ú¶Á
+int P_I2C_ReadReg(i2c_adapter *adap,uint8_t slave_addr,uint8_t reg,uint8_t *dat);
+
+//¶à×Ö½Ú¶Á
+int P_I2C_ReadRegBuf(i2c_adapter *adap,uint8_t slave_addr,uint8_t reg,uint16_t len,uint8_t *dat);
+
+//µ¥×Ö½ÚÑÚÂëĞ´
+void P_I2C_WriteRegMask(i2c_adapter *adap,uint8_t slave_addr,uint8_t reg,uint8_t mask,uint8_t dat);
 
 #endif

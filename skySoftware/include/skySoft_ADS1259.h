@@ -42,12 +42,12 @@ typedef struct {
 
 typedef struct{
     spi_adapter adap;
-    void (* rst_set)(uint8_t);//è®¾ç½®rstç”µå¹³
-    void (* start_set)(uint8_t);//è®¾ç½®startç”µå¹³
-    uint8_t (* drdy_read)(void);//è¯»å–drdyç”µå¹³
-    void (* delayms)(uint16_t);//å¾®ç§’å»¶æ—¶
+    void (* rst_set)(uint8_t);//ÉèÖÃrstµçÆ½
+    void (* start_set)(uint8_t);//ÉèÖÃstartµçÆ½
+    uint8_t (* drdy_read)(void);//¶ÁÈ¡drdyµçÆ½
+    void (* delayms)(uint16_t);//Î¢ÃëÑÓÊ±
     
-    Init_data config;//é…ç½®ä¿¡æ¯
+    Init_data config;//ÅäÖÃĞÅÏ¢
 }ads12xx_drv;
 
 void skySoft_ADS12xx_DeInit(ads12xx_drv *drv);

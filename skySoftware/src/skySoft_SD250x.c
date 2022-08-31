@@ -1,4 +1,4 @@
-//ç‰ˆæœ¬ V0.0.1
+//°æ±¾ V0.0.1
 
 #include "skySoft_sd250x.h"
 
@@ -6,17 +6,17 @@
 void skySoft_SD250X_Init(i2c_adapter *adap){
     uint8_t data_Buf[1];
     
-    //å……ç”µä½¿èƒ½
+    //³äµçÊ¹ÄÜ
 	data_Buf[0] = Chg_enable;
 	skySoft_SD250X_I2CWriteSerial(adap,Chg_MG,1,data_Buf);    
 }
 
 
 /*********************************************
- * å‡½æ•°åï¼šWriteRTC_Enable
- * æ  è¿°ï¼šRTCå†™å…è®¸ç¨‹åº
- * è¾“  å…¥ï¼šæ— 
- * è¾“  å‡ºï¼šTRUE:æ“ä½œæˆåŠŸï¼ŒFALSE:æ“ä½œå¤±è´¥
+ * º¯ÊıÃû£ºWriteRTC_Enable
+ * Ãè  Êö£ºRTCĞ´ÔÊĞí³ÌĞò
+ * Êä  Èë£ºÎŞ
+ * Êä  ³ö£ºTRUE:²Ù×÷³É¹¦£¬FALSE:²Ù×÷Ê§°Ü
  ********************************************/
 int skySoft_SD250X_WriteRTC_Enable(i2c_adapter *adap)
 {
@@ -24,14 +24,14 @@ int skySoft_SD250X_WriteRTC_Enable(i2c_adapter *adap)
     uint8_t buf1[2],buf2[2];
     
     buf1[0]=CTR2;
-    buf1[1]=0x80;//ç½®WRTC1=1  
+    buf1[1]=0x80;//ÖÃWRTC1=1  
     msg[0].type=I2C_S_W|I2C_P;
     msg[0].addr=RTC_Address;
     msg[0].len=2;
     msg[0].buf=buf1;
     
     buf2[0]=CTR1;
-    buf2[1]=0x84;//ç½®WRTC2,WRTC3=1    
+    buf2[1]=0x84;//ÖÃWRTC2,WRTC3=1    
     msg[1].type=I2C_S_W;
     msg[1].addr=RTC_Address;
     msg[1].len=2;
@@ -41,19 +41,19 @@ int skySoft_SD250X_WriteRTC_Enable(i2c_adapter *adap)
 }
 
 /*********************************************
- * å‡½æ•°åï¼šWriteRTC_Disable
- * æ  è¿°ï¼šRTCå†™ç¦æ­¢ç¨‹åº
- * è¾“  å…¥ï¼šæ— 
- * è¾“  å‡ºï¼šTRUE:æ“ä½œæˆåŠŸï¼ŒFALSE:æ“ä½œå¤±è´¥
+ * º¯ÊıÃû£ºWriteRTC_Disable
+ * Ãè  Êö£ºRTCĞ´½ûÖ¹³ÌĞò
+ * Êä  Èë£ºÎŞ
+ * Êä  ³ö£ºTRUE:²Ù×÷³É¹¦£¬FALSE:²Ù×÷Ê§°Ü
  ********************************************/
 int skySoft_SD250X_WriteRTC_Disable(i2c_adapter *adap)
 {
     i2c_msg msg[1];
     uint8_t buf1[3];
     
-    buf1[0]=CTR1;//è®¾ç½®å†™åœ°å€0FH    
-    buf1[1]=0x0;//ç½®WRTC2,WRTC3=0 
-    buf1[2]=0x0;//ç½®WRTC1=0(10Håœ°å€) 
+    buf1[0]=CTR1;//ÉèÖÃĞ´µØÖ·0FH    
+    buf1[1]=0x0;//ÖÃWRTC2,WRTC3=0 
+    buf1[2]=0x0;//ÖÃWRTC1=0(10HµØÖ·) 
     msg[0].type=I2C_S_W;
     msg[0].addr=RTC_Address;
     msg[0].len=3;
@@ -63,22 +63,22 @@ int skySoft_SD250X_WriteRTC_Disable(i2c_adapter *adap)
 }
 
 /*********************************************
- * å‡½æ•°åï¼šRTC_WriteDate
- * æ  è¿°ï¼šå†™RTCå®æ—¶æ•°æ®å¯„å­˜å™¨
- * è¾“  å…¥ï¼šæ—¶é—´ç»“æ„ä½“æŒ‡é’ˆ
- * è¾“  å‡ºï¼šTRUE:æ“ä½œæˆåŠŸï¼ŒFALSE:æ“ä½œå¤±è´¥
+ * º¯ÊıÃû£ºRTC_WriteDate
+ * Ãè  Êö£ºĞ´RTCÊµÊ±Êı¾İ¼Ä´æÆ÷
+ * Êä  Èë£ºÊ±¼ä½á¹¹ÌåÖ¸Õë
+ * Êä  ³ö£ºTRUE:²Ù×÷³É¹¦£¬FALSE:²Ù×÷Ê§°Ü
  ********************************************/
-int skySoft_SD250X_RTC_WriteDate(i2c_adapter *adap,Time_Def *psRTC)	//å†™æ—¶é—´æ“ä½œè¦æ±‚ä¸€æ¬¡å¯¹å®æ—¶æ—¶é—´å¯„å­˜å™¨(00H~06H)ä¾æ¬¡å†™å…¥ï¼Œ
-{                               //ä¸å¯ä»¥å•ç‹¬å¯¹7ä¸ªæ—¶é—´æ•°æ®ä¸­çš„æŸä¸€ä½è¿›è¡Œå†™æ“ä½œ,å¦åˆ™å¯èƒ½ä¼šå¼•èµ·æ—¶é—´æ•°æ®çš„é”™è¯¯è¿›ä½. 
-                                //è¦ä¿®æ”¹å…¶ä¸­æŸä¸€ä¸ªæ•°æ® , åº”ä¸€æ¬¡æ€§å†™å…¥å…¨éƒ¨ 7 ä¸ªå®æ—¶æ—¶é’Ÿæ•°æ®.
+int skySoft_SD250X_RTC_WriteDate(i2c_adapter *adap,Time_Def *psRTC)	//Ğ´Ê±¼ä²Ù×÷ÒªÇóÒ»´Î¶ÔÊµÊ±Ê±¼ä¼Ä´æÆ÷(00H~06H)ÒÀ´ÎĞ´Èë£¬
+{                               //²»¿ÉÒÔµ¥¶À¶Ô7¸öÊ±¼äÊı¾İÖĞµÄÄ³Ò»Î»½øĞĞĞ´²Ù×÷,·ñÔò¿ÉÄÜ»áÒıÆğÊ±¼äÊı¾İµÄ´íÎó½øÎ». 
+                                //ÒªĞŞ¸ÄÆäÖĞÄ³Ò»¸öÊı¾İ , Ó¦Ò»´ÎĞÔĞ´ÈëÈ«²¿ 7 ¸öÊµÊ±Ê±ÖÓÊı¾İ.
     int ret;    
     i2c_msg msg[1];
     uint8_t buf1[8];        
 
-    buf1[0]=0;//è®¾ç½®å†™èµ·å§‹åœ°å€   
+    buf1[0]=0;//ÉèÖÃĞ´ÆğÊ¼µØÖ·   
     buf1[1]=psRTC->second;	 //second 
     buf1[2]=psRTC->minute;	 //minute   
-    buf1[3]=psRTC->hour|0x80;//hour ,åŒæ—¶è®¾ç½®å°æ—¶å¯„å­˜å™¨æœ€é«˜ä½ï¼ˆ0ï¼šä¸º12å°æ—¶åˆ¶ï¼Œ1ï¼šä¸º24å°æ—¶åˆ¶ï¼‰  
+    buf1[3]=psRTC->hour|0x80;//hour ,Í¬Ê±ÉèÖÃĞ¡Ê±¼Ä´æÆ÷×î¸ßÎ»£¨0£ºÎª12Ğ¡Ê±ÖÆ£¬1£ºÎª24Ğ¡Ê±ÖÆ£©  
     buf1[4]=psRTC->week;     //week     
     buf1[5]=psRTC->day;		 //day
     buf1[6]=psRTC->month;	 //month      
@@ -88,18 +88,18 @@ int skySoft_SD250X_RTC_WriteDate(i2c_adapter *adap,Time_Def *psRTC)	//å†™æ—¶é—´æ
     msg[0].len=8;
     msg[0].buf=buf1;
     
-    skySoft_SD250X_WriteRTC_Enable(adap);		//ä½¿èƒ½ï¼Œå¼€é”
+    skySoft_SD250X_WriteRTC_Enable(adap);		//Ê¹ÄÜ£¬¿ªËø
     ret=P_I2C_transfer(adap,msg,1);
-    skySoft_SD250X_WriteRTC_Disable(adap);		//å…³é”
+    skySoft_SD250X_WriteRTC_Disable(adap);		//¹ØËø
     
     return ret;
 }
 
 /*********************************************
- * å‡½æ•°åï¼šRTC_ReadDate
- * æ  è¿°ï¼šè¯»RTCå®æ—¶æ•°æ®å¯„å­˜å™¨
- * è¾“  å…¥ï¼šæ—¶é—´ç»“æ„ä½“æŒ‡é’ˆ
- * è¾“  å‡ºï¼šTRUE:æ“ä½œæˆåŠŸï¼ŒFALSE:æ“ä½œå¤±è´¥
+ * º¯ÊıÃû£ºRTC_ReadDate
+ * Ãè  Êö£º¶ÁRTCÊµÊ±Êı¾İ¼Ä´æÆ÷
+ * Êä  Èë£ºÊ±¼ä½á¹¹ÌåÖ¸Õë
+ * Êä  ³ö£ºTRUE:²Ù×÷³É¹¦£¬FALSE:²Ù×÷Ê§°Ü
  ********************************************/
 int skySoft_SD250X_RTC_ReadDate(i2c_adapter *adap,Time_Def *psRTC)
 {
@@ -107,7 +107,7 @@ int skySoft_SD250X_RTC_ReadDate(i2c_adapter *adap,Time_Def *psRTC)
     i2c_msg msg[2];
     uint8_t buf1[1],buf2[7];   
     
-    buf1[0]=0;//è®¾ç½®å†™èµ·å§‹åœ°å€   
+    buf1[0]=0;//ÉèÖÃĞ´ÆğÊ¼µØÖ·   
     msg[0].type=I2C_S_W;
     msg[0].addr=RTC_Address;
     msg[0].len=1;
@@ -131,13 +131,13 @@ int skySoft_SD250X_RTC_ReadDate(i2c_adapter *adap,Time_Def *psRTC)
 }
 
 /*********************************************
- * å‡½æ•°å     ï¼šI2CWriteSerial
- * æ  è¿°     ï¼šI2Cåœ¨æŒ‡å®šåœ°å€å†™ä¸€å­—èŠ‚æ•°æ®
- * Device_Addrï¼šI2Cè®¾å¤‡åœ°å€
- * Address    ï¼šå†…éƒ¨åœ°å€
- * length     ï¼šå­—èŠ‚é•¿åº¦
- * ps         ï¼šç¼“å­˜åŒºæŒ‡é’ˆ
- * è¾“å‡º       ï¼šTRUE æˆåŠŸï¼ŒFALSE å¤±è´¥
+ * º¯ÊıÃû     £ºI2CWriteSerial
+ * Ãè  Êö     £ºI2CÔÚÖ¸¶¨µØÖ·Ğ´Ò»×Ö½ÚÊı¾İ
+ * Device_Addr£ºI2CÉè±¸µØÖ·
+ * Address    £ºÄÚ²¿µØÖ·
+ * length     £º×Ö½Ú³¤¶È
+ * ps         £º»º´æÇøÖ¸Õë
+ * Êä³ö       £ºTRUE ³É¹¦£¬FALSE Ê§°Ü
  ********************************************/	
 int skySoft_SD250X_I2CWriteSerial(i2c_adapter *adap,uint8_t Address, uint8_t length, uint8_t *ps)
 {
@@ -163,13 +163,13 @@ int skySoft_SD250X_I2CWriteSerial(i2c_adapter *adap,uint8_t Address, uint8_t len
 }
 
 /*********************************************
- * å‡½æ•°å     ï¼šI2CReadSerial
- * æ  è¿°     ï¼šI2Cåœ¨æŒ‡å®šåœ°å€å†™ä¸€å­—èŠ‚æ•°æ®
- * Device_Addrï¼šI2Cè®¾å¤‡åœ°å€
- * Address    ï¼šå†…éƒ¨åœ°å€
- * length     ï¼šå­—èŠ‚é•¿åº¦
- * ps         ï¼šç¼“å­˜åŒºæŒ‡é’ˆ
- * è¾“å‡º       ï¼šTRUE æˆåŠŸï¼ŒFALSE å¤±è´¥
+ * º¯ÊıÃû     £ºI2CReadSerial
+ * Ãè  Êö     £ºI2CÔÚÖ¸¶¨µØÖ·Ğ´Ò»×Ö½ÚÊı¾İ
+ * Device_Addr£ºI2CÉè±¸µØÖ·
+ * Address    £ºÄÚ²¿µØÖ·
+ * length     £º×Ö½Ú³¤¶È
+ * ps         £º»º´æÇøÖ¸Õë
+ * Êä³ö       £ºTRUE ³É¹¦£¬FALSE Ê§°Ü
  ********************************************/	
 uint8_t skySoft_SD250X_I2CReadSerial(i2c_adapter *adap,uint8_t Address, uint8_t length, uint8_t *ps)
 {
@@ -192,10 +192,10 @@ uint8_t skySoft_SD250X_I2CReadSerial(i2c_adapter *adap,uint8_t Address, uint8_t 
 }
 
 /*********************************************
- * å‡½æ•°åï¼šSet_CountDown
- * æ  è¿°ï¼šè®¾ç½®å€’è®¡æ—¶ä¸­æ–­
- * è¾“  å…¥ï¼šCountDown_Init å€’è®¡æ—¶ä¸­æ–­ç»“æ„ä½“æŒ‡é’ˆ 
- * è¾“  å‡ºï¼šæ— 
+ * º¯ÊıÃû£ºSet_CountDown
+ * Ãè  Êö£ºÉèÖÃµ¹¼ÆÊ±ÖĞ¶Ï
+ * Êä  Èë£ºCountDown_Init µ¹¼ÆÊ±ÖĞ¶Ï½á¹¹ÌåÖ¸Õë 
+ * Êä  ³ö£ºÎŞ
  ********************************************/
 void skySoft_SD250X_Set_CountDown(i2c_adapter *adap,CountDown_Def *CountDown_Init)
 {
@@ -212,11 +212,11 @@ void skySoft_SD250X_Set_CountDown(i2c_adapter *adap,CountDown_Def *CountDown_Ini
 }
 
 /*********************************************
- * å‡½æ•°åï¼šSet_Alarm
- * æ  è¿°ï¼šè®¾ç½®æŠ¥è­¦ä¸­æ–­ï¼ˆé—¹é’ŸåŠŸèƒ½ï¼‰
- * Enable_configï¼šä½¿èƒ½è®¾ç½®  
- * psRTCï¼šæŠ¥è­¦æ—¶é—´çš„æ—¶é—´ç»“æ„ä½“æŒ‡é’ˆ
- * è¾“  å‡ºï¼šæ— 
+ * º¯ÊıÃû£ºSet_Alarm
+ * Ãè  Êö£ºÉèÖÃ±¨¾¯ÖĞ¶Ï£¨ÄÖÖÓ¹¦ÄÜ£©
+ * Enable_config£ºÊ¹ÄÜÉèÖÃ  
+ * psRTC£º±¨¾¯Ê±¼äµÄÊ±¼ä½á¹¹ÌåÖ¸Õë
+ * Êä  ³ö£ºÎŞ
  ********************************************/
 void skySoft_SD250X_Set_Alarm(i2c_adapter *adap,uint8_t Enable_config, Time_Def *psRTC)
 {
@@ -235,10 +235,10 @@ void skySoft_SD250X_Set_Alarm(i2c_adapter *adap,uint8_t Enable_config, Time_Def 
 }
 
 /*********************************************
- * å‡½æ•°åï¼šSetFrq
- * æ  è¿°ï¼šè®¾ç½®RTCé¢‘ç‡ä¸­æ–­ï¼Œä»INTè„šè¾“å‡ºé¢‘ç‡æ–¹æ³¢
- * è¾“  å…¥ï¼šé¢‘ç‡å€¼
- * è¾“  å‡ºï¼šæ— 
+ * º¯ÊıÃû£ºSetFrq
+ * Ãè  Êö£ºÉèÖÃRTCÆµÂÊÖĞ¶Ï£¬´ÓINT½ÅÊä³öÆµÂÊ·½²¨
+ * Êä  Èë£ºÆµÂÊÖµ
+ * Êä  ³ö£ºÎŞ
  ********************************************/
 void skySoft_SD250X_SetFrq(i2c_adapter *adap,enum Freq F_Out)					
 {
@@ -249,10 +249,10 @@ void skySoft_SD250X_SetFrq(i2c_adapter *adap,enum Freq F_Out)
 }
 
 /*********************************************
- * å‡½æ•°åï¼šClrINT
- * æ  è¿°ï¼šç¦æ­¢ä¸­æ–­
- * int_ENï¼šä¸­æ–­ç±»å‹ INTDEã€INTDEã€INTDE
- * è¾“  å‡ºï¼šæ— 
+ * º¯ÊıÃû£ºClrINT
+ * Ãè  Êö£º½ûÖ¹ÖĞ¶Ï
+ * int_EN£ºÖĞ¶ÏÀàĞÍ INTDE¡¢INTDE¡¢INTDE
+ * Êä  ³ö£ºÎŞ
  ********************************************/
 void skySoft_SD250X_ClrINT(i2c_adapter *adap,uint8_t int_EN)
 {
