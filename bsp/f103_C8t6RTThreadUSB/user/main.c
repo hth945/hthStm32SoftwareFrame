@@ -49,8 +49,8 @@ int runStrCmd(stringCMD_t *scmd)
 		}
 		else if (P_StringCmdScan(scmd, "setmotor%d:%d", &ch, &value) >= 0) //每秒脉冲数
 		{
-			servos[ch].HighTime =  2000-value;//20000-1500;//20000-1;
-			servos[ch].run_state = 1;
+//			servos[ch].HighTime =  2000-value;//20000-1500;//20000-1;
+//			servos[ch].run_state = 1;
 			len = sprintf(buf, "ok\n");
 			devWrite(scmd->dev, (u8 *)buf, len);
 		}
@@ -81,10 +81,9 @@ int main()
 //	TIM_SetCompare4(TIM8, 4999); //5ms
 
 	
-	TIM3_Int_Init(719, 0);
+//	TIM3_Int_Init(719, 0);
+	TIM_PWM_Init(); //100k
 
-	
-//	
 	while (1)
 	{
 //		EncryRun();
