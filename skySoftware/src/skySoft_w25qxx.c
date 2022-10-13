@@ -2,14 +2,14 @@
 
 #include "skySoft_w25qxx.h"
 
-//4Kbytesä¸ºä¸€ä¸ªSector
-//16ä¸ªæ‰‡åŒºä¸º1ä¸ªBlock
+//4KbytesÎªÒ»¸öSector
+//16¸öÉÈÇøÎª1¸öBlock
 //W25Q256
-//å®¹é‡ä¸º32Må­—èŠ‚,å…±æœ‰512ä¸ªBlock,8192ä¸ªSector 
+//ÈİÁ¿Îª32M×Ö½Ú,¹²ÓĞ512¸öBlock,8192¸öSector 
 
 						
 ////////////////////////////////////////////////////////////////////////////////// 
-//æŒ‡ä»¤è¡¨
+//Ö¸Áî±í
 #define W25X_WriteEnable		0x06 
 #define W25X_WriteDisable		0x04 
 #define W25X_ReadStatusReg1		0x05 
@@ -37,7 +37,7 @@
 
 //-------------------
 
-__weak void skySoft_W25QXX_Delay(){
+__weak void skySoft_W25QXX_Delay(struct _Tspi_adapter *self){
 }
 
         
@@ -53,36 +53,36 @@ void skySoft_W25QXX_Init(w25qxx_drv * drv){
     P_SPI_Init(&drv->adap);
 }  
 
-//è¯»å–W25QXXçš„çŠ¶æ€å¯„å­˜å™¨ï¼ŒW25QXXä¸€å…±æœ‰3ä¸ªçŠ¶æ€å¯„å­˜å™¨
-//çŠ¶æ€å¯„å­˜å™¨1ï¼š
+//¶ÁÈ¡W25QXXµÄ×´Ì¬¼Ä´æÆ÷£¬W25QXXÒ»¹²ÓĞ3¸ö×´Ì¬¼Ä´æÆ÷
+//×´Ì¬¼Ä´æÆ÷1£º
 //BIT7  6   5   4   3   2   1   0
 //SPR   RV  TB BP2 BP1 BP0 WEL BUSY
-//SPR:é»˜è®¤0,çŠ¶æ€å¯„å­˜å™¨ä¿æŠ¤ä½,é…åˆWPä½¿ç”¨
-//TB,BP2,BP1,BP0:FLASHåŒºåŸŸå†™ä¿æŠ¤è®¾ç½®
-//WEL:å†™ä½¿èƒ½é”å®š
-//BUSY:å¿™æ ‡è®°ä½(1,å¿™;0,ç©ºé—²)
-//é»˜è®¤:0x00
-//çŠ¶æ€å¯„å­˜å™¨2ï¼š
+//SPR:Ä¬ÈÏ0,×´Ì¬¼Ä´æÆ÷±£»¤Î»,ÅäºÏWPÊ¹ÓÃ
+//TB,BP2,BP1,BP0:FLASHÇøÓòĞ´±£»¤ÉèÖÃ
+//WEL:Ğ´Ê¹ÄÜËø¶¨
+//BUSY:Ã¦±ê¼ÇÎ»(1,Ã¦;0,¿ÕÏĞ)
+//Ä¬ÈÏ:0x00
+//×´Ì¬¼Ä´æÆ÷2£º
 //BIT7  6   5   4   3   2   1   0
 //SUS   CMP LB3 LB2 LB1 (R) QE  SRP1
-//çŠ¶æ€å¯„å­˜å™¨3ï¼š
+//×´Ì¬¼Ä´æÆ÷3£º
 //BIT7      6    5    4   3   2   1   0
 //HOLD/RST  DRV1 DRV0 (R) (R) WPS ADP ADS
-//regno:çŠ¶æ€å¯„å­˜å™¨å·ï¼ŒèŒƒ:1~3
-//è¿”å›å€¼:çŠ¶æ€å¯„å­˜å™¨å€¼
+//regno:×´Ì¬¼Ä´æÆ÷ºÅ£¬·¶:1~3
+//·µ»ØÖµ:×´Ì¬¼Ä´æÆ÷Öµ
 uint8_t skySoft_W25QXX_ReadSR(w25qxx_drv * drv,uint8_t regno)   {  
 	uint8_t byte=0,command=0; 
     spi_msg msg[2];
     
     switch(regno){
         case 1:
-            command=W25X_ReadStatusReg1;    //è¯»çŠ¶æ€å¯„å­˜å™¨1æŒ‡ä»¤
+            command=W25X_ReadStatusReg1;    //¶Á×´Ì¬¼Ä´æÆ÷1Ö¸Áî
             break;
         case 2:
-            command=W25X_ReadStatusReg2;    //è¯»çŠ¶æ€å¯„å­˜å™¨2æŒ‡ä»¤
+            command=W25X_ReadStatusReg2;    //¶Á×´Ì¬¼Ä´æÆ÷2Ö¸Áî
             break;
         case 3:
-            command=W25X_ReadStatusReg3;    //è¯»çŠ¶æ€å¯„å­˜å™¨3æŒ‡ä»¤
+            command=W25X_ReadStatusReg3;    //¶Á×´Ì¬¼Ä´æÆ÷3Ö¸Áî
             break;
         default:
             command=W25X_ReadStatusReg1;    
@@ -101,20 +101,20 @@ uint8_t skySoft_W25QXX_ReadSR(w25qxx_drv * drv,uint8_t regno)   {
     
 	return byte;   
 } 
-//å†™W25QXXçŠ¶æ€å¯„å­˜å™¨
+//Ğ´W25QXX×´Ì¬¼Ä´æÆ÷
 void skySoft_W25QXX_Write_SR(w25qxx_drv * drv,uint8_t regno,uint8_t sr)   {   
     uint8_t command=0;
     spi_msg msg[2];
     
     switch(regno){
         case 1:
-            command=W25X_WriteStatusReg1;    //å†™çŠ¶æ€å¯„å­˜å™¨1æŒ‡ä»¤
+            command=W25X_WriteStatusReg1;    //Ğ´×´Ì¬¼Ä´æÆ÷1Ö¸Áî
             break;
         case 2:
-            command=W25X_WriteStatusReg2;    //å†™çŠ¶æ€å¯„å­˜å™¨2æŒ‡ä»¤
+            command=W25X_WriteStatusReg2;    //Ğ´×´Ì¬¼Ä´æÆ÷2Ö¸Áî
             break;
         case 3:
-            command=W25X_WriteStatusReg3;    //å†™çŠ¶æ€å¯„å­˜å™¨3æŒ‡ä»¤
+            command=W25X_WriteStatusReg3;    //Ğ´×´Ì¬¼Ä´æÆ÷3Ö¸Áî
             break;
         default:
             command=W25X_WriteStatusReg1;    
@@ -132,13 +132,13 @@ void skySoft_W25QXX_Write_SR(w25qxx_drv * drv,uint8_t regno,uint8_t sr)   {
     P_SPI_transfer(&drv->adap,msg,2);   
 }   
 
-//ç­‰å¾…ç©ºé—²
+//µÈ´ı¿ÕÏĞ
 void skySoft_W25QXX_Wait_Busy(w25qxx_drv * drv){   
-	while((skySoft_W25QXX_ReadSR(drv,1)&0x01)==0x01);   // ç­‰å¾…BUSYä½æ¸…ç©º
+	while((skySoft_W25QXX_ReadSR(drv,1)&0x01)==0x01);   // µÈ´ıBUSYÎ»Çå¿Õ
 }  
 
-//W25QXXå†™ä½¿èƒ½ä¸å†™ç¦æ­¢	
-//å°†WELç½®ä½ä¸æ¸…é›¶  
+//W25QXXĞ´Ê¹ÄÜÓëĞ´½ûÖ¹	
+//½«WELÖÃÎ»ÓëÇåÁã  
 void skySoft_W25QXX_Write_Enable(w25qxx_drv * drv,uint8_t en)   {
     spi_msg msg[1];
     uint8_t txbuf[2];
@@ -152,14 +152,14 @@ void skySoft_W25QXX_Write_Enable(w25qxx_drv * drv,uint8_t en)   {
 } 
 
 
-//è¯»å–èŠ¯ç‰‡ID
-//è¿”å›å€¼å¦‚ä¸‹:				   
-//0XEF13,è¡¨ç¤ºèŠ¯ç‰‡å‹å·ä¸ºW25Q80  
-//0XEF14,è¡¨ç¤ºèŠ¯ç‰‡å‹å·ä¸ºW25Q16    
-//0XEF15,è¡¨ç¤ºèŠ¯ç‰‡å‹å·ä¸ºW25Q32  
-//0XEF16,è¡¨ç¤ºèŠ¯ç‰‡å‹å·ä¸ºW25Q64 
-//0XEF17,è¡¨ç¤ºèŠ¯ç‰‡å‹å·ä¸ºW25Q128 	  
-//0XEF18,è¡¨ç¤ºèŠ¯ç‰‡å‹å·ä¸ºW25Q256
+//¶ÁÈ¡Ğ¾Æ¬ID
+//·µ»ØÖµÈçÏÂ:				   
+//0XEF13,±íÊ¾Ğ¾Æ¬ĞÍºÅÎªW25Q80  
+//0XEF14,±íÊ¾Ğ¾Æ¬ĞÍºÅÎªW25Q16    
+//0XEF15,±íÊ¾Ğ¾Æ¬ĞÍºÅÎªW25Q32  
+//0XEF16,±íÊ¾Ğ¾Æ¬ĞÍºÅÎªW25Q64 
+//0XEF17,±íÊ¾Ğ¾Æ¬ĞÍºÅÎªW25Q128 	  
+//0XEF18,±íÊ¾Ğ¾Æ¬ĞÍºÅÎªW25Q256
 uint16_t skySoft_W25QXX_ReadID(w25qxx_drv * drv){
 	uint16_t Temp = 0;	  
     spi_msg msg[2];
@@ -188,11 +188,11 @@ uint16_t skySoft_W25QXX_ReadID(w25qxx_drv * drv){
 	return Temp;
 }   	
 
-//è¯»å–SPI FLASH  
-//åœ¨æŒ‡å®šåœ°å€å¼€å§‹è¯»å–æŒ‡å®šé•¿åº¦çš„æ•°æ®
-//addr:å¼€å§‹è¯»å–çš„åœ°å€(24bit)
-//len:è¦è¯»å–çš„å­—èŠ‚æ•°(æœ€å¤§65535)
-//buf:æ•°æ®å­˜å‚¨åŒº
+//¶ÁÈ¡SPI FLASH  
+//ÔÚÖ¸¶¨µØÖ·¿ªÊ¼¶ÁÈ¡Ö¸¶¨³¤¶ÈµÄÊı¾İ
+//addr:¿ªÊ¼¶ÁÈ¡µÄµØÖ·(24bit)
+//len:Òª¶ÁÈ¡µÄ×Ö½ÚÊı(×î´ó65535)
+//buf:Êı¾İ´æ´¢Çø
 void skySoft_W25QXX_Read(w25qxx_drv * drv,uint32_t addr,uint16_t len,uint8_t* buf){ 
     spi_msg msg[3];
     uint8_t txbuf1[1],txbuf2[4];
@@ -226,11 +226,11 @@ void skySoft_W25QXX_Read(w25qxx_drv * drv,uint32_t addr,uint16_t len,uint8_t* bu
     P_SPI_transfer(&drv->adap,msg,3);  
     
 }  
-//SPIåœ¨ä¸€é¡µ(0~65535)å†…å†™å…¥å°‘äº256ä¸ªå­—èŠ‚çš„æ•°æ®
-//åœ¨æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æœ€å¤§256å­—èŠ‚çš„æ•°æ®
-//pBuffer:æ•°æ®å­˜å‚¨åŒº
-//WriteAddr:å¼€å§‹å†™å…¥çš„åœ°å€(24bit)
-//NumByteToWrite:è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§256),è¯¥æ•°ä¸åº”è¯¥è¶…è¿‡è¯¥é¡µçš„å‰©ä½™å­—èŠ‚æ•°!!!	 
+//SPIÔÚÒ»Ò³(0~65535)ÄÚĞ´ÈëÉÙÓÚ256¸ö×Ö½ÚµÄÊı¾İ
+//ÔÚÖ¸¶¨µØÖ·¿ªÊ¼Ğ´Èë×î´ó256×Ö½ÚµÄÊı¾İ
+//pBuffer:Êı¾İ´æ´¢Çø
+//WriteAddr:¿ªÊ¼Ğ´ÈëµÄµØÖ·(24bit)
+//NumByteToWrite:ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó256),¸ÃÊı²»Ó¦¸Ã³¬¹ı¸ÃÒ³µÄÊ£Óà×Ö½ÚÊı!!!	 
 void skySoft_W25QXX_Write_Page(w25qxx_drv * drv,uint32_t addr,uint16_t len,uint8_t* buf){
     spi_msg msg[3];
     uint8_t txbuf1[1],txbuf2[4];
@@ -265,44 +265,44 @@ void skySoft_W25QXX_Write_Page(w25qxx_drv * drv,uint32_t addr,uint16_t len,uint8
 
     P_SPI_transfer(&drv->adap,msg,3); 
 
-	skySoft_W25QXX_Wait_Busy(drv);					   //ç­‰å¾…å†™å…¥ç»“æŸ
+	skySoft_W25QXX_Wait_Busy(drv);					   //µÈ´ıĞ´Èë½áÊø
     
 } 
-//æ— æ£€éªŒå†™SPI FLASH 
-//å¿…é¡»ç¡®ä¿æ‰€å†™çš„åœ°å€èŒƒå›´å†…çš„æ•°æ®å…¨éƒ¨ä¸º0XFF,å¦åˆ™åœ¨é0XFFå¤„å†™å…¥çš„æ•°æ®å°†å¤±è´¥!
-//å…·æœ‰è‡ªåŠ¨æ¢é¡µåŠŸèƒ½ 
-//åœ¨æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ®,ä½†æ˜¯è¦ç¡®ä¿åœ°å€ä¸è¶Šç•Œ!
-//pBuffer:æ•°æ®å­˜å‚¨åŒº
-//WriteAddr:å¼€å§‹å†™å…¥çš„åœ°å€(24bit)
-//NumByteToWrite:è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§65535)
+//ÎŞ¼ìÑéĞ´SPI FLASH 
+//±ØĞëÈ·±£ËùĞ´µÄµØÖ··¶Î§ÄÚµÄÊı¾İÈ«²¿Îª0XFF,·ñÔòÔÚ·Ç0XFF´¦Ğ´ÈëµÄÊı¾İ½«Ê§°Ü!
+//¾ßÓĞ×Ô¶¯»»Ò³¹¦ÄÜ 
+//ÔÚÖ¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨³¤¶ÈµÄÊı¾İ,µ«ÊÇÒªÈ·±£µØÖ·²»Ô½½ç!
+//pBuffer:Êı¾İ´æ´¢Çø
+//WriteAddr:¿ªÊ¼Ğ´ÈëµÄµØÖ·(24bit)
+//NumByteToWrite:ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó65535)
 //CHECK OK
 void skySoft_W25QXX_Write_NoCheck(w25qxx_drv * drv,uint32_t addr,uint16_t len,uint8_t* buf){ 			 		 
 	uint16_t pageremain;	   
     
-	pageremain=256-addr%256; //å•é¡µå‰©ä½™çš„å­—èŠ‚æ•°		 	    
+	pageremain=256-addr%256; //µ¥Ò³Ê£ÓàµÄ×Ö½ÚÊı		 	    
 	if(len<=pageremain)
-        pageremain=len;//ä¸å¤§äº256ä¸ªå­—èŠ‚
+        pageremain=len;//²»´óÓÚ256¸ö×Ö½Ú
     
 	while(1){	   
 		skySoft_W25QXX_Write_Page(drv,addr,pageremain,buf);
 		if(len==pageremain)
-            break;//å†™å…¥ç»“æŸäº†
+            break;//Ğ´Èë½áÊøÁË
 	 	else{ //NumByteToWrite>pageremain
 			buf+=pageremain;
 			addr+=pageremain;	
 
-			len-=pageremain;//å‡å»å·²ç»å†™å…¥äº†çš„å­—èŠ‚æ•°
+			len-=pageremain;//¼õÈ¥ÒÑ¾­Ğ´ÈëÁËµÄ×Ö½ÚÊı
 			if(len>256)
-                pageremain=256; //ä¸€æ¬¡å¯ä»¥å†™å…¥256ä¸ªå­—èŠ‚
+                pageremain=256; //Ò»´Î¿ÉÒÔĞ´Èë256¸ö×Ö½Ú
 			else 
-                pageremain=len; 	  //ä¸å¤Ÿ256ä¸ªå­—èŠ‚äº†
+                pageremain=len; 	  //²»¹»256¸ö×Ö½ÚÁË
 		}
 	};	    
 } 
 
-//æ“¦é™¤ä¸€ä¸ªæ‰‡åŒº
-//Dst_Addr:æ‰‡åŒºåœ°å€ æ ¹æ®å®é™…å®¹é‡è®¾ç½®
-//æ“¦é™¤ä¸€ä¸ªæ‰‡åŒºçš„æœ€å°‘æ—¶é—´:150ms
+//²Á³ıÒ»¸öÉÈÇø
+//Dst_Addr:ÉÈÇøµØÖ· ¸ù¾İÊµ¼ÊÈİÁ¿ÉèÖÃ
+//²Á³ıÒ»¸öÉÈÇøµÄ×îÉÙÊ±¼ä:150ms
 void skySoft_W25QXX_Erase_Sector(w25qxx_drv * drv,uint32_t addr){  
     spi_msg msg[2];
     uint8_t txbuf1[1],txbuf2[4];    
@@ -311,7 +311,7 @@ void skySoft_W25QXX_Erase_Sector(w25qxx_drv * drv,uint32_t addr){
     skySoft_W25QXX_Write_Enable(drv,1);//SET WEL 	 
     skySoft_W25QXX_Wait_Busy(drv);   
     
-    txbuf1[0]=W25X_SectorErase;//å‘é€æ‰‡åŒºæ“¦é™¤æŒ‡ä»¤ 
+    txbuf1[0]=W25X_SectorErase;//·¢ËÍÉÈÇø²Á³ıÖ¸Áî 
     msg[0].len=1;
     msg[0].type=SPI_OnlyW;
     msg[0].txbuf=txbuf1;    
@@ -335,15 +335,15 @@ void skySoft_W25QXX_Erase_Sector(w25qxx_drv * drv,uint32_t addr){
 
     P_SPI_transfer(&drv->adap,msg,2); 
     
-    skySoft_W25QXX_Wait_Busy(drv);//ç­‰å¾…æ“¦é™¤å®Œæˆ
+    skySoft_W25QXX_Wait_Busy(drv);//µÈ´ı²Á³ıÍê³É
 }  
 
-//å†™SPI FLASH  
-//åœ¨æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ®
-//è¯¥å‡½æ•°å¸¦æ“¦é™¤æ“ä½œ!
-//pBuffer:æ•°æ®å­˜å‚¨åŒº
-//WriteAddr:å¼€å§‹å†™å…¥çš„åœ°å€(24bit)						
-//NumByteToWrite:è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§65535)   
+//Ğ´SPI FLASH  
+//ÔÚÖ¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨³¤¶ÈµÄÊı¾İ
+//¸Ãº¯Êı´ø²Á³ı²Ù×÷!
+//pBuffer:Êı¾İ´æ´¢Çø
+//WriteAddr:¿ªÊ¼Ğ´ÈëµÄµØÖ·(24bit)						
+//NumByteToWrite:ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó65535)   
 uint8_t W25QXX_BUFFER[4096];		 
 void skySoft_W25QXX_Write(w25qxx_drv * drv,uint32_t addr,uint16_t len,uint8_t* buf){ 
 	uint32_t secpos;
@@ -353,48 +353,48 @@ void skySoft_W25QXX_Write(w25qxx_drv * drv,uint32_t addr,uint16_t len,uint8_t* b
 	uint8_t * W25QXX_BUF;
     
    	W25QXX_BUF=W25QXX_BUFFER;	     
- 	secpos=addr/4096;//æ‰‡åŒºåœ°å€  
-	secoff=addr%4096;//åœ¨æ‰‡åŒºå†…çš„åç§»
-	secremain=4096-secoff;//æ‰‡åŒºå‰©ä½™ç©ºé—´å¤§å°   
+ 	secpos=addr/4096;//ÉÈÇøµØÖ·  
+	secoff=addr%4096;//ÔÚÉÈÇøÄÚµÄÆ«ÒÆ
+	secremain=4096-secoff;//ÉÈÇøÊ£Óà¿Õ¼ä´óĞ¡   
 
  	if(len<=secremain)
-        secremain=len;//ä¸å¤§äº4096ä¸ªå­—èŠ‚
+        secremain=len;//²»´óÓÚ4096¸ö×Ö½Ú
     
 	while(1) {	
-		skySoft_W25QXX_Read(drv,secpos*4096,4096,W25QXX_BUF);//è¯»å‡ºæ•´ä¸ªæ‰‡åŒºçš„å†…å®¹
-		for(i=0;i<secremain;i++){//æ ¡éªŒæ•°æ®
-			if(W25QXX_BUF[secoff+i]!=0XFF)break;//éœ€è¦æ“¦é™¤  	  
+		skySoft_W25QXX_Read(drv,secpos*4096,4096,W25QXX_BUF);//¶Á³öÕû¸öÉÈÇøµÄÄÚÈİ
+		for(i=0;i<secremain;i++){//Ğ£ÑéÊı¾İ
+			if(W25QXX_BUF[secoff+i]!=0XFF)break;//ĞèÒª²Á³ı  	  
 		}
         
-		if(i<secremain){//éœ€è¦æ“¦é™¤
-			skySoft_W25QXX_Erase_Sector(drv,secpos);//æ“¦é™¤è¿™ä¸ªæ‰‡åŒº
-			for(i=0;i<secremain;i++){	   //å¤åˆ¶
+		if(i<secremain){//ĞèÒª²Á³ı
+			skySoft_W25QXX_Erase_Sector(drv,secpos);//²Á³ıÕâ¸öÉÈÇø
+			for(i=0;i<secremain;i++){	   //¸´ÖÆ
 				W25QXX_BUF[i+secoff]=buf[i];	  
 			}
-			skySoft_W25QXX_Write_NoCheck(drv,secpos*4096,4096,W25QXX_BUF);//å†™å…¥æ•´ä¸ªæ‰‡åŒº  
+			skySoft_W25QXX_Write_NoCheck(drv,secpos*4096,4096,W25QXX_BUF);//Ğ´ÈëÕû¸öÉÈÇø  
 		}else{
-            skySoft_W25QXX_Write_NoCheck(drv,addr,secremain,buf);//å†™å·²ç»æ“¦é™¤äº†çš„,ç›´æ¥å†™å…¥æ‰‡åŒºå‰©ä½™åŒºé—´. 
+            skySoft_W25QXX_Write_NoCheck(drv,addr,secremain,buf);//Ğ´ÒÑ¾­²Á³ıÁËµÄ,Ö±½ÓĞ´ÈëÉÈÇøÊ£ÓàÇø¼ä. 
         }
         
-		if(len==secremain){//å†™å…¥ç»“æŸäº†
+		if(len==secremain){//Ğ´Èë½áÊøÁË
             break;
-		}else{//å†™å…¥æœªç»“æŸ
-			secpos++;//æ‰‡åŒºåœ°å€å¢1
-			secoff=0;//åç§»ä½ç½®ä¸º0 	 
+		}else{//Ğ´ÈëÎ´½áÊø
+			secpos++;//ÉÈÇøµØÖ·Ôö1
+			secoff=0;//Æ«ÒÆÎ»ÖÃÎª0 	 
 
-		   	buf+=secremain; //æŒ‡é’ˆåç§»
-			addr+=secremain;//å†™åœ°å€åç§»	   
-		   	len-=secremain;	//å­—èŠ‚æ•°é€’å‡
+		   	buf+=secremain; //Ö¸ÕëÆ«ÒÆ
+			addr+=secremain;//Ğ´µØÖ·Æ«ÒÆ	   
+		   	len-=secremain;	//×Ö½ÚÊıµİ¼õ
 			if(len>4096)
-                secremain=4096;	//ä¸‹ä¸€ä¸ªæ‰‡åŒºè¿˜æ˜¯å†™ä¸å®Œ
+                secremain=4096;	//ÏÂÒ»¸öÉÈÇø»¹ÊÇĞ´²»Íê
 			else 
-                secremain=len;	//ä¸‹ä¸€ä¸ªæ‰‡åŒºå¯ä»¥å†™å®Œäº†
+                secremain=len;	//ÏÂÒ»¸öÉÈÇø¿ÉÒÔĞ´ÍêÁË
 		}	 
 	};	 
 }
 
-//æ“¦é™¤æ•´ä¸ªèŠ¯ç‰‡		  
-//ç­‰å¾…æ—¶é—´è¶…é•¿...
+//²Á³ıÕû¸öĞ¾Æ¬		  
+//µÈ´ıÊ±¼ä³¬³¤...
 void skySoft_W25QXX_Erase_Chip(w25qxx_drv * drv){   
     spi_msg msg[1];
     uint8_t txbuf[2];
@@ -402,35 +402,35 @@ void skySoft_W25QXX_Erase_Chip(w25qxx_drv * drv){
     skySoft_W25QXX_Write_Enable(drv,1);//SET WEL 
     skySoft_W25QXX_Wait_Busy(drv);   
 
-    txbuf[0]=W25X_ChipErase;//å‘é€ç‰‡æ“¦é™¤å‘½ä»¤  
+    txbuf[0]=W25X_ChipErase;//·¢ËÍÆ¬²Á³ıÃüÁî  
     msg[0].len=1;
     msg[0].type=SPI_OnlyW;
     msg[0].txbuf=txbuf;    
     
     P_SPI_transfer(&drv->adap,msg,1);  
     
-	skySoft_W25QXX_Wait_Busy(drv); //ç­‰å¾…èŠ¯ç‰‡æ“¦é™¤ç»“æŸ
+	skySoft_W25QXX_Wait_Busy(drv); //µÈ´ıĞ¾Æ¬²Á³ı½áÊø
 }   
 
 
 /*
-//è¿›å…¥æ‰ç”µæ¨¡å¼
+//½øÈëµôµçÄ£Ê½
 void skySoft_W25QXX_PowerDown(w25qxx_drv * drv){ 
     spi_msg msg[1];
     uint8_t txbuf[2];
     
-    txbuf[0]=W25X_PowerDown;//å‘é€æ‰ç”µå‘½ä»¤ 
+    txbuf[0]=W25X_PowerDown;//·¢ËÍµôµçÃüÁî 
     msg[0].len=1;
     msg[0].type=SPI_OnlyW;
     msg[0].txbuf=txbuf;    
     
     P_SPI_transfer(&drv->adap,msg,1);      
-    drv->delay(3);//ç­‰å¾…TPD  
+    drv->delay(3);//µÈ´ıTPD  
 }   
 */
 
 /*
-//å”¤é†’
+//»½ĞÑ
 void skySoft_W25QXX_WAKEUP(w25qxx_drv * drv){  
     spi_msg msg[1];
     uint8_t txbuf[2];
@@ -441,7 +441,7 @@ void skySoft_W25QXX_WAKEUP(w25qxx_drv * drv){
     msg[0].txbuf=txbuf;    
     
     P_SPI_transfer(&drv->adap,msg,1);  
-    drv->delay(3);//ç­‰å¾…TRES1                            
+    drv->delay(3);//µÈ´ıTRES1                            
 }   
 */
 

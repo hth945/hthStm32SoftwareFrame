@@ -17,9 +17,9 @@ int asm_runF(void *fun,uint32_t *stack, int len, uint32_t rs[4+16]);
 int P_doPack(uint8_t *funName,uint8_t *data, funpack_parameter *pt, int len)
 {
 	int i,n,tem;
-	int dataLen = 0; //ç»“æ„ä½“æ•°æ®æ®µçš„åç§»
+	int dataLen = 0; //½á¹¹ÌåÊı¾İ¶ÎµÄÆ«ÒÆ
 	int NameLen;
-	int offset = 0; //é¡ºåºå­˜å‚¨æ—¶çš„åç§»
+	int offset = 0; //Ë³Ğò´æ´¢Ê±µÄÆ«ÒÆ
 	
 	NameLen = strlen((char *)funName);
 	memcpy(data, funName, NameLen + 1);
@@ -34,7 +34,7 @@ int P_doPack(uint8_t *funName,uint8_t *data, funpack_parameter *pt, int len)
 		offset++;
 	}
 	
-	/***********ä¹‹åçš„æ•°æ®è¦ä¿è¯4å­—èŠ‚å¯¹é½ï¼Œé€šä¿¡çš„***************/
+	/***********Ö®ºóµÄÊı¾İÒª±£Ö¤4×Ö½Ú¶ÔÆë£¬Í¨ĞÅµÄ***************/
 	n = (offset) % 4;
 	offset += (4-n)%4;
 	
@@ -43,22 +43,22 @@ int P_doPack(uint8_t *funName,uint8_t *data, funpack_parameter *pt, int len)
 	{
 		if ((pt[i].type == 1) || (pt[i].type == 4))
 		{
-			memcpy(&data[offset],&pt[i].value,4);  //è¿™é‡Œdataä¸ä¸€å®š4å­—èŠ‚å¯¹é½
+			memcpy(&data[offset],&pt[i].value,4);  //ÕâÀïdata²»Ò»¶¨4×Ö½Ú¶ÔÆë
 			offset += 4;
 		}else if (pt[i].type == 2)
 		{
-			memcpy(&data[offset],&dataLen,4);  //æ•°æ®ç›¸å¯¹äºdataçš„åç§»
+			memcpy(&data[offset],&dataLen,4);  //Êı¾İÏà¶ÔÓÚdataµÄÆ«ÒÆ
 			offset += 4;
-			memcpy(&data[dataLen],pt[i].data,pt[i].len);  //å…·ä½“æ•°æ®
+			memcpy(&data[dataLen],pt[i].data,pt[i].len);  //¾ßÌåÊı¾İ
 			
-			/*å¦‚æœpt[i].len æ²¡æœ‰4å­—èŠ‚å¯¹é½ éœ€è¦è¡¥é½*/
+			/*Èç¹ûpt[i].len Ã»ÓĞ4×Ö½Ú¶ÔÆë ĞèÒª²¹Æë*/
 			dataLen += pt[i].len;  
 			tem = (pt[i].len) % 4;
 			dataLen += (4-tem)%4;
 			
-		}else if (pt[i].type == 3)  //åªè¾“å‡º  è¾“å‡ºç¼“å†²åŒºå¤§å° 
+		}else if (pt[i].type == 3)  //Ö»Êä³ö  Êä³ö»º³åÇø´óĞ¡ 
 		{
-			memcpy(&data[offset],&pt[i].len,4);  //æ¥æ”¶æ—¶çš„æ•°æ®é•¿åº¦
+			memcpy(&data[offset],&pt[i].len,4);  //½ÓÊÕÊ±µÄÊı¾İ³¤¶È
 			offset += 4;
 		}else
 		{
@@ -70,7 +70,7 @@ int P_doPack(uint8_t *funName,uint8_t *data, funpack_parameter *pt, int len)
 
 
 
-//è¿”å› è¾“å‡ºé•¿åº¦æœ‰å¤šå°‘
+//·µ»Ø Êä³ö³¤¶ÈÓĞ¶àÉÙ
 int P_unPack(const funpack_funNametab *fn, uint8_t *data, uint8_t *outData,int *outLen)
 {
 	int i,len;
@@ -79,7 +79,7 @@ int P_unPack(const funpack_funNametab *fn, uint8_t *data, uint8_t *outData,int *
 	int NameLen;
 	int re;
 	void *p;	
-	int offset = 0; //é¡ºåºå­˜å‚¨æ—¶çš„åç§»
+	int offset = 0; //Ë³Ğò´æ´¢Ê±µÄÆ«ÒÆ
 	
 	
 	uint32_t par[10];
@@ -106,8 +106,8 @@ int P_unPack(const funpack_funNametab *fn, uint8_t *data, uint8_t *outData,int *
 	}
 	
 	
-	/***********ä¹‹åçš„æ•°æ®è¦ä¿è¯4å­—èŠ‚å¯¹é½ï¼Œé€šä¿¡çš„***************/
-	offset = NameLen+1+1+len; //å­—ç¬¦ä¸²é•¿åº¦ + '\0' + [len]
+	/***********Ö®ºóµÄÊı¾İÒª±£Ö¤4×Ö½Ú¶ÔÆë£¬Í¨ĞÅµÄ***************/
+	offset = NameLen+1+1+len; //×Ö·û´®³¤¶È + '\0' + [len]
 	n = (offset) % 4;
 	offset += (4-n)%4;
 
@@ -117,7 +117,7 @@ int P_unPack(const funpack_funNametab *fn, uint8_t *data, uint8_t *outData,int *
 		if (data[i+NameLen+2] == 1)
 		{
 //			memcpy(&prageme[i], &data[len + n + i * 4],4);
-			par[i] = *((uint32_t *)&data[offset + i * 4]);  //è¿™é‡Œdataä¸€å®š4å­—èŠ‚å¯¹é½
+			par[i] = *((uint32_t *)&data[offset + i * 4]);  //ÕâÀïdataÒ»¶¨4×Ö½Ú¶ÔÆë
 		}else if (data[i+NameLen+2] == 2)
 		{
 			par[i] = *((uint32_t *)&data[offset + i * 4]) + (uint32_t)data;
@@ -132,7 +132,7 @@ int P_unPack(const funpack_funNametab *fn, uint8_t *data, uint8_t *outData,int *
 	}
 	
 	
-	//æ‰§è¡Œå‡½æ•°
+	//Ö´ĞĞº¯Êı
 	switch (data[NameLen + 1])
 	{
 	case 0:
@@ -181,7 +181,7 @@ int P_unPack(const funpack_funNametab *fn, uint8_t *data, uint8_t *outData,int *
 #if USE_FPU
 
 
-//è¿”å› è¾“å‡ºé•¿åº¦æœ‰å¤šå°‘
+//·µ»Ø Êä³ö³¤¶ÈÓĞ¶àÉÙ
 int P_unPackASM_fpu(const funpack_funNametab *fn, uint8_t *data, uint8_t *outData,int *outLen)
 {
 	int i,len;
@@ -190,15 +190,15 @@ int P_unPackASM_fpu(const funpack_funNametab *fn, uint8_t *data, uint8_t *outDat
 	int NameLen;
 	int re;
 	void *p;
-	int offset = 0; //é¡ºåºå­˜å‚¨æ—¶çš„åç§»
+	int offset = 0; //Ë³Ğò´æ´¢Ê±µÄÆ«ÒÆ
 	
 //	uint32_t par[10];
 	uint32_t tem;
-	uint32_t rs[4+16];  //å‡½æ•°ä¼ é€’æ—¶ä½¿ç”¨çš„å¯„å­˜å™¨(è‹¥ä½¿ç”¨çš„ç¡¬ä»¶æµ®ç‚¹ï¼Œåˆ™åŒ…å«16ä¸ªså¯„å­˜å™¨ç»„ï¼Œè‹¥ä¸é€‚ç”¨ç¡¬ä»¶æµ®ç‚¹ï¼Œåˆ™æµ®ç‚¹æ•°å’Œæ™®é€šå…¬ç”¨4ä¸ªrå¯„å­˜å™¨)
-	uint32_t stack[40]; //æœ€å¤§æ”¯æŒ40ä¸ªå‚æ•°å­˜æ”¾åœ¨æ ˆç©ºé—´
-	int rLen = 0; //å½“å‰rå¯„å­˜å™¨ç»„ä½¿ç”¨çš„ä¸ªæ•°
-	int sLen = 0; //å½“å‰så¯„å­˜å™¨ç»„ä½¿ç”¨çš„ä¸ªæ•°
-	int stackLen = 0; //å½“å‰så¯„å­˜å™¨ç»„ä½¿ç”¨çš„ä¸ªæ•°
+	uint32_t rs[4+16];  //º¯Êı´«µİÊ±Ê¹ÓÃµÄ¼Ä´æÆ÷(ÈôÊ¹ÓÃµÄÓ²¼ş¸¡µã£¬Ôò°üº¬16¸ös¼Ä´æÆ÷×é£¬Èô²»ÊÊÓÃÓ²¼ş¸¡µã£¬Ôò¸¡µãÊıºÍÆÕÍ¨¹«ÓÃ4¸ör¼Ä´æÆ÷)
+	uint32_t stack[40]; //×î´óÖ§³Ö40¸ö²ÎÊı´æ·ÅÔÚÕ»¿Õ¼ä
+	int rLen = 0; //µ±Ç°r¼Ä´æÆ÷×éÊ¹ÓÃµÄ¸öÊı
+	int sLen = 0; //µ±Ç°s¼Ä´æÆ÷×éÊ¹ÓÃµÄ¸öÊı
+	int stackLen = 0; //µ±Ç°s¼Ä´æÆ÷×éÊ¹ÓÃµÄ¸öÊı
 	
 	NameLen = strlen((char *)data);
 	len = data[NameLen + 1];
@@ -218,8 +218,8 @@ int P_unPackASM_fpu(const funpack_funNametab *fn, uint8_t *data, uint8_t *outDat
 		i++;
 	}
 
-	/***********ä¹‹åçš„æ•°æ®è¦ä¿è¯4å­—èŠ‚å¯¹é½ï¼Œé€šä¿¡çš„***************/
-	offset = NameLen+1+1+len; //å­—ç¬¦ä¸²é•¿åº¦ + '\0' + [len]
+	/***********Ö®ºóµÄÊı¾İÒª±£Ö¤4×Ö½Ú¶ÔÆë£¬Í¨ĞÅµÄ***************/
+	offset = NameLen+1+1+len; //×Ö·û´®³¤¶È + '\0' + [len]
 	n = (offset) % 4;
 	offset += (4-n)%4;
 	
@@ -227,9 +227,9 @@ int P_unPackASM_fpu(const funpack_funNametab *fn, uint8_t *data, uint8_t *outDat
 	{
 		if (data[i+NameLen+2] == 4)
 		{
-			tem = *((uint32_t *)&data[offset + i * 4]);  //è¿™é‡Œdataä¸€å®š4å­—èŠ‚å¯¹é½
+			tem = *((uint32_t *)&data[offset + i * 4]);  //ÕâÀïdataÒ»¶¨4×Ö½Ú¶ÔÆë
 			
-			//temä¸­çš„æ•°æ®æ·»åŠ åˆ°å¯„å­˜å™¨æˆ–æ ˆä¸­
+			//temÖĞµÄÊı¾İÌí¼Óµ½¼Ä´æÆ÷»òÕ»ÖĞ
 			if (sLen < 16)
 			{
 				rs[sLen+4] = tem;
@@ -243,7 +243,7 @@ int P_unPackASM_fpu(const funpack_funNametab *fn, uint8_t *data, uint8_t *outDat
 		{
 			if (data[i+NameLen+2] == 1)
 			{
-				tem = *((uint32_t *)&data[offset + i * 4]);  //è¿™é‡Œdataä¸€å®š4å­—èŠ‚å¯¹é½
+				tem = *((uint32_t *)&data[offset + i * 4]);  //ÕâÀïdataÒ»¶¨4×Ö½Ú¶ÔÆë
 			}else if (data[i+NameLen+2] == 2)
 			{
 				tem = *((uint32_t *)&data[offset + i * 4]) + (uint32_t)data;
@@ -257,7 +257,7 @@ int P_unPackASM_fpu(const funpack_funNametab *fn, uint8_t *data, uint8_t *outDat
 				return -1;
 			}
 			
-			//temä¸­çš„æ•°æ®æ·»åŠ åˆ°å¯„å­˜å™¨æˆ–æ ˆä¸­
+			//temÖĞµÄÊı¾İÌí¼Óµ½¼Ä´æÆ÷»òÕ»ÖĞ
 			if (rLen < 4)
 			{
 				rs[rLen] = tem;
@@ -281,7 +281,7 @@ int P_unPackASM_fpu(const funpack_funNametab *fn, uint8_t *data, uint8_t *outDat
 
 
 
-//è¿”å› è¾“å‡ºé•¿åº¦æœ‰å¤šå°‘
+//·µ»Ø Êä³ö³¤¶ÈÓĞ¶àÉÙ
 int P_unPackASM(const funpack_funNametab *fn, uint8_t *data, uint8_t *outData,int *outLen)
 {
 	int i,len;
@@ -290,15 +290,15 @@ int P_unPackASM(const funpack_funNametab *fn, uint8_t *data, uint8_t *outData,in
 	int NameLen;
 	int re;
 	void *p;
-	int offset = 0; //é¡ºåºå­˜å‚¨æ—¶çš„åç§»
+	int offset = 0; //Ë³Ğò´æ´¢Ê±µÄÆ«ÒÆ
 	
 //	uint32_t par[10];
 	uint32_t tem;
-	uint32_t rs[4+16];  //å‡½æ•°ä¼ é€’æ—¶ä½¿ç”¨çš„å¯„å­˜å™¨(è‹¥ä½¿ç”¨çš„ç¡¬ä»¶æµ®ç‚¹ï¼Œåˆ™åŒ…å«16ä¸ªså¯„å­˜å™¨ç»„ï¼Œè‹¥ä¸é€‚ç”¨ç¡¬ä»¶æµ®ç‚¹ï¼Œåˆ™æµ®ç‚¹æ•°å’Œæ™®é€šå…¬ç”¨4ä¸ªrå¯„å­˜å™¨)
-	uint32_t stack[40]; //æœ€å¤§æ”¯æŒ40ä¸ªå‚æ•°å­˜æ”¾åœ¨æ ˆç©ºé—´
-	int rLen = 0; //å½“å‰rå¯„å­˜å™¨ç»„ä½¿ç”¨çš„ä¸ªæ•°
-	//int sLen = 0; //å½“å‰så¯„å­˜å™¨ç»„ä½¿ç”¨çš„ä¸ªæ•°
-	int stackLen = 0; //å½“å‰så¯„å­˜å™¨ç»„ä½¿ç”¨çš„ä¸ªæ•°
+	uint32_t rs[4+16];  //º¯Êı´«µİÊ±Ê¹ÓÃµÄ¼Ä´æÆ÷(ÈôÊ¹ÓÃµÄÓ²¼ş¸¡µã£¬Ôò°üº¬16¸ös¼Ä´æÆ÷×é£¬Èô²»ÊÊÓÃÓ²¼ş¸¡µã£¬Ôò¸¡µãÊıºÍÆÕÍ¨¹«ÓÃ4¸ör¼Ä´æÆ÷)
+	uint32_t stack[40]; //×î´óÖ§³Ö40¸ö²ÎÊı´æ·ÅÔÚÕ»¿Õ¼ä
+	int rLen = 0; //µ±Ç°r¼Ä´æÆ÷×éÊ¹ÓÃµÄ¸öÊı
+	//int sLen = 0; //µ±Ç°s¼Ä´æÆ÷×éÊ¹ÓÃµÄ¸öÊı
+	int stackLen = 0; //µ±Ç°s¼Ä´æÆ÷×éÊ¹ÓÃµÄ¸öÊı
 	
 	NameLen = strlen((char *)data);
 	len = data[NameLen + 1];
@@ -318,7 +318,7 @@ int P_unPackASM(const funpack_funNametab *fn, uint8_t *data, uint8_t *outData,in
 		i++;
 	}
 
-	offset = NameLen+1+1+len; //å­—ç¬¦ä¸²é•¿åº¦ + '\0' + [len]
+	offset = NameLen+1+1+len; //×Ö·û´®³¤¶È + '\0' + [len]
 	n = (offset) % 4;
 	offset += (4-n)%4;
 	
@@ -326,7 +326,7 @@ int P_unPackASM(const funpack_funNametab *fn, uint8_t *data, uint8_t *outData,in
 	{
 		if ((data[i+NameLen+2] == 1) || (data[i+NameLen+2] == 4))
 		{
-			tem = *((uint32_t *)&data[offset + i * 4]);  //è¿™é‡Œdataä¸€å®š4å­—èŠ‚å¯¹é½
+			tem = *((uint32_t *)&data[offset + i * 4]);  //ÕâÀïdataÒ»¶¨4×Ö½Ú¶ÔÆë
 		}else if (data[i+NameLen+2] == 2)
 		{
 			tem = *((uint32_t *)&data[offset + i * 4]) + (uint32_t)data;
@@ -340,7 +340,7 @@ int P_unPackASM(const funpack_funNametab *fn, uint8_t *data, uint8_t *outData,in
 			return -1;
 		}
 		
-		//temä¸­çš„æ•°æ®æ·»åŠ åˆ°å¯„å­˜å™¨æˆ–æ ˆä¸­
+		//temÖĞµÄÊı¾İÌí¼Óµ½¼Ä´æÆ÷»òÕ»ÖĞ
 		if (rLen < 4)
 		{
 			rs[rLen] = tem;

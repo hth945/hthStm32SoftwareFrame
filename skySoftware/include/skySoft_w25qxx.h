@@ -9,7 +9,7 @@ typedef struct{
     spi_adapter adap;
     uint16_t id;
     uint8_t addr_over3byte;
-    void (* delay)(void);//å»¶æ—¶
+    void (* delay)(void);//ÑÓÊ±
 }w25qxx_drv;
 
 

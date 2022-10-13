@@ -1,45 +1,93 @@
+/**
+ ******************************************************************************
+ * @file    myFIFO.c 
+ * @author  
+ * @version V1.1.0
+ * @date    2021.08.10
+ * @brief   
+ ******************************************************************************
+ * @version v1.1.0  2021.08.10
+ *          -->Ìí¼Ó¾Ö²¿±äÁ¿£¬µ±min(x, y)±»ÒıÓÃÊ±£¬×÷Îªy²ÎÊı´«Èë¡£
+ *             ½â¾öÖĞ¶ÏĞ´FIFO£¬ÂÖÑ¯Á¬Ğø¶ÁFIFOÇé¿öÏÂ£¬Ğ´FIFOÖĞ¶Ï´ò¶Ï¶ÁFIFO¹ı³Ì£¬
+ *             µ¼ÖÂµÄFIFO->in±»ÒşÊ½¸Ä±ä£¬´Ó¶øÔì³Émin(x,y)ÖĞµÄy²ÎÊı±ä»»Á½´Î£¬
+ *             Çó½â³öÀ´µÄ¶ÁÈ¡×Ö½Ú³¤¶Èlen·¢Éú´íÎó¡£×îÖÕµ¼ÖÂ¶ÁÈ¡µÄ×Ö½Ú³¤¶È·¢ÉúÒì³£¡£
+ ******************************************************************************  
+ */
+
 #include "myFIFO.h"
-#include <string.h>  
+#include <string.h>
 
+#define min(x, y) ((x) < (y) ? (x) : (y))
 
-#define min(x, y) ((x) < (y) ? (x) : (y)) 
-
-
-//ç¼“å†²åŒºå¤§å°å¿…é¡»ä¸º2çš„æ•´æ•°æ¬¡å¹‚
-int myFIFOInit(MyFIFO_t *fifo,unsigned char *buf, int size)
+/**
+ * @brief   FIFO³õÊ¼»¯
+ * @param   *fifo: FIFO½á¹¹
+ *          *buf: ±¸·İ»º³åÇø
+ *          size: FIFO×Ö½Ú³¤¶È
+ * @return  -1: FIFO³õÊ¼»¯Ê§°Ü
+ *           0: FIFO³õÊ¼»¯³É¹¦
+ * @attention  »º³åÇø´óĞ¡±ØĞëÎª2µÄÕûÊı´ÎÃİ
+ */
+int myFIFOInit(MyFIFO_t *fifo, unsigned char *buf, int size)
 {
-	int ret;  
-	
-	ret = size & (size - 1);  
-    if (ret)
+    int ret;
+
+    ret = size & (size - 1);
+    if (ret) {
         return -1;
+	}
+    fifo->buf = buf;
+    fifo->size = size;
+    fifo->in = fifo->out = 0;
+    memset(fifo->buf, 0, size);
 	
-	fifo->buf = buf;  
-    fifo->size = size;  
-    fifo->in = fifo->out = 0;  
-	memset(fifo->buf, 0, size);
-    return 0;  
+    return 0;
 }
 
-unsigned int myFIFORead(MyFIFO_t *fifo,unsigned char *buf, unsigned int len)  
+/**
+ * @brief   ¶ÁÈ¡FIFO
+ * @param   *fifo: FIFO½á¹¹
+ *          *buf: ¶ÁFIFOÄÚÈİ»º³åÇø
+ *          len: ¶ÁÈ¡×Ö½Ú³¤¶È
+ * @return  ¶ÁÈ¡×Ö½Ú³¤¶È
+ */
+unsigned int myFIFORead(MyFIFO_t *fifo, unsigned char *buf, unsigned int len)
 {
-    unsigned int l;  
-    len = min(len, fifo->in - fifo->out);  
-    l = min(len, fifo->size - (fifo->out & (fifo->size - 1)));  
-    memcpy(buf, fifo->buf + (fifo->out & (fifo->size - 1)), l);  
-    memcpy(buf + l, fifo->buf, len - l);  
-    fifo->out += len;  
-    return len;  
+    unsigned int l;
+	int fifo_remain_len;
+	int fifo_circle_len;
+
+	fifo_remain_len = fifo->in - fifo->out;
+	len = min(len, fifo_remain_len);
+	fifo_circle_len = fifo->size - (fifo->out & (fifo->size - 1));
+    l = min(len, fifo_circle_len);
+    memcpy(buf, fifo->buf + (fifo->out & (fifo->size - 1)), l);
+    memcpy(buf + l, fifo->buf, len - l);
+    fifo->out += len;
+
+    return len;
 }
 
-unsigned int myFIFOWrite(MyFIFO_t *fifo,unsigned char *buf, unsigned int len)
+/**
+ * @brief   Ğ´ÈëFIFO
+ * @param   *fifo: FIFO½á¹¹
+ *          *buf: Ğ´FIFOÄÚÈİ»º³åÇø
+ *          len: Ğ´Èë×Ö½Ú³¤¶È
+ * @return  Ğ´Èë×Ö½Ú³¤¶È
+ */
+unsigned int myFIFOWrite(MyFIFO_t *fifo, unsigned char *buf, unsigned int len)
 {
-    unsigned int l;  
-    len = min(len, fifo->size - fifo->in + fifo->out);  
-    l = min(len, fifo->size - (fifo->in & (fifo->size - 1)));  
-    memcpy(fifo->buf + (fifo->in & (fifo->size - 1)), buf, l);  
-    memcpy(fifo->buf, buf + l, len - l);  
-    fifo->in += len;  
-    return len;  
+    unsigned int l;
+	int fifo_remain_len;
+    int fifo_circle_len;
+	
+	fifo_remain_len = fifo->size - fifo->in + fifo->out;
+    len = min(len, fifo_remain_len);
+	fifo_circle_len = fifo->size - (fifo->in & (fifo->size - 1));
+    l = min(len, fifo_circle_len);
+    memcpy(fifo->buf + (fifo->in & (fifo->size - 1)), buf, l);
+    memcpy(fifo->buf, buf + l, len - l);
+    fifo->in += len;
+	
+    return len;
 }
-

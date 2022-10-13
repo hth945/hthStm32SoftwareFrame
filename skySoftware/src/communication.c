@@ -1,20 +1,4 @@
 #include "communication.h"
-//#include "delay.h"
-
-
-//void sky_ConmmunicationInit(sky_MyByteReceiveDataTypeDef *myRecType,
-//							uint8_t *data,uint32_t len,uint8_t startC,uint8_t endC,uint32_t waitTimeT)
-//{
-//	myRecType->data = data;
-//	myRecType->startc = startC;
-//	myRecType->endc = endC;
-//	myRecType->maxlen = len;
-//	myRecType->saveFlag = 0;
-//	myRecType->saveNum = 0;
-//	myRecType->oldTime = 0;
-//	myRecType->dataLen = 0;
-//	myRecType->waitTimeT = waitTimeT;
-//}
 
 int sky_Delay_ms(sky_MyByteReceiveDataTypeDef *myRecType, int ms)
 {
@@ -27,7 +11,7 @@ int sky_Delay_ms(sky_MyByteReceiveDataTypeDef *myRecType, int ms)
 
 int sky_devSingle(sky_comDriver *dev,uint8_t *data, int len)
 {
-	sky_MyByteReceiveDataTypeDef *myRecType =(sky_MyByteReceiveDataTypeDef *) dev->userData;
+	sky_MyByteReceiveDataTypeDef *myRecType =(sky_MyByteReceiveDataTypeDef *) dev->Parent;
 	return sky_receivePactData(myRecType, data, len);
 }
 
@@ -36,19 +20,21 @@ int sky_ConmBindDriver(sky_MyByteReceiveDataTypeDef *myRecType,sky_comDriver *dr
 //	myRecType->send = driver->write;
 //	driver->userData = myRecType;
 //	driver->single = (int (*)(void *userData,uint8_t *data, int len))sky_receivePactData;
+	
 	myRecType->dev = driver;
-	myRecType->dev->userData = myRecType;
+//	myRecType->dev->userData = myRecType;
+	myRecType->dev->Parent = myRecType;
 	driver->single = sky_devSingle;
 	return 1;
 }
 
-void sky_ConmmunicationInit(sky_MyByteReceiveDataTypeDef *myRecType,uint8_t *data,uint32_t len,uint8_t startC,uint8_t endC,uint32_t waitTimeT)
+void sky_ConmmunicationInit(sky_MyByteReceiveDataTypeDef *myRecType,uint8_t *data,uint32_t len,uint8_t startC,uint8_t endC,uint32_t waitTimeT,sky_conmmunicationGetTime getTime)
 {
 	int off;
 	
 	memset(myRecType,0,sizeof(sky_MyByteReceiveDataTypeDef));
 	
-	//å› ä¸ºéœ€è¦ä¿è¯æ¥æ”¶åˆ°çš„æ•°æ®æ­£æ–‡æ®µä½4å­—èŠ‚å¯¹é½çš„ å› æ­¤æ¥æ”¶ç¼“å†²åŒºèµ·å§‹å¿…é¡» off%4=2
+	//ÒòÎªĞèÒª±£Ö¤½ÓÊÕµ½µÄÊı¾İÕıÎÄ¶ÎÎ»4×Ö½Ú¶ÔÆëµÄ Òò´Ë½ÓÊÕ»º³åÇøÆğÊ¼±ØĞë off%4=2
 	off = (uint32_t)data % 4;
 	off = (6 - off) % 4;
 	
@@ -61,6 +47,7 @@ void sky_ConmmunicationInit(sky_MyByteReceiveDataTypeDef *myRecType,uint8_t *dat
 	myRecType->oldTime = 0;
 	myRecType->dataLen = 0;
 	myRecType->waitTimeT = waitTimeT;
+	myRecType->getTime=getTime;
 }
 
 unsigned int sky_GetMeasureTime_ms(sky_MyByteReceiveDataTypeDef *myRecType, unsigned int ts)
@@ -92,15 +79,15 @@ int sky_receivePactData(sky_MyByteReceiveDataTypeDef *myRecType,uint8_t *data, i
 }
 
 /********************************************************************************
-*å‡½å¾—ï¼šreceivePact
-*æè¿°  ï¼šæŒ‰åè®®æ¥æ”¶ä¸€å¸§æ•°æ®ï¼Œæ”¾å…¥æ¥æ”¶ä¸­æ–­ä¸­ï¼Œæ¯æ¬¡ä¼ å…¥ä¸€ä¸ªå­—èŠ‚ï¼Œå¸¦æ ¡éªŒä¸è¶…æ—¶åˆ¤æ–­50ms
-		è‹¥ä¸Šä¸€å¸§æ•°æ®æ²¡æœ‰å¤„ç†å®Œï¼ˆæ ‡å¿—ä½æ²¡æœ‰æ¸…0ï¼‰ï¼Œåˆ™ä¸æ¥æ”¶æ–°æ•°æ®ã€‚
-*å‚æ•°  ï¼š1.myRecType  é€šä¿¡çš„ä¸Šä¸‹æ–‡ç»“æ„ä½“ï¼Œå†…éƒ¨æœ‰ç¼“å†²åŒºï¼Œé€šä¿¡çŠ¶æ€æ ‡å¿—ç­‰ä¿¡æ¯
-		 2.newc       æ­¤æ—¶æ¥æ”¶åˆ°çš„ä¸€ä¸ªå­—èŠ‚
-*è¿”å›  ï¼šè¿”å›é€šä¿¡çŠ¶æ€æ ‡å¿—  0 æ­£åœ¨ç­‰å¾…  
-						1 æ­£åœ¨æ¥æ”¶æ•°æ®å¤´éƒ¨æå–æ•°æ®é•¿åº¦  
-						2 æ­£åœ¨æ ¡éªŒæ•°æ®  
-						3 æ¥æ”¶åˆ°ä¸€å¸§å®Œæ•´çš„æ•°æ®
+*º¯”µÃû£ºreceivePact
+*ÃèÊö  £º°´Ğ­Òé½ÓÊÕÒ»Ö¡Êı¾İ£¬·ÅÈë½ÓÊÕÖĞ¶ÏÖĞ£¬Ã¿´Î´«ÈëÒ»¸ö×Ö½Ú£¬´øĞ£ÑéÓë³¬Ê±ÅĞ¶Ï50ms
+		ÈôÉÏÒ»Ö¡Êı¾İÃ»ÓĞ´¦ÀíÍê£¨±êÖ¾Î»Ã»ÓĞÇå0£©£¬Ôò²»½ÓÊÕĞÂÊı¾İ¡£
+*²ÎÊı  £º1.myRecType  Í¨ĞÅµÄÉÏÏÂÎÄ½á¹¹Ìå£¬ÄÚ²¿ÓĞ»º³åÇø£¬Í¨ĞÅ×´Ì¬±êÖ¾µÈĞÅÏ¢
+		 2.newc       ´ËÊ±½ÓÊÕµ½µÄÒ»¸ö×Ö½Ú
+*·µ»Ø  £º·µ»ØÍ¨ĞÅ×´Ì¬±êÖ¾  0 ÕıÔÚµÈ´ı  
+						1 ÕıÔÚ½ÓÊÕÊı¾İÍ·²¿ÌáÈ¡Êı¾İ³¤¶È  
+						2 ÕıÔÚĞ£ÑéÊı¾İ  
+						3 ½ÓÊÕµ½Ò»Ö¡ÍêÕûµÄÊı¾İ
 ********************************************************************************/
 int sky_receivePact(sky_MyByteReceiveDataTypeDef *myRecType,uint8_t newc)
 {
@@ -108,46 +95,46 @@ int sky_receivePact(sky_MyByteReceiveDataTypeDef *myRecType,uint8_t newc)
 	uint8_t num=0;
 	uint32_t T;
 	
-	/************************è¶…æ—¶åˆ¤æ–­************************/
+	/************************³¬Ê±ÅĞ¶Ï************************/
 	T = sky_GetMeasureTime_ms(myRecType, myRecType->oldTime);  
 	myRecType->oldTime = myRecType->getTime();
 	
-	if((T > 50)&&(myRecType->saveFlag !=3))  //è¶…æ—¶ å¹¶ä¸”æ²¡æœ‰æ¥æ”¶å®Œæ¯• é‚£ä¹ˆä»æ–°å¼€å§‹
+	if((T > 50)&&(myRecType->saveFlag !=3))  //³¬Ê± ²¢ÇÒÃ»ÓĞ½ÓÊÕÍê±Ï ÄÇÃ´´ÓĞÂ¿ªÊ¼
 		myRecType->saveFlag = 0;
 	
-	/*********************æŒ‰åè®®æ¥æ”¶æ•°æ®**********************************/
-	if (myRecType->saveFlag == 0) //ç­‰å¾…æ¥æ”¶åˆ°èµ·å§‹å­—ç¬¦
+	/*********************°´Ğ­Òé½ÓÊÕÊı¾İ**********************************/
+	if (myRecType->saveFlag == 0) //µÈ´ı½ÓÊÕµ½ÆğÊ¼×Ö·û
 	{
-		if (newc == myRecType->startc)  //æ¥æ”¶åˆ°èµ·å§‹å­—ç¬¦
+		if (newc == myRecType->startc)  //½ÓÊÕµ½ÆğÊ¼×Ö·û
 		{
-			myRecType->saveFlag=1;  //æ ‡å¿—è‡´1 è¿›å…¥ä¸‹ä¸€æ­¥
+			myRecType->saveFlag=1;  //±êÖ¾ÖÂ1 ½øÈëÏÂÒ»²½
 			myRecType->saveNum=1;
 			myRecType->data[0] = newc; 
 		}
 		
-	}else if (myRecType->saveFlag == 1) //æ­£åœ¨æ¥æ”¶æ•°æ®å¤´éƒ¨æå–æ•°æ®é•¿åº¦ 
+	}else if (myRecType->saveFlag == 1) //ÕıÔÚ½ÓÊÕÊı¾İÍ·²¿ÌáÈ¡Êı¾İ³¤¶È 
 	{
 		myRecType->data[myRecType->saveNum] = newc; 
 		myRecType->saveNum++;	
 		
-		if(myRecType->saveNum >= 6)  //æ¥æ”¶åˆ°çš„æ•°æ®é•¿åº¦å¤§äº6  æ•°æ®é•¿åº¦å·²ä¼ é€è¿‡æ¥
+		if(myRecType->saveNum >= 6)  //½ÓÊÕµ½µÄÊı¾İ³¤¶È´óÓÚ6  Êı¾İ³¤¶ÈÒÑ´«ËÍ¹ıÀ´
 		{
 			myRecType->dataLen = *((uint32_t *)(myRecType->data+2));
 			
-			if(myRecType->dataLen > myRecType->maxlen - 10)  //åˆ¤æ–­æ•°æ®é•¿åº¦å¿«åˆ°ç¼“å†²åŒºæœ€å¤§é•¿åº¦  
-				myRecType->saveFlag = 0;       //æ¸…é™¤ é‡æ–°å¼€å§‹æ¥æ”¶
+			if(myRecType->dataLen > myRecType->maxlen - 10)  //ÅĞ¶ÏÊı¾İ³¤¶È¿ìµ½»º³åÇø×î´ó³¤¶È  
+				myRecType->saveFlag = 0;       //Çå³ı ÖØĞÂ¿ªÊ¼½ÓÊÕ
 			else
-				myRecType->saveFlag = 2;      //é•¿åº¦åˆæ ¼ è¿›å…¥ä¸‹ä¸€æ­¥ ç»§ç»­æ¥æ”¶
+				myRecType->saveFlag = 2;      //³¤¶ÈºÏ¸ñ ½øÈëÏÂÒ»²½ ¼ÌĞø½ÓÊÕ
 		}
 		
-	}else if(myRecType->saveFlag == 2)  //ç­‰å¾…æ¥æ”¶æ•°æ®å®Œæˆ
+	}else if(myRecType->saveFlag == 2)  //µÈ´ı½ÓÊÕÊı¾İÍê³É
 	{
         myRecType->data[myRecType->saveNum] = newc; 
 		myRecType->saveNum++;	
         
-		if(myRecType->saveNum >= myRecType->dataLen + 8)  //æ•°æ®æ¥æ”¶å®Œæˆ è¿›å…¥æ ¡éªŒ
+		if(myRecType->saveNum >= myRecType->dataLen + 8)  //Êı¾İ½ÓÊÕÍê³É ½øÈëĞ£Ñé
 		{
-			for(num =0,i=1;i<myRecType->dataLen + 6;i++)  //æ ¡éªŒæ•°æ®
+			for(num =0,i=1;i<myRecType->dataLen + 6;i++)  //Ğ£ÑéÊı¾İ
 			{
 				num ^= myRecType->data[i];
 			}
@@ -166,13 +153,13 @@ int sky_receivePact(sky_MyByteReceiveDataTypeDef *myRecType,uint8_t newc)
 }
 
 
-//ä»æ¥æ”¶åˆ°çš„æ•°æ®ä¸­ æå–æ•°æ® åˆ°å…¨å±€å˜é‡ä¸­
+//´Ó½ÓÊÕµ½µÄÊı¾İÖĞ ÌáÈ¡Êı¾İ µ½È«¾Ö±äÁ¿ÖĞ
 int sky_extractData(sky_MyByteReceiveDataTypeDef *recType,uint8_t *data)
 {
 	uint16_t offest;
 	uint16_t len;
 	
-	if (recType->saveFlag == 3)    //ç­‰å¾…æ¥æ”¶å®Œæˆ
+	if (recType->saveFlag == 3)    //µÈ´ı½ÓÊÕÍê³É
 	{
 		offest = *((uint16_t*)(&recType->data[6]));
 		len =  *((uint16_t*)(&recType->data[8]));
@@ -182,22 +169,22 @@ int sky_extractData(sky_MyByteReceiveDataTypeDef *recType,uint8_t *data)
 	return -1;
 }
 
-//ç­‰å¾…æ•°æ®åé¦ˆ 
+//µÈ´ıÊı¾İ·´À¡ 
 int sky_waitData(sky_MyByteReceiveDataTypeDef *recType,uint8_t cmd,int time)
 {
 	uint32_t t = recType->getTime();
 	
 	while(1)
 	{
-		if(recType->saveFlag == 3)    //ç­‰å¾…æ¥æ”¶å®Œæˆ
+		if(recType->saveFlag == 3)    //µÈ´ı½ÓÊÕÍê³É
 		{
-			if(*(recType->data+1) == (cmd|0x10))  //è¿”å›çš„å‘½ä»¤è¿›è¡Œæ ¡éªŒ  è‹¥æ¥æ”¶ç«¯æ‰§è¡ŒæˆåŠŸ ä¼šæŠŠç¬¬äº”ä½ç½®1
+			if(*(recType->data+1) == (cmd|0x10))  //·µ»ØµÄÃüÁî½øĞĞĞ£Ñé  Èô½ÓÊÕ¶ËÖ´ĞĞ³É¹¦ »á°ÑµÚÎåÎ»ÖÃ1
 			{
 				return 1;
 			}else
 			{
 				recType->saveFlag  = 0;
-				return -2;            //æ‰§è¡Œé”™è¯¯ è¿”å›çš„æ˜¯é”™è¯¯çš„æ•°æ®
+				return -2;            //Ö´ĞĞ´íÎó ·µ»ØµÄÊÇ´íÎóµÄÊı¾İ
 			}
 		}
 	
@@ -211,7 +198,7 @@ int sky_waitData(sky_MyByteReceiveDataTypeDef *recType,uint8_t cmd,int time)
 	return -1;
 }
 
-//ç­‰å¾…æ•°æ®åé¦ˆ 
+//µÈ´ıÊı¾İ·´À¡ 
 int sky_waitNData(uint8_t PN,sky_MyByteReceiveDataTypeDef *recType,uint8_t cmd,int time)
 {
 	uint8_t tem = 0;
@@ -256,51 +243,100 @@ int sky_waitNData(uint8_t PN,sky_MyByteReceiveDataTypeDef *recType,uint8_t cmd,i
 	return tem;
 }
 
+
+/*******************************************************************************
+ * º¯ÊıÃû : pcui_sendData
+ * Ãè  Êö : pcui·¢ËÍÊı¾İ
+ * ²Î  Êı : *recType:Í¨Ñ¶Ğ­Òé½á¹¹Ìå
+ * ²Î  Êı : cmd:Ö¸Áî
+ * ²Î  Êı : **str:×Ö·û´®Ö¸Õë
+ * ²Î  Êı : strLen:×Ö·û´®¸öÊı
+ * ·µ  »Ø : >=0:·¢ËÍ³É¹¦
+            -1:·¢ËÍÊ§°Ü
+*******************************************************************************/
+int sky_sendStrNData(sky_MyByteReceiveDataTypeDef *recType, uint8_t cmd, char **str, int strLen)
+{
+	uint8_t sbuf[10];
+	int i = 0, j = 0;
+	int len = 0;
+	
+	sbuf[0] = recType->startc;
+	sbuf[1] = cmd;
+	
+	for(i = 0; i < strLen; i++)
+		len += strlen(str[i]);
+	*((uint32_t *)(&sbuf[2])) = len;
+	if(devWrite(recType->dev, sbuf, 6) < 0)
+		return -1;
+	
+	sbuf[6] = 0;
+	sbuf[7] = recType->endc;
+	
+	for( i = 1; i < 6; i++)
+		sbuf[6] ^= sbuf[i];
+	
+	for(i = 0; i < strLen; i++)
+	{
+		len = strlen(str[i]);
+		
+		for (j = 0; j < len; j++)
+			sbuf[6] ^= str[i][j];
+		
+		if(devWrite(recType->dev, (uint8_t *)str[i], len) < 0)
+			return -1;
+	}
+	if(devWrite(recType->dev,sbuf + 6, 2) < 0)
+		return -1;
+	
+	return 0;
+}
+
+
 /********************************************************************************
-*å‡½å¾—ï¼šsendData
-*æè¿°  ï¼šæŒ‰åè®®å‘é€ä¸€å¸§æ•°æ®,ç»“æ„ä½“ä¸­sendå‡½æ•°æŒ‡é’ˆå®ç°ä¹‹åæ‰å¯ä»¥ä½¿ç”¨
-*å‚æ•°  ï¼š1.recType  é€šä¿¡çš„ä¸Šä¸‹æ–‡ç»“æ„ä½“ï¼Œå†…éƒ¨æœ‰ç¼“å†²åŒºï¼Œé€šä¿¡çŠ¶æ€æ ‡å¿—ç­‰ä¿¡æ¯
-		 2.cmd       å‘é€æ•°æ®åŒ…çš„å‘½ä»¤
-		 3.data     å‘é€çš„æ•°æ®
-		 4.len       å‘é€çš„æ•°æ®é•¿åº¦
-*è¿”å›  ï¼šæ­£æ•° å‘é€çš„æ•°æ®é•¿åº¦  -1å‘é€é”™è¯¯
+*º¯”µÃû£ºsendData
+*ÃèÊö  £º°´Ğ­Òé·¢ËÍÒ»Ö¡Êı¾İ,½á¹¹ÌåÖĞsendº¯ÊıÖ¸ÕëÊµÏÖÖ®ºó²Å¿ÉÒÔÊ¹ÓÃ
+*²ÎÊı  £º1.recType  Í¨ĞÅµÄÉÏÏÂÎÄ½á¹¹Ìå£¬ÄÚ²¿ÓĞ»º³åÇø£¬Í¨ĞÅ×´Ì¬±êÖ¾µÈĞÅÏ¢
+		 2.cmd       ·¢ËÍÊı¾İ°üµÄÃüÁî
+		 3.data     ·¢ËÍµÄÊı¾İ
+		 4.len       ·¢ËÍµÄÊı¾İ³¤¶È
+*·µ»Ø  £ºÕıÊı ·¢ËÍµÄÊı¾İ³¤¶È  -1·¢ËÍ´íÎó
 ********************************************************************************/
 int sky_sendData(sky_MyByteReceiveDataTypeDef *recType,uint8_t cmd,uint8_t *data,uint32_t len)
 {
 	uint8_t sbuf[10];
 	int i;
 	
-	sbuf[0] = recType->startc;   //ä¸€å­—èŠ‚èµ·å§‹å­—ç¬¦
-	sbuf[1] = cmd;				 //ä¸€å­—èŠ‚å‘½ä»¤	
-	*((uint32_t*)(&sbuf[2])) = len;   //å››å­—èŠ‚é•¿åº¦
+	sbuf[0] = recType->startc;   //Ò»×Ö½ÚÆğÊ¼×Ö·û
+	sbuf[1] = cmd;				 //Ò»×Ö½ÚÃüÁî	
+	*((uint32_t*)(&sbuf[2])) = len;   //ËÄ×Ö½Ú³¤¶È
 	
 	if (devWrite(recType->dev, sbuf,6) < 0)
 		return -1;
 
-	sbuf[6] = 0;                //æ ¡éªŒåˆå§‹åŒ–ä¸º0
-	sbuf[7] = recType->endc;    //ç»“æŸå­—ç¬¦
+	sbuf[6] = 0;                //Ğ£Ñé³õÊ¼»¯Îª0
+	sbuf[7] = recType->endc;    //½áÊø×Ö·û
 	
-	for( i = 1; i < 6;i++)      //æ ¡éªŒå¤´
+	for( i = 1; i < 6;i++)      //Ğ£ÑéÍ·
 		sbuf[6] ^= sbuf[i];
 	
-	for (i = 0; i < len; i++)   //æ ¡éªŒæ•°æ®æ®µ
+	for (i = 0; i < len; i++)   //Ğ£ÑéÊı¾İ¶Î
 		sbuf[6] ^= data[i];
 	
-	if (devWrite(recType->dev, data,len) < 0) return -1;   //å‘é€æ•°æ®æ®µ
-	if (devWrite(recType->dev, sbuf + 6,2) < 0) return -1; //å‘é€ç»“å°¾
+	if (devWrite(recType->dev, data,len) < 0) return -1;   //·¢ËÍÊı¾İ¶Î
+	if (devWrite(recType->dev, sbuf + 6,2) < 0) return -1; //·¢ËÍ½áÎ²
 	return len + 8;
 }
 
 /********************************************************************************
-*å‡½å¾—ï¼šsend2Data
-*æè¿°  ï¼šæŒ‰åè®®å‘é€ä¸€å¸§æ•°æ®,æ•°æ®æ®µåˆ†ä¸ºä¸¤æ®µ,ç»“æ„ä½“ä¸­sendå‡½æ•°æŒ‡é’ˆå®ç°ä¹‹åæ‰å¯ä»¥ä½¿ç”¨
-*å‚æ•°  ï¼š1.recType  é€šä¿¡çš„ä¸Šä¸‹æ–‡ç»“æ„ä½“ï¼Œå†…éƒ¨æœ‰ç¼“å†²åŒºï¼Œé€šä¿¡çŠ¶æ€æ ‡å¿—ç­‰ä¿¡æ¯
-		 2.cmd       å‘é€æ•°æ®åŒ…çš„å‘½ä»¤
-		 3.data1     å‘é€çš„ç¬¬ä¸€æ®µæ•°æ®
-		 4.len1       å‘é€çš„ç¬¬ä¸€æ®µæ•°æ®é•¿åº¦
-		 5.data2     å‘é€çš„ç¬¬äºŒæ®µæ•°æ®
-		 6.len2       å‘é€çš„ç¬¬äºŒæ®µæ•°æ®é•¿åº¦
-*è¿”å›  ï¼šæ­£æ•° å‘é€çš„æ•°æ®é•¿åº¦  -1å‘é€é”™è¯¯
+*º¯”µÃû£ºsend2Data
+*ÃèÊö  £º°´Ğ­Òé·¢ËÍÒ»Ö¡Êı¾İ,Êı¾İ¶Î·ÖÎªÁ½¶Î,½á¹¹ÌåÖĞsendº¯ÊıÖ¸ÕëÊµÏÖÖ®ºó²Å¿ÉÒÔÊ¹ÓÃ
+*²ÎÊı  £º1.recType  Í¨ĞÅµÄÉÏÏÂÎÄ½á¹¹Ìå£¬ÄÚ²¿ÓĞ»º³åÇø£¬Í¨ĞÅ×´Ì¬±êÖ¾µÈĞÅÏ¢
+		 2.cmd       ·¢ËÍÊı¾İ°üµÄÃüÁî
+		 3.data1     ·¢ËÍµÄµÚÒ»¶ÎÊı¾İ
+		 4.len1       ·¢ËÍµÄµÚÒ»¶ÎÊı¾İ³¤¶È
+		 5.data2     ·¢ËÍµÄµÚ¶ş¶ÎÊı¾İ
+		 6.len2       ·¢ËÍµÄµÚ¶ş¶ÎÊı¾İ³¤¶È
+*·µ»Ø  £ºÕıÊı ·¢ËÍµÄÊı¾İ³¤¶È  -1·¢ËÍ´íÎó
 ********************************************************************************/
 int sky_send2Data(sky_MyByteReceiveDataTypeDef *recType,uint8_t cmd,uint8_t *data1,uint32_t len1,uint8_t *data2,uint32_t len2)
 {
@@ -370,17 +406,17 @@ int sky_sendNData(sky_MyByteReceiveDataTypeDef *recType,uint8_t cmd,uint8_t type
 
 
 /********************************************************************************
-*å‡½å¾—ï¼šrecOffsetType
-*æè¿°  ï¼šæŒ‰åè®®å‘é€ä¸€å¸§æ•°æ®,æ•°æ®æ®µåˆ†ä¸¤å­—èŠ‚åç§»ï¼Œä¸¤å­—èŠ‚é•¿åº¦ï¼Œç¬¬ä¸‰æ®µæ ¹æ®tpyeåˆ¤æ–­ä¹¦å¦åŒ…å«æ•°æ®
-		å³åŠŸèƒ½ä¸º è¯·æ±‚æ•°æ® è¿˜æ˜¯å‘é€æ•°æ®,ç»“æ„ä½“ä¸­sendå‡½æ•°æŒ‡é’ˆå®ç°ä¹‹åæ‰å¯ä»¥ä½¿ç”¨
-*æ³¨æ„  ï¼šæ­¤å‡½æ•°åªå‘é€  æ¥æ”¶åˆ°çš„æ•°æ®æ€ä¹ˆå¤„ç†ä¸è¶…æ—¶ è¯·å¤–éƒ¨å¤„ç†
-*å‚æ•°  ï¼š1.recType  é€šä¿¡çš„ä¸Šä¸‹æ–‡ç»“æ„ä½“ï¼Œå†…éƒ¨æœ‰ç¼“å†²åŒºï¼Œé€šä¿¡çŠ¶æ€æ ‡å¿—ç­‰ä¿¡æ¯
-		 2.data      æ•°æ®çš„åŸºåœ°å€
-		 4.offset    è¦å‘é€æ•°æ®çš„åç§»
-		 5.len       è¦å‘é€æ•°æ®çš„é•¿åº¦
-		 5.cmd       å‘é€æ•°æ®åŒ…çš„å‘½ä»¤
-		 6.type      æ˜¯å¦å‘é€å…·ä½“çš„æ•°æ®  1å‘é€  0ä¸å‘é€
-*è¿”å›  ï¼šæ­£æ•° å‘é€çš„æ•°æ®é•¿åº¦  -1å‘é€é”™è¯¯
+*º¯”µÃû£ºrecOffsetType
+*ÃèÊö  £º°´Ğ­Òé·¢ËÍÒ»Ö¡Êı¾İ,Êı¾İ¶Î·ÖÁ½×Ö½ÚÆ«ÒÆ£¬Á½×Ö½Ú³¤¶È£¬µÚÈı¶Î¸ù¾İtpyeÅĞ¶ÏÊé·ñ°üº¬Êı¾İ
+		¼´¹¦ÄÜÎª ÇëÇóÊı¾İ »¹ÊÇ·¢ËÍÊı¾İ,½á¹¹ÌåÖĞsendº¯ÊıÖ¸ÕëÊµÏÖÖ®ºó²Å¿ÉÒÔÊ¹ÓÃ
+*×¢Òâ  £º´Ëº¯ÊıÖ»·¢ËÍ  ½ÓÊÕµ½µÄÊı¾İÔõÃ´´¦ÀíÓë³¬Ê± ÇëÍâ²¿´¦Àí
+*²ÎÊı  £º1.recType  Í¨ĞÅµÄÉÏÏÂÎÄ½á¹¹Ìå£¬ÄÚ²¿ÓĞ»º³åÇø£¬Í¨ĞÅ×´Ì¬±êÖ¾µÈĞÅÏ¢
+		 2.data      Êı¾İµÄ»ùµØÖ·
+		 4.offset    Òª·¢ËÍÊı¾İµÄÆ«ÒÆ
+		 5.len       Òª·¢ËÍÊı¾İµÄ³¤¶È
+		 5.cmd       ·¢ËÍÊı¾İ°üµÄÃüÁî
+		 6.type      ÊÇ·ñ·¢ËÍ¾ßÌåµÄÊı¾İ  1·¢ËÍ  0²»·¢ËÍ
+*·µ»Ø  £ºÕıÊı ·¢ËÍµÄÊı¾İ³¤¶È  -1·¢ËÍ´íÎó
 ********************************************************************************/
 int sky_recOffsetType(sky_MyByteReceiveDataTypeDef *recType,uint8_t *data, uint16_t offset, uint16_t len,uint8_t cmd, uint8_t type)
 {
@@ -389,13 +425,13 @@ int sky_recOffsetType(sky_MyByteReceiveDataTypeDef *recType,uint8_t *data, uint1
 	
 	sbuf[0] = recType->startc;
 	sbuf[1] = cmd;
-	if (type == 1)
+	if ((type&0x01) == 1)
 	{
-		*((uint32_t*)(&sbuf[2])) = 4 + len;  //typeä¸º1æ—¶ æ•°æ®é•¿åº¦ä¸º len+2+2  (å‘é€è½½è· + åç§» + é•¿åº¦çš„å€¼)
+		*((uint32_t*)(&sbuf[2])) = 4 + len;  //typeÎª1Ê± Êı¾İ³¤¶ÈÎª len+2+2  (·¢ËÍÔØºÉ + Æ«ÒÆ + ³¤¶ÈµÄÖµ)
 	}
 	else
 	{
-		*((uint32_t*)(&sbuf[2])) = 4;        //typeä¸º0æ—¶ æ•°æ®é•¿åº¦ä¸º 2+2  ï¼ˆåç§» + é•¿åº¦çš„å€¼)
+		*((uint32_t*)(&sbuf[2])) = 4;        //typeÎª0Ê± Êı¾İ³¤¶ÈÎª 2+2  £¨Æ«ÒÆ + ³¤¶ÈµÄÖµ)
 	}
 		
 	
@@ -422,28 +458,28 @@ int sky_recOffsetType(sky_MyByteReceiveDataTypeDef *recType,uint8_t *data, uint1
 
 
 /********************************************************************************
-*å‡½å¾—ï¼šrunCmdPact
-*æè¿°  ï¼šè¿è¡Œä¸€æ¡å‘½ä»¤ï¼Œå¹¶ç­‰å¾…åé¦ˆ,åé¦ˆæ•°æ®åœ¨ç»“æ„ä½“ä¸­,ç»“æ„ä½“ä¸­sendå‡½æ•°æŒ‡é’ˆå®ç°ä¹‹åæ‰å¯ä»¥ä½¿ç”¨
-*æ³¨æ„  ï¼šå‘½ä»¤è¿è¡Œåæ•°æ®åœ¨ç»“æ„ä½“ä¸­ï¼Œè‹¥åç»­æƒ³ä¸€ç›´æ¥æ”¶ï¼Œè¯·ä¸»åŠ¨æ¸…0 ç»“æ„ä½“ä¸­çš„æ ‡å¿—
-*å‚æ•°  ï¼š1.recType  é€šä¿¡çš„ä¸Šä¸‹æ–‡ç»“æ„ä½“ï¼Œå†…éƒ¨æœ‰ç¼“å†²åŒºï¼Œé€šä¿¡çŠ¶æ€æ ‡å¿—ç­‰ä¿¡æ¯
-		 2.cmd       å‘é€æ•°æ®åŒ…çš„å‘½ä»¤
-		 3.data     å‘é€çš„æ•°æ®
-		 4.len       å‘é€çš„æ•°æ®é•¿åº¦
-		 5.time     è¶…æ—¶æ—¶é—´
-*è¿”å›  ï¼š1 æ‰§è¡ŒæˆåŠŸ  -1 è¶…æ—¶   -2 æ‰§è¡Œé”™è¯¯
+*º¯”µÃû£ºrunCmdPact
+*ÃèÊö  £ºÔËĞĞÒ»ÌõÃüÁî£¬²¢µÈ´ı·´À¡,·´À¡Êı¾İÔÚ½á¹¹ÌåÖĞ,½á¹¹ÌåÖĞsendº¯ÊıÖ¸ÕëÊµÏÖÖ®ºó²Å¿ÉÒÔÊ¹ÓÃ
+*×¢Òâ  £ºÃüÁîÔËĞĞºóÊı¾İÔÚ½á¹¹ÌåÖĞ£¬ÈôºóĞøÏëÒ»Ö±½ÓÊÕ£¬ÇëÖ÷¶¯Çå0 ½á¹¹ÌåÖĞµÄ±êÖ¾
+*²ÎÊı  £º1.recType  Í¨ĞÅµÄÉÏÏÂÎÄ½á¹¹Ìå£¬ÄÚ²¿ÓĞ»º³åÇø£¬Í¨ĞÅ×´Ì¬±êÖ¾µÈĞÅÏ¢
+		 2.cmd       ·¢ËÍÊı¾İ°üµÄÃüÁî
+		 3.data     ·¢ËÍµÄÊı¾İ
+		 4.len       ·¢ËÍµÄÊı¾İ³¤¶È
+		 5.time     ³¬Ê±Ê±¼ä
+*·µ»Ø  £º1 Ö´ĞĞ³É¹¦  -1 ³¬Ê±   -2 Ö´ĞĞ´íÎó
 ********************************************************************************/
 int sky_runCmdPact(sky_MyByteReceiveDataTypeDef *recType,uint8_t cmd,uint8_t *data,uint32_t len,uint32_t time)	
 {
-	recType->saveFlag  = 0;         //æ¸…é™¤æ¥æ”¶æ ‡å¿— æ‰“å¼€æ¥æ”¶
-	sky_sendData(recType,cmd,data,len); //å‘é€å‘½ä»¤
+	recType->saveFlag  = 0;         //Çå³ı½ÓÊÕ±êÖ¾ ´ò¿ª½ÓÊÕ
+	sky_sendData(recType,cmd,data,len); //·¢ËÍÃüÁî
 	return sky_waitData(recType,cmd,time);
 }
 
 
 int sky_runCmdType(sky_MyByteReceiveDataTypeDef *recType, uint8_t *data, uint16_t offset, uint16_t len,uint8_t cmd, uint8_t type, int time)
 {
-	recType->saveFlag  = 0;         //æ¸…é™¤æ¥æ”¶æ ‡å¿— æ‰“å¼€æ¥æ”¶
-	sky_recOffsetType(recType,data,offset,len,cmd,type); //å‘é€å‘½ä»¤
+	recType->saveFlag  = 0;         //Çå³ı½ÓÊÕ±êÖ¾ ´ò¿ª½ÓÊÕ
+	sky_recOffsetType(recType,data,offset,len,cmd,type); //·¢ËÍÃüÁî
 	if  (sky_waitData(recType,cmd,time) < 0)
 		return -1;
 	
@@ -498,17 +534,15 @@ int sky_recSetVirTypePN(uint8_t PN,sky_MyByteReceiveDataTypeDef *recType, uint8_
 		}
 	}
 		
-	
-	
 	sky_sendNData(recType, cmd, 4, bdata, blen);
 	return sky_waitNData(PN,recType,cmd,time);
 }
 
 /*
-æ­¤å‡½æ•°ä¸“ä¸ºä¸€æ‹–å››æ‰€å†™ ä¸éœ€è¦è€ƒè™‘
-æ•°æ®å…ˆä¿å­˜åœ¨å…¨å±€å˜é‡ä¸­
-typeæœ€ä½ä½è¡¨ç¤ºå‘é€æ—¶æ˜¯å¦å¸¦ä¸Šæ•°æ®  ç¬¬äºŒä½è¡¨ç¤º æ˜¯å¦è¦æ¥æ”¶å…·ä½“æ•°æ®æŠŠæ•°æ®æ‹·è´åˆ°ç»“æ„ä½“ä¸­
-,ç»“æ„ä½“ä¸­sendå‡½æ•°æŒ‡é’ˆå®ç°ä¹‹åæ‰å¯ä»¥ä½¿ç”¨
+´Ëº¯Êı×¨ÎªÒ»ÍÏËÄËùĞ´ ²»ĞèÒª¿¼ÂÇ
+Êı¾İÏÈ±£´æÔÚÈ«¾Ö±äÁ¿ÖĞ
+type×îµÍÎ»±íÊ¾·¢ËÍÊ±ÊÇ·ñ´øÉÏÊı¾İ  µÚ¶şÎ»±íÊ¾ ÊÇ·ñÒª½ÓÊÕ¾ßÌåÊı¾İ°ÑÊı¾İ¿½±´µ½½á¹¹ÌåÖĞ
+,½á¹¹ÌåÖĞsendº¯ÊıÖ¸ÕëÊµÏÖÖ®ºó²Å¿ÉÒÔÊ¹ÓÃ
 */
 int sky_runOffsetCMD(sky_MyByteReceiveDataTypeDef *recType, uint8_t PN,uint8_t cmd,uint8_t **dataAdress, uint16_t offset, uint16_t len,uint8_t type,uint16_t time)
 {
@@ -572,43 +606,87 @@ int sky_runOffsetCMD(sky_MyByteReceiveDataTypeDef *recType, uint8_t PN,uint8_t c
 }
 
 
+int sky_runNFun(int group, sky_MyByteReceiveDataTypeDef *recType,
+					uint8_t cmd,uint8_t *data,uint32_t len,uint32_t time,
+					uint8_t *outData,uint32_t outOnelen)	
+{
+	int i;
+	uint8_t tem = 0;
+	
+	for (i = 0; i < 8;i++)
+	{
+		if (group & (1 << i))
+		{
+			
+            recType[i].saveFlag = 0;
+			if (tem != 0)
+			{
+				sky_Delay_ms(recType, 20); //·ÀÖ¹·´À¡Ê±¼ä³åÍ» ´ËÊ±¼äÓ¦¸ù¾İ·´À¡µÄÊı¾İÁ¿À´ÅĞ¶Ï
+			}
+			tem = 1;
+			if (sky_sendData(&recType[i], cmd, data, len) < 0) 
+            {return -1;}
+			
+		}
+	}
+	
+	
+	if (sky_waitNData(group, recType, cmd, time) < 0){
+		return -2;
+	}
+	
+	
+	for (i = 0; i < 8;i++)
+	{
+		if (group & (1 << i))
+		{
+			if (*((uint32_t*)(&recType[i].data[2])) != (outOnelen+ 4))
+			{
+				return -3;
+			}
+			memcpy(outData + i*outOnelen,&(recType[i].data[10]),outOnelen);
+		}
+	}
+	
+	return 0;
+	
+}
+/*  ³£ÓÃÃüÁî
+01 ÇëÇó²¢Í¨Öª        (·¢¸öÓÊÏäºó·´À¡)
+02 ÉèÖÃ²¢Í¨Öª        (·¢¸öÓÊÏäºó·´À¡)
+03 ÇëÇó ²»Í¨Öª       (Ö±½Ó·´À¡)
+04 ÉèÖÃ ²»Í¨Öª       (Ö±½Ó·´À¡)   
+05 ÉèÖÃ Í¨Öª ²¢»Ø¶Á  (Êı¾İ¶ÔÏóÒªÇó³É¶Ô³öÏÖ£¬Ò»¸ö¶ÁÒ»¸öĞ´£¬Í¨¹ı»¥³âÁ¿µÈ£¬Ö´ĞĞÍê±ÏºóÔÙ·´À¡) 
+06 ÇëÇó Í¨Öª ²¢»Ø¶Á  (Êı¾İ¶ÔÏóÒªÇó³É¶Ô³öÏÖ£¬Ò»¸ö¶ÁÒ»¸öĞ´£¬Í¨¹ı»¥³âÁ¿µÈ£¬Ö´ĞĞÍê±ÏºóÔÙ·´À¡) 
 
-/*  å¸¸ç”¨å‘½ä»¤
-01 è¯·æ±‚å¹¶é€šçŸ¥        (å‘ä¸ªé‚®ç®±ååé¦ˆ)
-02 è®¾ç½®å¹¶é€šçŸ¥        (å‘ä¸ªé‚®ç®±ååé¦ˆ)
-03 è¯·æ±‚ ä¸é€šçŸ¥       (ç›´æ¥åé¦ˆ)
-04 è®¾ç½® ä¸é€šçŸ¥       (ç›´æ¥åé¦ˆ)   
-05 è®¾ç½® é€šçŸ¥ å¹¶å›è¯»  (æ•°æ®å¯¹è±¡è¦æ±‚æˆå¯¹å‡ºç°ï¼Œä¸€ä¸ªè¯»ä¸€ä¸ªå†™ï¼Œé€šè¿‡äº’æ–¥é‡ç­‰ï¼Œæ‰§è¡Œå®Œæ¯•åå†åé¦ˆ) 
-06 è¯·æ±‚ é€šçŸ¥ å¹¶å›è¯»  (æ•°æ®å¯¹è±¡è¦æ±‚æˆå¯¹å‡ºç°ï¼Œä¸€ä¸ªè¯»ä¸€ä¸ªå†™ï¼Œé€šè¿‡äº’æ–¥é‡ç­‰ï¼Œæ‰§è¡Œå®Œæ¯•åå†åé¦ˆ) 
-
-21  ä¸å®šé•¿æ•°æ® é•¿åº¦è¾ƒé•¿ ä¸æ‹·è´çš„æ•°æ®
-22  ä¸å®šé•¿æ•°æ® å‘é€å­—ç¬¦ä¸²æ ¼å¼çš„å‘½ä»¤ï¼Œ
-23  ä¸å®šé•¿æ•°æ® è¯·æ±‚å­—ç¬¦ä¸²æ ¼å¼çš„å‘½ä»¤,
+21  ²»¶¨³¤Êı¾İ ³¤¶È½Ï³¤ ²»¿½±´µÄÊı¾İ
+22  ²»¶¨³¤Êı¾İ ·¢ËÍ×Ö·û´®¸ñÊ½µÄÃüÁî£¬
+23  ²»¶¨³¤Êı¾İ ÇëÇó×Ö·û´®¸ñÊ½µÄÃüÁî,
 
 
-40  è¿›å…¥IAPå‘½ä»¤ æŸ¥è¯¢æ˜¯è¿æ¥å‘½ä»¤
-41  IAPæ“¦é™¤flashå‘½ä»¤
-42  æ˜æ–‡å†™æ•°æ®å‘½ä»¤
-43  é‡å¯å‘½ä»¤
-44  å¯†æ–‡å†™æ•°æ®
-45  é€šç”¨å¯†æ–‡å†™æ•°æ®
-46  ä¸‹å‘ç‰ˆæœ¬å·ï¼Œåšå¯¹æ¯”
-47  å›è¯»ç¡¬ä»¶ç‰ˆæœ¬å·
-48  å›è¯»è½¯ä»¶ç‰ˆæœ¬å·
-49  å‘é€HTTpå‡çº§æŒ‡ä»¤ 0~4 æ•°æ®é•¿åº¦ï¼Œ4~8èµ·å§‹åœ°å€ï¼Œä¹‹å128ä¸ºè¦å‡çº§ç¨‹åºè¯†åˆ«ç 
+40  ½øÈëIAPÃüÁî ²éÑ¯ÊÇÁ¬½ÓÃüÁî
+41  IAP²Á³ıflashÃüÁî
+42  Ã÷ÎÄĞ´Êı¾İÃüÁî
+43  ÖØÆôÃüÁî
+44  ÃÜÎÄĞ´Êı¾İ
+45  Í¨ÓÃÃÜÎÄĞ´Êı¾İ
+46  ÏÂ·¢°æ±¾ºÅ£¬×ö¶Ô±È
+47  »Ø¶ÁÓ²¼ş°æ±¾ºÅ
+48  »Ø¶ÁÈí¼ş°æ±¾ºÅ
+49  ·¢ËÍHTTpÉı¼¶Ö¸Áî 0~4 Êı¾İ³¤¶È£¬4~8ÆğÊ¼µØÖ·£¬Ö®ºó128ÎªÒªÉı¼¶³ÌĞòÊ¶±ğÂë
 
-61 è½¬å‘åŠŸèƒ½
-62 ç‰¹æ®Šæ¿å­é€šç”¨è¯»å–åŠŸèƒ½
+61 ×ª·¢¹¦ÄÜ
+62 ÌØÊâ°å×ÓÍ¨ÓÃ¶ÁÈ¡¹¦ÄÜ
 
 
-è™šæ‹Ÿçš„æ„æ€æ˜¯ï¼Œä»¥å˜é‡ä»£æ›¿å‘½ä»¤ï¼Œæ‰§è¡Œå…·ä½“çš„æ“ä½œï¼Œæ¯ä¸€æ¡å‘½ä»¤éƒ½è¦å•ç‹¬å¤„ç†,ä¼ é€’çš„æ•°æ®(å¦‚æœæœ‰)å¹¶ä¸åœ¨é€šä¿¡ç»“æ„ä½“ä¸­ï¼Œéœ€è¦æ ¹æ®å˜é‡æ¥åŒºåˆ†ï¼Œç„¶ååŠ¨æ€çš„æ¥çœ‹
-81 è™šæ‹Ÿè¯·æ±‚  
-82 è™šæ‹Ÿè®¾ç½®
-83 è™šæ‹Ÿè¯·æ±‚ éœ€è¿”å›ä¸åœ¨ç»“æ„ä½“ä¸­çš„æ•°æ®
-84 è™šæ‹Ÿè®¾ç½® éœ€å‘é€ä¸åœ¨ç»“æ„ä½“ä¸­çš„æ•°æ®
+ĞéÄâµÄÒâË¼ÊÇ£¬ÒÔ±äÁ¿´úÌæÃüÁî£¬Ö´ĞĞ¾ßÌåµÄ²Ù×÷£¬Ã¿Ò»ÌõÃüÁî¶¼Òªµ¥¶À´¦Àí,´«µİµÄÊı¾İ(Èç¹ûÓĞ)²¢²»ÔÚÍ¨ĞÅ½á¹¹ÌåÖĞ£¬ĞèÒª¸ù¾İ±äÁ¿À´Çø·Ö£¬È»ºó¶¯Ì¬µÄÀ´¿´
+81 ĞéÄâÇëÇó  
+82 ĞéÄâÉèÖÃ
+83 ĞéÄâÇëÇó Ğè·µ»Ø²»ÔÚ½á¹¹ÌåÖĞµÄÊı¾İ
+84 ĞéÄâÉèÖÃ Ğè·¢ËÍ²»ÔÚ½á¹¹ÌåÖĞµÄÊı¾İ
 
 A1 ?
 
-C1 è°ƒç”¨å‡½æ•°
+C1 µ÷ÓÃº¯Êı
 
 */

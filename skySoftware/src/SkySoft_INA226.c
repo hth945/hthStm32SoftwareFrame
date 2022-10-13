@@ -3,31 +3,31 @@
 
 
 /*
-*å‡½æ•°å : INA226_Init
-*æè¿°   : åˆå§‹åŒ– INA226 é©±åŠ¨ç¨‹åºï¼Œåˆå§‹åŒ–åICå¤„äºå¤ä½çŠ¶æ€
-*å‚æ•°   :  1. INA226_Drv *ina226_drv
-           2. i2c_adapter *i2c_adap  I2Cé©±åŠ¨çš„å¥æŸ„
-           3. i2c_addr  ä»æœºåœ°å€
-*è¿”å›   : =0 æˆåŠŸï¼Œ<0 å¤±è´¥
+*º¯ÊıÃû : INA226_Init
+*ÃèÊö   : ³õÊ¼»¯ INA226 Çı¶¯³ÌĞò£¬³õÊ¼»¯ºóIC´¦ÓÚ¸´Î»×´Ì¬
+*²ÎÊı   :  1. INA226_Drv *ina226_drv
+           2. i2c_adapter *i2c_adap  I2CÇı¶¯µÄ¾ä±ú
+           3. i2c_addr  ´Ó»úµØÖ·
+*·µ»Ø   : =0 ³É¹¦£¬<0 Ê§°Ü
 */
 int skySoft_INA226_Init(INA226_Drv *ina226_drv, i2c_adapter *i2c_adap, u8 i2c_addr)
 {
  ina226_drv->i2c_addr = i2c_addr;
  ina226_drv->i2c_adap = *i2c_adap;
  //memcpy(&(ina226_drv->i2c_adap), i2c_adap,sizeof(i2c_adapter));
- return skySoft_INA226_SendData(ina226_drv, INA226_CFG_REG, 0x8000); //å¤ä½
+ return skySoft_INA226_SendData(ina226_drv, INA226_CFG_REG, 0x8000); //¸´Î»
 }
 
 /******************************************************************************
-*å‡½æ•°å : skySoft_INA226_SendData
-*æè¿°   : 
-*å‚æ•°   :  1. INA226_Drv *ina226_drv
+*º¯ÊıÃû : skySoft_INA226_SendData
+*ÃèÊö   : 
+*²ÎÊı   :  1. INA226_Drv *ina226_drv
            2. 
            3. 
            4. 
-*è¿”å›   : =0 æˆåŠŸï¼Œ<0 å¤±è´¥
+*·µ»Ø   : =0 ³É¹¦£¬<0 Ê§°Ü
 ******************************************************************************/
-int skySoft_INA226_SendData(INA226_Drv *drv, uint8_t reg, uint16_t data) //å†™æ•°æ®
+int skySoft_INA226_SendData(INA226_Drv *drv, uint8_t reg, uint16_t data) //Ğ´Êı¾İ
 {
     i2c_msg msg[1];
     uint8_t buf1[3];
@@ -45,7 +45,7 @@ int skySoft_INA226_SendData(INA226_Drv *drv, uint8_t reg, uint16_t data) //å†™æ•
 
 
 
-int skySoft_INA226_ReadData(INA226_Drv *drv,uint8_t reg, uint16_t *rd_data)  //è¯»æ•°æ®
+int skySoft_INA226_ReadData(INA226_Drv *drv,uint8_t reg, uint16_t *rd_data)  //¶ÁÊı¾İ
 { 
     int ret;
     i2c_msg msg[2];
@@ -67,11 +67,11 @@ int skySoft_INA226_ReadData(INA226_Drv *drv,uint8_t reg, uint16_t *rd_data)  //è
 }   
 
 /*
-*å‡½æ•°å : skySoft_INA226_SetRshunt
-*æè¿°   : è®¾ç½®ç”µæµé‡‡æ ·ç”µé˜»çš„é˜»å€¼
-*å‚æ•°   :  1. INA226_Drv *ina226_drv
-           2. r_ohm  ç”µæµé‡‡æ ·ç”µé˜»çš„é˜»å€¼å•ä½ æ¬§å§†
-*è¿”å›   : =0 æˆåŠŸï¼Œ<0 å¤±è´¥
+*º¯ÊıÃû : skySoft_INA226_SetRshunt
+*ÃèÊö   : ÉèÖÃµçÁ÷²ÉÑùµç×èµÄ×èÖµ
+*²ÎÊı   :  1. INA226_Drv *ina226_drv
+           2. r_ohm  µçÁ÷²ÉÑùµç×èµÄ×èÖµµ¥Î» Å·Ä·
+*·µ»Ø   : =0 ³É¹¦£¬<0 Ê§°Ü
 */
 int skySoft_INA226_SetRshunt(INA226_Drv *ina226_drv, float r_ohm)
 {
@@ -80,11 +80,11 @@ int skySoft_INA226_SetRshunt(INA226_Drv *ina226_drv, float r_ohm)
 }
 
 /*
-*å‡½æ•°å : skySoft_INA226_GetIuA
-*æè¿°   : è¯»å–ç”µæµå€¼
-*å‚æ•°   :  1. INA226_Drv *ina226_drv
-           2. ç”µæµå€¼ å•ä½ uA
-*è¿”å›   : =0 æˆåŠŸï¼Œ<0 å¤±è´¥
+*º¯ÊıÃû : skySoft_INA226_GetIuA
+*ÃèÊö   : ¶ÁÈ¡µçÁ÷Öµ
+*²ÎÊı   :  1. INA226_Drv *ina226_drv
+           2. µçÁ÷Öµ µ¥Î» uA
+*·µ»Ø   : =0 ³É¹¦£¬<0 Ê§°Ü
 */
 int skySoft_INA226_GetIuA(INA226_Drv *ina226_drv, float *uA)
 {
@@ -96,18 +96,18 @@ int skySoft_INA226_GetIuA(INA226_Drv *ina226_drv, float *uA)
     if(ret<0) return ret;
     
     sv = adc;
-    sv *= 2.5f; //shunt ç”µå‹ å•ä½uV
+    sv *= 2.5f; //shunt µçÑ¹ µ¥Î»uV
     *uA = sv / ina226_drv->r_shunt_ohm ;
     
     return ret;
 }
 
 /*
-*å‡½æ•°å : skySoft_INA226_GetIuA
-*æè¿°   : è¯»å–VBUSç”µå‹å€¼
-*å‚æ•°   :  1. INA226_Drv *ina226_drv
-           2. ç”µå‹å€¼ å•ä½ V
-*è¿”å›   : =0 æˆåŠŸï¼Œ<0 å¤±è´¥
+*º¯ÊıÃû : skySoft_INA226_GetIuA
+*ÃèÊö   : ¶ÁÈ¡VBUSµçÑ¹Öµ
+*²ÎÊı   :  1. INA226_Drv *ina226_drv
+           2. µçÑ¹Öµ µ¥Î» V
+*·µ»Ø   : =0 ³É¹¦£¬<0 Ê§°Ü
 */
 int skySoft_INA226_GetVol(INA226_Drv *ina226_drv, float *vol)
 {

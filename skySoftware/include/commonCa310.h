@@ -1,3 +1,69 @@
+/********************************* SKYCODE ************************************
+* Copyright (c) 2017-2022, ÉîÛÚË¼¿­²âÊÔ¼¼ÊõÓÐÏÞ¹«Ë¾
+* All rights reserved.
+*
+* ÎÄ¼þÃû³Æ : commonCa310.h   
+* ÄÚÈÝÕªÒª : ¹âÑ§Ì½Í·¹«¹²µ×²ãÇý¶¯º¯Êý¿â
+* µ±Ç°°æ±¾ : V1.8
+* ×÷    Õß : Optics group
+* Íê³ÉÈÕÆÚ : 2022-5-24
+*
+* °æ    ±¾ £ºV1.8
+* ×÷    Õß £ºOptics group
+* ÐÞ¸ÄÈÕÆÚ £º2022-5-24
+* ÐÞ¸ÄÃèÊö £ºa.Ôö¼Ó²éÑ¯CA310 TcpduvLv¹¦ÄÜ
+*           b.Ôö¼Ó²éÑ¯CA310 uvLv¹¦ÄÜ
+*           c.Ôö¼ÓÉèÖÃCA310²âÁ¿ËÙ¶È
+*           d.Ôö¼ÓÉèÖÃCA310Í¬²½ÆµÂÊ
+*           e.ÓÅ»¯×¢ÊÍ,Í»³öÖØµã    
+*
+* °æ    ±¾ £ºV1.7
+* ×÷    Õß £ºOptics group
+* ÐÞ¸ÄÈÕÆÚ £º2022-3-30
+* ÐÞ¸ÄÃèÊö £ºa.Ôö¼Ó²éÑ¯CA410 ID¹¦ÄÜ
+*           b.Ôö¼Ó²éÑ¯CA410É«ÎÂ¹¦ÄÜ
+*           c.Ôö¼Ó²éÑ¯CA410 uvLv¹¦ÄÜ
+*           d.Ôö¼Ó²éÑ¯CA410 flick dB¹¦ÄÜ
+*
+* °æ    ±¾ £ºV1.6
+* ×÷    Õß £ºOptics group
+* ÐÞ¸ÄÈÕÆÚ £º2022-2-19
+* ÐÞ¸ÄÃèÊö £ºa.Ôö¼ÓCA410²âÁ¿ËÙ¶ÈÄ£Ê½º¯Êý
+*           b.½â¾öCA310 CA410ÁãÐ£×¼Í¨ÐÅÊ§°Ü
+*
+* °æ    ±¾ £ºV1.5
+* ×÷    Õß £ºOptics group
+* ÐÞ¸ÄÈÕÆÚ £º2022-1-19
+* ÐÞ¸ÄÃèÊö £ºa.ÐÞ¸ÄÆçÒå×¢ÊÍ,É¾³ýCA410²¿·Ö¶àÓà´úÂë
+*
+* °æ    ±¾ £ºV1.3
+* ×÷    Õß £ºOptics group
+* ÐÞ¸ÄÈÕÆÚ £º2021-9-29
+* ÐÞ¸ÄÃèÊö £ºa.ÐÞ¸´CA410Éè¶¨Í¬²½ÆµÂÊº¯Êý£¬Ð¡ÊýµãºóÎ»Êý¹ý¶àµ¼ÖÂ´íÎó
+*
+* °æ    ±¾ £ºV1.2
+* ×÷    Õß £ºOptics group
+* ÐÞ¸ÄÈÕÆÚ £º2021-9-7
+* ÐÞ¸ÄÃèÊö £ºa.Ôö¼ÓCA410²éÑ¯,ÉèÖÃÍ¨µÀºÅº¯Êý
+*           b.Ôö¼ÓC33²éÑ¯INTÍ¬²½ÆµÂÊº¯Êý
+*           c.²¹³äËùÓÐº¯Êý×¢ÊÍ
+*           d.Ôö¼ÓCA410²éÑ¯INTÍ¬²½ÆµÂÊº¯Êý
+*
+* °æ    ±¾ £ºV1.1
+* ×÷    Õß £º
+* ÐÞ¸ÄÈÕÆÚ £º2021-9-6
+* ÐÞ¸ÄÃèÊö £ºa.ÐÞ¸ÄCA310,MSE²éÑ¯Í¨µÀº¯Êý
+*           b.Ôö¼ÓÉèÖÃINTÄ£Ê½Í¬²½ÆµÂÊº¯Êý
+*           c.Ôö¼Ó²¿·Öº¯Êý×¢ÊÍ
+*
+* °æ    ±¾ £ºV1.0
+* ×÷    Õß £º
+* ÐÞ¸ÄÈÕÆÚ £º2021-8-30
+* ÐÞ¸ÄÃèÊö £ºa.Ôö¼ÓÉèÖÃ²âÁ¿CA310, MSEÄÚ´æÍ¨µÀ½Ó¿Úº¯Êý
+*           b.Ôö¼Ó²éÑ¯²âÁ¿CA310, MSEÄÚ´æÍ¨µÀ½Ó¿Úº¯Êý
+*               
+******************************************************************************/
+
 #ifndef __COMMONCA310_H
 #define	__COMMONCA310_H
 
@@ -6,12 +72,12 @@
 
 typedef struct
 {
-	uint8_t PNumberFlag;        //è®°å½•ä¸Šä¸€æ¬¡è¯»å–çš„æ˜¯å“ªä¸ªæŽ¢å¤´
-	MyFIFO_t ca310FIFO;    //é€šä¿¡ä½¿ç”¨çš„FIFO
-	char caFIFOBuf[1024];  //FIFOä½¿ç”¨åˆ°çš„ç¼“å†²åŒº
-	char recive[1024];   //å¤„ç†å­—ç¬¦ä¸²çš„ä¸´å˜é‡ï¼ˆæœ‰å¯èƒ½æ ˆæº¢å‡ºï¼‰
+	uint8_t PNumberFlag;        //¼ÇÂ¼ÉÏÒ»´Î¶ÁÈ¡µÄÊÇÄÄ¸öÌ½Í·
+	MyFIFO_t ca310FIFO;    //Í¨ÐÅÊ¹ÓÃµÄFIFO
+	char caFIFOBuf[1024];  //FIFOÊ¹ÓÃµ½µÄ»º³åÇø
+	char recive[1024];   //´¦Àí×Ö·û´®µÄÁÙ±äÁ¿£¨ÓÐ¿ÉÄÜÕ»Òç³ö£©
 	
-	/**************ä½¿ç”¨åˆ°çš„ç¡¬ä»¶é©±åŠ¨***************/
+	/**************Ê¹ÓÃµ½µÄÓ²¼þÇý¶¯***************/
 	sky_comDriver *driver;
 }Ca310Interface;
 
@@ -24,16 +90,527 @@ typedef struct
 	int (*CA310_GetLvXY)(uint8_t PN,float* Lv,float* X,float* Y);
 	int (*CA310_GetXYZ)(uint8_t PN,float* X,float* Y,float* Z);
 	int (*CA310_GetFMA)(uint8_t PN,float* FMA);
-}Ca310Fun;  //äºŒæ¬¡å°è£…æŽ¥å£ ä¸ºå…¶ä»–è®¾å¤‡è¯»å–310ç„¶åŽä¼ è¾“ä½¿ç”¨
+	int (*CA310_GetSerialNO)(uint8_t PN,int* id);
+	int (*CA310_GetSN)(uint8_t PN,char* SN);
+	int (*CA310_GetCH)(uint8_t PN,char* SN);
+	int (*CA310_SetCH)(uint8_t PN,char* SN);
+}Ca310Fun;  //¶þ´Î·â×°½Ó¿Ú ÎªÆäËûÉè±¸¶ÁÈ¡310È»ºó´«ÊäÊ¹ÓÃ
 
+/**
+  * ¹¦ÄÜÃèÊö : °ó¶¨Çý¶¯ÖÁÌ½Í·ÏûÏ¢½á¹¹Ìå
+  * ÊäÈë²ÎÊý : 1. ca310 -- CA310Ì½Í·ÏûÏ¢½á¹¹
+  *           2. driver -- Çý¶¯½á¹¹Ìå
+  * ·µ »Ø Öµ : = 1 -- ³É¹¦,  < 0 -- Ê§°Ü
+  */
 int COMCa310InterfaceInit(Ca310Interface *ca310,sky_comDriver *driver);
+
+/**=================================================================================
+ *                      ###  CA-310Í¨ÓÃÅäÖÃ¹¦ÄÜº¯Êý  ###
+ * =================================================================================
+ * @{
+ */
+
+/**
+  * ¹¦ÄÜÃèÊö : ³õÊ¼»¯CA-310Ì½Í·
+  * ÊäÈë²ÎÊý : 1. ca310 -- CA310Ì½Í·ÏûÏ¢½á¹¹
+  *           2. ch -- ÄÚ´æÍ¨µÀ,ÖµÓò0 ~ 99
+  *           3. sync -- Í¬²½Ä£Ê½, 0£ºNTSC  1£ºPAL  2£ºEXT  3£ºUNIV
+  * ·µ »Ø Öµ : = 1 -- ³õÊ¼»¯³É¹¦,  < 0 -- ³õÊ¼»¯Ê§°Ü
+  */
 int COMCA310_Init(Ca310Interface *ca310, int ch,int sync);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯CA310Ì½Í·±àºÅ
+  * ÊäÈë²ÎÊý : ca310 -- CA310Ì½Í·ÏûÏ¢½á¹¹
+  * ·µ »Ø Öµ : Ì½Í·±àºÅ
+  * ×¢ÒâÊÂÏî : ½öÊÊÓÃCA-310¶àÌ½Í·²âÁ¿        
+  */
 int COMCA310_QueryPNumber(Ca310Interface *ca310);
+
+/**
+  * ¹¦ÄÜÃèÊö : Ð£ÁãCA-310Ì½Í·
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  * ·µ »Ø Öµ : = 1 -- Ð£Áã³É¹¦,  < 0 -- Ð£ÁãÊ§°Ü
+  */
 int COMCA310_Cal0(Ca310Interface *ca310);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯x, y, Lv
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- Ä¬ÈÏÎª1,CA310¶àÌ½Í·Êä³öÊ±,Ñ¡Ôñbit[x](x = 0..5) = 1Ö¸¶¨Ì½Í·Êä³ö
+  * Êä³ö²ÎÊý : 1. Lv -- ÁÁ¶ÈÖµ
+  *           2. X -- XYÉ«¶ÈÍ¼ÖÐX×ø±ê  
+  *           3. Y -- XYÉ«¶ÈÍ¼ÖÐY×ø±ê
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
 int COMCA310_GetLvXY(Ca310Interface *ca310, uint8_t PN,float* Lv,float* X,float* Y);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯Tcp, duv, Lv
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- Ä¬ÈÏÎª1,CA310¶àÌ½Í·Êä³öÊ±,Ñ¡Ôñbit[x](x = 0..5) = 1Ö¸¶¨Ì½Í·Êä³ö
+  * Êä³ö²ÎÊý : 1. Tcp -- É«ÎÂ
+  *           2. duV -- É«Æ«²îÖµ
+  *           3. Lv -- ÁÁ¶ÈÖµ
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA310_GetTcpduvLv(Ca310Interface *ca310, uint8_t PN, float* Tcp, float* duv, float* Lv);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯u, v, Lv
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- Ä¬ÈÏÎª1,CA310¶àÌ½Í·Êä³öÊ±,Ñ¡Ôñbit[x](x = 0..5) = 1Ö¸¶¨Ì½Í·Êä³ö
+  * Êä³ö²ÎÊý : 1. u  -- uÖµ
+  *           2. v  -- vÖµ
+  *           3. Lv -- ÁÁ¶ÈÖµ
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA310_GetuvLv(Ca310Interface *ca310, uint8_t PN, float* u, float* v, float* Lv);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯X, Y, Z 
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2.PN -- Ä¬ÈÏÎª1,CA310¶àÌ½Í·Êä³öÊ±,Ñ¡Ôñbit[x](x = 0..5) = 1Ö¸¶¨Ì½Í·Êä³ö
+  * Êä³ö²ÎÊý : 1. X -- Èý´Ì¼¤ÖµÖ®X
+  *           2. Y -- Èý´Ì¼¤ÖµÖ®Y 
+  *           3. Z -- Èý´Ì¼¤ÖµÖ®Z
+  * ·µ »Ø Öµ := 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
 int COMCA310_GetXYZ(Ca310Interface *ca310, uint8_t PN,float* X,float* Y,float* Z);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯ÉÁË¸Öµ
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- Ä¬ÈÏÎª1,CA310¶àÌ½Í·Êä³öÊ±,Ñ¡Ôñbit[x](x = 0..5) = 1Ö¸¶¨Ì½Í·Êä³ö
+  * Êä³ö²ÎÊý : 1. FMA -- flickÖµ
+  * ·µ »Ø Öµ := 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
 int COMCA310_GetFMA(Ca310Interface *ca310, uint8_t PN,float* FMA);
 
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯CA310Ì½Í·Î¨Ò»ÐòÁÐºÅ
+  * ÊäÈë²ÎÊý : 1.ca310 -- CA310Ì½Í·ÏûÏ¢½á¹¹
+  *           2.PN -- Ä¬ÈÏÎª1,CA310¶àÌ½Í·Êä³öÊ±,Ñ¡Ôñbit[x](x = 0..5) = 1Ö¸¶¨Ì½Í·Êä³ö
+  * Êä³ö²ÎÊý : 1.id -- Ì½Í·Î¨Ò»ID
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA310_GetSerialNO(Ca310Interface *ca310, uint8_t PN,int* id);
 
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊý
+  * Êä³ö²ÎÊý : 1. CH -- CA310Ì½Í·Í¨µÀºÅ»º´æÇø
+  *              ²éÑ¯Í¨µÀÖµÓòÎª0 ~ 99,¶ÔÓ¦Í¨µÀCH00 ~ CH99
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA310_GetMeasureCH(Ca310Interface *ca310, uint8_t PN, int* CH);
+
+/**
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊý
+  *           3. CH -- CA310Ì½Í·Í¨µÀºÅ,ÖµÓòÎª0 ~ 99,´ú±íÍ¨µÀCH00 ~ CH99
+  * ·µ »Ø Öµ : = 1 -- ÉèÖÃ³É¹¦,  < 0 -- ÉèÖÃÊ§°Ü
+  */
+int COMCA310_SetMeasureCH(Ca310Interface *ca310, uint8_t PN, int CH);
+
+/**
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿¿ìÂýÄ£Ê½
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊý
+  *           3. speed -- 0:SLOW  1:FAST 2:AUTO 
+  * ·µ »Ø Öµ : = 1 -- ÉèÖÃ³É¹¦,  < 0 -- ÉèÖÃÊ§°Ü
+  */
+int COMCA310_SetMeasureSpeed(Ca310Interface *ca310, uint8_t PN, int speed);
+
+/**
+  * ¹¦ÄÜÃèÊö : ÉèÖÃÍ¬²½ÆµÂÊ
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN  -- ±£Áô²ÎÊý
+  *           3. fre -- Í¬²½ÆµÂÊ,Öµ·¶Î§40.0 ~ 200.0,¾«¶ÈÎªÐ¡ÊýµãºóÒ»Î»
+  * ·µ »Ø Öµ : = 1 -- ÉèÖÃ³É¹¦,  < 0 -- ÉèÖÃÊ§°Ü
+  */
+int COMCA310_SetINTFrequency(Ca310Interface *ca310, uint8_t PN, float fre);
+
+/** @}
+  * @end of CA310
+  */
+
+
+/**=================================================================================
+ *                      ###  CA-410Í¨ÓÃÅäÖÃ¹¦ÄÜº¯Êý  ###
+ * =================================================================================
+ * @{
+ */
+ 
+/**
+  * ¹¦ÄÜÃèÊö : ³õÊ¼»¯CA-410Ì½Í·
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. ch -- ÄÚ´æÍ¨µÀ,ÖµÓò0 ~ 99
+  *           3. sync -- Í¬²½Ä£Ê½, 0£ºNTSC  1£ºPAL  2£ºEXT  3£ºUNIV
+  * ·µ »Ø Öµ : = 1 -- ³õÊ¼»¯³É¹¦,  < 0 -- ³õÊ¼»¯Ê§°Ü
+  */
+int COMCA410_Init(Ca310Interface *ca310, int ch,int sync);
+
+/**
+  * ¹¦ÄÜÃèÊö : Ð£ÁãCA410Ì½Í·
+  * ÊäÈë²ÎÊý : 1. ca410 -- CA410Ì½Í·ÏûÏ¢½á¹¹
+  * ·µ »Ø Öµ : = 1 -- Ð£Áã³É¹¦,  < 0 -- Ð£ÁãÊ§°Ü
+  */
+int COMCA410_Cal0(Ca310Interface *ca410);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯CA410Î¨Ò»ID
+  * ÊäÈë²ÎÊý : 1. ca410 -- CA410Ì½Í·ÏûÏ¢½á¹¹
+  *           2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. id -- ÁÁ¶ÈÖµ,µ¥Î»cd/m^2
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetSerialNO(Ca310Interface *ca410, uint8_t PN, int* id);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯x, y, Lv
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. Lv -- ÁÁ¶ÈÖµ,µ¥Î»cd/m^2
+  *            2. X -- XYÉ«¶ÈÍ¼ÖÐX×ø±ê  
+  *            3. Y -- XYÉ«¶ÈÍ¼ÖÐY×ø±ê
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetLvXY(Ca310Interface *ca410, uint8_t PN,float* Lv,float* X,float* Y);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯Tcp, duv, Lv
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. Tcp -- É«ÎÂ
+  *            2. duV -- É«Æ«²îÖµ
+  *            3. Lv -- ÁÁ¶ÈÖµ,µ¥Î»cd/m^2
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetTcpduvLv(Ca310Interface *ca410, uint8_t PN,float* Tcp,float* duv,float* Lv);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯u, v, Lv
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. u -- É«¶ÈuÖµ
+  *           2. v -- É«¶ÈvÖµ
+  *           3. Lv -- ÁÁ¶ÈÖµ,µ¥Î»cd/m^2
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetuvLv(Ca310Interface *ca410, uint8_t PN, float* u, float* v, float* Lv);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯X, Y, Z
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. X -- Èý´Ì¼¤ÖµÖ®X
+  *            2. Y -- Èý´Ì¼¤ÖµÖ®Y 
+  *            3. Z -- Èý´Ì¼¤ÖµÖ®Z
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetXYZ(Ca310Interface *ca410, uint8_t PN,float* X,float* Y,float* Z);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯flick °Ù·ÖÖµ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. FMA -- flickÖµ
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetFMA(Ca310Interface *ca410, uint8_t PN,float* FMA);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯flick dBÖµ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. FMA -- flickÖµ
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetdB(Ca310Interface *ca410, uint8_t PN, float* dB);
+
+/**
+  * ¹¦ÄÜÃèÊö : ÉèÖÃINTÄ£Ê½ÏÂµÄÍ¬²½ÆµÂÊ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  *            3. fre -- Í¬²½ÆµÂÊ,×î¶àÖ§³ÖÐ¡ÊýµãºóÁ½Î»
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_SetINTFrequency(Ca310Interface *ca410, uint8_t PN, float fre);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯INTÄ£Ê½ÏÂµÄÍ¬²½ÆµÂÊ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. fre -- Í¬²½ÆµÂÊ
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetINTFrequency(Ca310Interface *ca410, uint8_t PN, float* fre);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯INTÄ£Ê½ÏÂµÄÍ¬²½ÆµÂÊ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. fre -- Í¬²½ÆµÂÊ
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  * ×¢ÒâÊÂÏî : ´Ëº¯Êý½öÄÜC33Ê¹ÓÃ
+  */
+int COMCA410_OnlyC33_GetINTFrequency(Ca310Interface *ca410, uint8_t PN, float* fre);
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. CH -- CA410Ì½Í·Í¨µÀºÅ»º´æÇø
+  *               ²éÑ¯Í¨µÀÖµÓòÎª0 ~ 99,¶ÔÓ¦Í¨µÀCH00 ~ CH99
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetMeasureCH(Ca310Interface *ca410, uint8_t PN, int* CH);
+
+/**
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  *            3. CH -- CA410Ì½Í·Í¨µÀºÅ,ÖµÓòÎª0 ~ 99,´ú±íÍ¨µÀCH00 ~ CH99
+  * ·µ »Ø Öµ : = 1 -- ÉèÖÃ³É¹¦,  < 0 -- ÉèÖÃÊ§°Ü
+  */
+int COMCA410_SetMeasureCH(Ca310Interface *ca410, uint8_t PN, int CH);
+	
+/**
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿ËÙ¶È
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  *            3. speedmode -- CA410²âÁ¿ËÙ¶ÈÄ£Ê½
+  *               0.SLOW 1.FAST 2.LTD.AUTO 3.AUTO
+  * ·µ »Ø Öµ : = 1 -- ÉèÖÃ³É¹¦,  < 0 -- ÉèÖÃÊ§°Ü
+  */
+int COMCA410_SetMeasureSpeed(Ca310Interface *ca410, uint8_t PN, int speedmode);
+  
+/** @}
+  * @end of CA410
+  */
+
+
+/**=================================================================================
+ *                      ###  MSEÍ¨ÓÃÅäÖÃ¹¦ÄÜº¯Êý  ###
+ * =================================================================================
+ * @{
+ */
+ 
+/**
+  * º¯Êý¶¨Òå : COMMSE_Init(Ca310Interface *ca310, int ch,int sync)
+  * ¹¦ÄÜÃèÊö : ³õÊ¼»¯ºÉÀ¼MSEÌ½Í·
+  * ÊäÈë²ÎÊý : 1. ca310 -- CA410Ì½Í·ÏûÏ¢½á¹¹
+  *           2. ch -- Î´Ê¹ÓÃ
+  *           3. sync -- Î´Ê¹ÓÃ
+  * ·µ »Ø Öµ : ÉèÖÃ×´Ì¬
+  *           1. = 1 -- ³É¹¦  2. < 0 -- Ê§°Ü
+  */
+int COMMSE_Init(Ca310Interface *ca310, int ch,int sync);
+
+/**
+  * º¯Êý¶¨Òå : COMMSE_GetLvXY(Ca310Interface *ca410, uint8_t PN,float* Lv,float* X,float* Y)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯É«×ø±ê¼°ÁÁ¶ÈÖµ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. Lv -- ÁÁ¶ÈÖµ,µ¥Î»cd/m^2
+  *           2. X -- XYÉ«¶ÈÍ¼ÖÐX×ø±ê  
+  *           3. Y -- XYÉ«¶ÈÍ¼ÖÐY×ø±ê
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMMSE_GetLvXY(Ca310Interface *ca410, uint8_t PN,float* Lv,float* X,float* Y);
+
+/**
+  * º¯Êý¶¨Òå : COMMSE_GetXYZ(Ca310Interface *ca410, uint8_t PN,float* X,float* Y,float* Z)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯Èý´Ì¼¤Öµ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. X -- Èý´Ì¼¤ÖµÖ®X
+  *           2. Y -- Èý´Ì¼¤ÖµÖ®Y 
+  *           3. Z -- Èý´Ì¼¤ÖµÖ®Z
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMMSE_GetXYZ(Ca310Interface *ca410, uint8_t PN,float* X,float* Y,float* Z);
+
+/**
+  * º¯Êý¶¨Òå : COMMSE_GetFMA(Ca310Interface *ca410, uint8_t PN,float* FMA)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯ÉÁË¸Öµ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. FMA -- flickÖµ
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMMSE_GetFMA(Ca310Interface *ca410, uint8_t PN,float* FMA);
+
+/**
+  * º¯Êý¶¨Òå : COMMSE_GetSN(Ca310Interface *ca410, uint8_t PN,char* SN)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯ÐòÁÐºÅ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 3. SN -- MSEÌ½Í·Î¨Ò»ÐòÁÐºÅ
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMMSE_GetSN(Ca310Interface *ca410, uint8_t PN,char* SN);//»ñÈ¡Ì½Í·±àºÅ
+
+/**
+  * º¯Êý¶¨Òå : COMMSE_GetCH(Ca310Interface *ca410, uint8_t PN,char* CH)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 3. CH -- MSEÌ½Í·Í¨µÀºÅ×Ö·û´®
+  *                     a."factory"   b."user1" ~ "user30"  c."off" 
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *            1. = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  * ×¢ÒâÊÂÏî : ´Ëº¯ÊýÓëCOMMSE_GetMeasureCH³åÍ»,²»ÄÜÍ¬Ê±Ê¹ÓÃ,½¨ÒéÊ¹ÓÃ
+  *            COMMSE_GetMeasureCH()
+  */
+int COMMSE_GetCH(Ca310Interface *ca410, uint8_t PN,char* CH);
+
+/**
+  * º¯Êý¶¨Òå : COMMSE_SetCH(Ca310Interface *ca410, uint8_t PN,char* CH)
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  *           3. CH -- MSEÌ½Í·Í¨µÀºÅ×Ö·û´®
+  *                    a."factory\r"   b."user1\r" ~ "user30\r"  c."off\r" 
+  * ·µ »Ø Öµ : ÉèÖÃ×´Ì¬
+  *           1. = 1 -- ÉèÖÃ³É¹¦  2. < 0 -- ÉèÖÃÊ§°Ü
+  * ×¢ÒâÊÂÏî : ´Ëº¯ÊýÓëCOMMSE_SetMeasureCH³åÍ»,²»ÄÜÍ¬Ê±Ê¹ÓÃ,½¨ÒéÊ¹ÓÃ
+  *            COMMSE_SetMeasureCH()
+  */
+int COMMSE_SetCH(Ca310Interface *ca410, uint8_t PN,char* CH);
+
+/**
+  * º¯Êý¶¨Òå : COMMSE_SetMeasureCH(Ca310Interface *ca410, uint8_t PN, int CH)
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  *           3. CH -- MSEÌ½Í·Í¨µÀºÅ
+  *                    a.0 -- factoryÍ¨µÀÄ£Ê½    b.1 ~ 30 -- userÍ¨µÀÄ£Ê½
+  *                    c.31 -- offÍ¨µÀÄ£Ê½
+  * ·µ »Ø Öµ : ÉèÖÃ×´Ì¬
+  *            1. = 1 -- ÉèÖÃ³É¹¦  2. < 0 -- ÉèÖÃÊ§°Ü
+  * ×¢ÒâÊÂÏî : ´Ëº¯ÊýÓëCOMMSE_SetCH()³åÍ»,²»ÄÜÍ¬Ê±Ê¹ÓÃ
+  */
+int COMMSE_SetMeasureCH(Ca310Interface *ca410, uint8_t PN, int CH);
+
+
+/**
+  * º¯Êý¶¨Òå : COMMSE_GetMeasureCH(Ca310Interface *ca410, uint8_t PN, int* CH)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊý : 1. ca410 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊý,ÖµÎÞÐ§
+  * Êä³ö²ÎÊý : 1. CH -- MSEÌ½Í·Í¨µÀºÅ
+  *                    a.0 -- factoryÍ¨µÀÄ£Ê½    b.1 ~ 30 -- userÍ¨µÀÄ£Ê½
+  *                    c.31 -- offÍ¨µÀÄ£Ê½
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  * ×¢ÒâÊÂÏî : ´Ëº¯ÊýÓëCOMMSE_GetCH()³åÍ»,²»ÄÜÍ¬Ê±Ê¹ÓÃ
+  */
+int COMMSE_GetMeasureCH(Ca310Interface *ca410, uint8_t PN, int* CH);
+
+/** @}
+  * @end of MSE
+  * ===============================================================================
+  */
+  
+/**=================================================================================
+*                      ###  C32Í¨ÓÃÅäÖÃ¹¦ÄÜº¯Êý  ###
+* =================================================================================
+* @{
+* @brief  C32¹Ì¼þ³ÌÐòV2.2½øÈëÔ¶³ÌÍ¨ÐÅºó½ÓÊÕÒì³£Êý¾ÝÊ±,ÎÞ·¨×Ô¾À´í,»áµ¼ÖÂÍ¨ÐÅ¹ý³ÌÖÐ¿¨ËÀC32,»ò
+*         ÕßÔ¶³ÌÍ¨ÐÅÎÞ·¨Ê¹ÓÃ.´¥·¢´ËBUG·½Ê½Îª½øÈëÔ¶³ÌÍ¨ÐÅºó,·¢ËÍ´íÎóÖ¸ÁîÒ»´Î»òÕßÁ¬Ðø¼¸´Î.»òÕß
+*         ÔÚÍ¨ÐÅ¹ý³ÌÖÐÒì³£¶Ï¿ªÎïÀíÁ¬½Ó,µ¼ÖÂ±¾´ÎÍ¨ÐÅÒì³£,ºóÐø¿ÉÄÜ¾ÍÎÞ·¨Õý³£Í¨ÐÅ.³öÏÖ¸ÃÇé¿öºóÖ»
+*         ÄÜÖØÆôC32,ÖØÐÂ½øÈë²âÁ¿.
+*         
+*/
+
+/**
+ * º¯Êý¶¨Òå : COMC32_Init(Ca310Interface *ca310, int ch,int sync)
+ * ¹¦ÄÜÃèÊö : ³õÊ¼»¯CA-310Ì½Í·
+ * ÊäÈë²ÎÊý : 1. ca310 -- CA310Ì½Í·ÏûÏ¢½á¹¹
+ *           2. ch -- ÄÚ´æÍ¨µÀ,ÖµÓò0 ~ 31
+ *           3. sync -- ±£Áô
+ * ·µ »Ø Öµ : ÉèÖÃ×´Ì¬
+ *           1. = 1 -- ³É¹¦  2. = -1 -- Ê§°Ü
+ */
+int COMC32_Init(Ca310Interface *ca310, int ch,int sync);
+
+
+/**
+  * º¯Êý¶¨Òå : COMC32_GetLvXY(Ca310Interface *ca310, uint8_t PN,float* Lv,float* X,float* Y)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯É«×ø±ê¼°ÁÁ¶ÈÖµ
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô
+  * Êä³ö²ÎÊý : 1. Lv -- ÁÁ¶ÈÖµ,µ¥Î»cd/m^2
+  *           2. X -- XYÉ«¶ÈÍ¼ÖÐX×ø±ê  
+  *           3. Y -- XYÉ«¶ÈÍ¼ÖÐY×ø±ê
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. = -1 -- ²éÑ¯Ê§°Ü
+  */
+int COMC32_GetLvXY(Ca310Interface *ca310, uint8_t PN,float* Lv,float* X,float* Y);
+
+
+/**
+  * º¯Êý¶¨Òå : COMC32_GetXYZ(Ca310Interface *ca310, uint8_t PN,float* X,float* Y,float* Z)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯Èý´Ì¼¤Öµ
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô
+  * Êä³ö²ÎÊý : 1. X -- Èý´Ì¼¤ÖµÖ®X
+  *           2. Y -- Èý´Ì¼¤ÖµÖ®Y 
+  *           3. Z -- Èý´Ì¼¤ÖµÖ®Z
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. = -1 -- ²éÑ¯Ê§°Ü
+  */
+int COMC32_GetXYZ(Ca310Interface *ca310, uint8_t PN,float* X,float* Y,float* Z);
+
+
+/**
+  * º¯Êý¶¨Òå : COMC32_GetFMA(Ca310Interface *ca310, uint8_t PN, float* FMA)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯ÉÁË¸Öµ
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô
+  * Êä³ö²ÎÊý : 1. FMA -- flickÖµ
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. = -1 -- ²éÑ¯Ê§°Ü
+  */
+int COMC32_GetFMA(Ca310Interface *ca310, uint8_t PN, float* FMA);
+
+
+/**
+  * º¯Êý¶¨Òå : COMC32_GetMeasureCH(Ca310Interface *ca310, uint8_t PN, int* CH)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô
+  * Êä³ö²ÎÊý : 1. CH -- CA310Ì½Í·Í¨µÀºÅ
+  *               ²éÑ¯Í¨µÀÖµÓòÎª0~31
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. = -1 -- ²éÑ¯Ê§°Ü
+  */
+int COMC32_GetMeasureCH(Ca310Interface *ca310, uint8_t PN, int* CH);
+
+
+/**
+  * º¯Êý¶¨Òå : COMC32_SetMeasureCH(Ca310Interface *ca310, uint8_t PN, int CH)
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊý : 1. ca310 -- Ca310InterfaceÀàÐÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô
+  *           3. CH -- CA310Ì½Í·Í¨µÀºÅ,ÖµÓòÎª0~31
+  * ·µ »Ø Öµ : ÉèÖÃ×´Ì¬
+  *           1. = 1 -- ÉèÖÃ³É¹¦  2. = -1 -- ÉèÖÃÊ§°Ü
+  */
+int COMC32_SetMeasureCH(Ca310Interface *ca310, uint8_t PN, int CH);
+
+/** @}
+  * @end of C32
+  * ===============================================================================
+  */
+  
 #endif
 

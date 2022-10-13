@@ -5,7 +5,7 @@
 typedef struct
 {  
     unsigned char *buf;  
-    unsigned int size;  //ç¼“å†²åŒºå¤§å°å¿…é¡»ä¸º2çš„æ•´æ•°æ¬¡å¹‚
+    unsigned int size;  //»º³åÇø´óĞ¡±ØĞëÎª2µÄÕûÊı´ÎÃİ
     unsigned int in;  
     unsigned int out;  
 }MyFIFO_t;  

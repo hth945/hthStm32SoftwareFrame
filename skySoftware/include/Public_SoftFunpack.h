@@ -4,32 +4,32 @@
 #include "stdint.h"
 
 typedef	struct{ 
-	void* func;			    //å‡½æ•°æŒ‡é’ˆ
-	const char* name;		//å‡½æ•°å(æŸ¥æ‰¾ä¸²)	 
+	void* func;			    //º¯ÊıÖ¸Õë
+	const char* name;		//º¯ÊıÃû(²éÕÒ´®)	 
 }funpack_funNametab;
 
 
 typedef	struct{
-	uint8_t type;     //1æ™®é€šæ•°æ®  2è¾“å…¥ç»“æ„ä½“ 3è¾“å‡ºç»“æ„ä½“ 
+	uint8_t type;     //1ÆÕÍ¨Êı¾İ  2ÊäÈë½á¹¹Ìå 3Êä³ö½á¹¹Ìå 
 	int len;
-	uint32_t value;  //æ­£å¸¸æ•°æ®
-	uint8_t *data;   //ç»“æ„ä½“æˆ–æŒ‡é’ˆ
+	uint32_t value;  //Õı³£Êı¾İ
+	uint8_t *data;   //½á¹¹Ìå»òÖ¸Õë
 }funpack_parameter;
 
 /****************************************************
-*funName : å‡½æ•°å
-*data    : æ‰“åŒ…åçš„æ•°æ®ç¼“å†²åŒº
-*pt      : å‡½æ•°çš„å‚æ•°ç»“æ„ï¼Œå…·ä½“å®šä¹‰çœ‹ç»“æ„ä½“
-*len     : å‡½æ•°çš„å‚æ•°ä¸ªæ•°
+*funName : º¯ÊıÃû
+*data    : ´ò°üºóµÄÊı¾İ»º³åÇø
+*pt      : º¯ÊıµÄ²ÎÊı½á¹¹£¬¾ßÌå¶¨Òå¿´½á¹¹Ìå
+*len     : º¯ÊıµÄ²ÎÊı¸öÊı
 ****************************************************/
 int P_doPack(uint8_t *funName,uint8_t *data, funpack_parameter *pt, int len);
 
 /****************************************************
-*funName : å‡½æ•°å
-*data    : æ‰“åŒ…åçš„æ•°æ®ç¼“å†²åŒº
-*pt      : å‡½æ•°çš„å‚æ•°ç»“æ„ï¼Œå…·ä½“å®šä¹‰çœ‹ç»“æ„ä½“
-*len     : å‡½æ•°çš„å‚æ•°ä¸ªæ•°
-*alignOff: æ¥æ”¶ç¼“å†²åŒºçš„å­—èŠ‚å¯¹é½åç§»ï¼ˆé—®å†™å®¢æˆ·ç«¯çš„äººï¼‰
+*funName : º¯ÊıÃû
+*data    : ´ò°üºóµÄÊı¾İ»º³åÇø
+*pt      : º¯ÊıµÄ²ÎÊı½á¹¹£¬¾ßÌå¶¨Òå¿´½á¹¹Ìå
+*len     : º¯ÊıµÄ²ÎÊı¸öÊı
+*alignOff: ½ÓÊÕ»º³åÇøµÄ×Ö½Ú¶ÔÆëÆ«ÒÆ£¨ÎÊĞ´¿Í»§¶ËµÄÈË£©
 ****************************************************/
 int P_doPackByalignOff(uint8_t *funName,uint8_t *data, funpack_parameter *pt, int len, int alignOff);
 
@@ -43,7 +43,7 @@ int P_unPackASM_fpu(const funpack_funNametab *fn, uint8_t *data, uint8_t *outDat
 
 /*
 
-//å¿…é¡»ä»¥0ç»“å°¾
+//±ØĞëÒÔ0½áÎ²
 struct _m_usmart_nametab usmart_nametab[]=
 {
 	(void*)read_addr,"u32 read_addr(u32 addr)",

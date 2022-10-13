@@ -3,27 +3,27 @@
 
 
 
-#include "stm32f4xx.h"
+//#include "stm32f4xx.h"
 #include "Public_SoftI2C.h"
 #include "delay.h"
 
 
-#define 	INA226_CFG_REG  0x00   //æ³¨å†Œé…ç½®
-#define 	INA226_SV_REG   0x01   //åˆ†æµå™¨ç”µé˜»ç”µå‹å¯„å­˜å™¨
-#define 	INA226_BV_REG   0x02   //æ€»çº¿ç”µå‹å¯„å­˜å™¨
-#define 	INA226_PWR_REG  0x03   //åŠŸç‡å¯„å­˜å™¨
-#define 	INA226_CUR_REG  0x04   //ç”µæµå¯„å­˜å™¨
-#define 	INA226_CAL_REG  0x05   //æ ¡å‡†å¯„å­˜å™¨
-#define 	INA226_ONFF_REG 0x06   //å¯ç”¨å¯„å­˜å™¨
-#define 	INA226_AL_REG   0x07   //è­¦æŠ¥é™åˆ¶å¯„å­˜å™¨
-#define 	INA226_ID_REG  0XFF   //åŒ…å«å”¯ä¸€çš„èŠ¯ç‰‡æ ‡è¯†å·(IDæ–‡ä»¶)
+#define 	INA226_CFG_REG  0x00   //×¢²áÅäÖÃ
+#define 	INA226_SV_REG   0x01   //·ÖÁ÷Æ÷µç×èµçÑ¹¼Ä´æÆ÷
+#define 	INA226_BV_REG   0x02   //×ÜÏßµçÑ¹¼Ä´æÆ÷
+#define 	INA226_PWR_REG  0x03   //¹¦ÂÊ¼Ä´æÆ÷
+#define 	INA226_CUR_REG  0x04   //µçÁ÷¼Ä´æÆ÷
+#define 	INA226_CAL_REG  0x05   //Ğ£×¼¼Ä´æÆ÷
+#define 	INA226_ONFF_REG 0x06   //ÆôÓÃ¼Ä´æÆ÷
+#define 	INA226_AL_REG   0x07   //¾¯±¨ÏŞÖÆ¼Ä´æÆ÷
+#define 	INA226_ID_REG  0XFF   //°üº¬Î¨Ò»µÄĞ¾Æ¬±êÊ¶ºÅ(IDÎÄ¼ş)
 //#define   	INA226_GETALADDR  0x14 
 
 
 //Configuration Register (00h) (Read/Write)
 #define RST           (1<<15)
 #define DEFAULT       (1<<14)
-#define AVG_1         (0<<9)//å¹³å‡é‡‡æ ·æ¬¡æ•° //ï¼ˆé»˜è®¤æ¨¡å¼ï¼‰
+#define AVG_1         (0<<9)//Æ½¾ù²ÉÑù´ÎÊı //£¨Ä¬ÈÏÄ£Ê½£©
 #define AVG_4         (1<<9)
 #define AVG_16        (2<<9)
 #define AVG_64        (3<<9)
@@ -31,68 +31,68 @@
 #define AVG_256       (5<<9)
 #define AVG_512       (6<<9)
 #define AVG_1024      (7<<9)
-#define VBUSCT_140us  (0<<6)//æ¯çº¿ç”µå‹é‡‡æ ·æ—¶é—´
+#define VBUSCT_140us  (0<<6)//Ä¸ÏßµçÑ¹²ÉÑùÊ±¼ä
 #define VBUSCT_204us  (1<<6)
 #define VBUSCT_332us  (2<<6)
 #define VBUSCT_588us  (3<<6)
-#define VBUSCT_1100us (4<<6)//ï¼ˆé»˜è®¤æ¨¡å¼ï¼‰
+#define VBUSCT_1100us (4<<6)//£¨Ä¬ÈÏÄ£Ê½£©
 #define VBUSCT_2116us (5<<6)
 #define VBUSCT_4156us (6<<6)
 #define VBUSCT_8244us (7<<6)
-#define VSHCT_140us   (0<<3)//åˆ†æµå™¨é‡‡æ ·æ—¶é—´
+#define VSHCT_140us   (0<<3)//·ÖÁ÷Æ÷²ÉÑùÊ±¼ä
 #define VSHCT_204us   (1<<3)
 #define VSHCT_332us   (2<<3)
 #define VSHCT_588us   (3<<3)
-#define VSHCT_1100us  (4<<3)//ï¼ˆé»˜è®¤æ¨¡å¼ï¼‰
+#define VSHCT_1100us  (4<<3)//£¨Ä¬ÈÏÄ£Ê½£©
 #define VSHCT_2116us  (5<<3)
 #define VSHCT_4156us  (6<<3)
 #define VSHCT_8244us  (7<<3)
 #define MODE_Shutdown1  (0<<0)
-#define MODE_Shunt_T    (1<<0)//åˆ†æµå™¨è·Ÿè¸ªè§¦å‘
-#define MODE_Bus_T      (2<<0)//æ¯çº¿ç”µå‹è·Ÿè¸ªè§¦å‘
-#define MODE_ShuntBus_T (3<<0)//åˆ†æµå™¨ä¸æ¯çº¿ç”µå‹è·Ÿè¸ªè§¦å‘
+#define MODE_Shunt_T    (1<<0)//·ÖÁ÷Æ÷¸ú×Ù´¥·¢
+#define MODE_Bus_T      (2<<0)//Ä¸ÏßµçÑ¹¸ú×Ù´¥·¢
+#define MODE_ShuntBus_T (3<<0)//·ÖÁ÷Æ÷ÓëÄ¸ÏßµçÑ¹¸ú×Ù´¥·¢
 #define MODE_Shutdown2  (4<<0)
-#define MODE_Shunt_C    (5<<0)//åˆ†æµå™¨è¿ç»­è§¦å‘
-#define MODE_Bus_C      (6<<0)//æ¯çº¿ç”µå‹è¿ç»­è§¦å‘
-#define MODE_ShuntBus_C (7<<0)//åˆ†æµå™¨ä¸æ¯çº¿ç”µå‹è¿ç»­è§¦å‘ ï¼ˆé»˜è®¤æ¨¡å¼ï¼‰
+#define MODE_Shunt_C    (5<<0)//·ÖÁ÷Æ÷Á¬Ğø´¥·¢
+#define MODE_Bus_C      (6<<0)//Ä¸ÏßµçÑ¹Á¬Ğø´¥·¢
+#define MODE_ShuntBus_C (7<<0)//·ÖÁ÷Æ÷ÓëÄ¸ÏßµçÑ¹Á¬Ğø´¥·¢ £¨Ä¬ÈÏÄ£Ê½£©
 
 
 typedef struct{
-    uint8_t i2c_addr; //i2c è®¾å¤‡åœ°å€
-    i2c_adapter i2c_adap; //i2c é©±åŠ¨é…ç½®
-    float r_shunt_ohm; //ç”µæµé‡‡æ ·ç”µé˜» å•ä½æ¬§å§†
+    uint8_t i2c_addr; //i2c Éè±¸µØÖ·
+    i2c_adapter i2c_adap; //i2c Çı¶¯ÅäÖÃ
+    float r_shunt_ohm; //µçÁ÷²ÉÑùµç×è µ¥Î»Å·Ä·
 }INA226_Drv;
 
 /*
-*å‡½æ•°å : INA226_Init
-*æè¿°   : åˆå§‹åŒ– INA226 é©±åŠ¨ç¨‹åºï¼Œåˆå§‹åŒ–åICå¤„äºå¤ä½çŠ¶æ€
-*å‚æ•°   :  1. INA226_Drv *ina226_drv
-           2. i2c_adapter *i2c_adap  I2Cé©±åŠ¨çš„å¥æŸ„
-           3. i2c_addr  ä»æœºåœ°å€
-*è¿”å›   : =0 æˆåŠŸï¼Œ<0 å¤±è´¥
+*º¯ÊıÃû : INA226_Init
+*ÃèÊö   : ³õÊ¼»¯ INA226 Çı¶¯³ÌĞò£¬³õÊ¼»¯ºóIC´¦ÓÚ¸´Î»×´Ì¬
+*²ÎÊı   :  1. INA226_Drv *ina226_drv
+           2. i2c_adapter *i2c_adap  I2CÇı¶¯µÄ¾ä±ú
+           3. i2c_addr  ´Ó»úµØÖ·
+*·µ»Ø   : =0 ³É¹¦£¬<0 Ê§°Ü
 */
 int skySoft_INA226_Init(INA226_Drv *ina226_drv, i2c_adapter *i2c_adap, u8 i2c_addr);
 
 /*
-*å‡½æ•°å : skySoft_INA226_SetRshunt
-*æè¿°   : è®¾ç½®ç”µæµé‡‡æ ·ç”µé˜»çš„é˜»å€¼
-*å‚æ•°   :  1. INA226_Drv *ina226_drv
-           2. r_ohm  ç”µæµé‡‡æ ·ç”µé˜»çš„é˜»å€¼å•ä½ æ¬§å§†
-*è¿”å›   : =0 æˆåŠŸï¼Œ<0 å¤±è´¥
+*º¯ÊıÃû : skySoft_INA226_SetRshunt
+*ÃèÊö   : ÉèÖÃµçÁ÷²ÉÑùµç×èµÄ×èÖµ
+*²ÎÊı   :  1. INA226_Drv *ina226_drv
+           2. r_ohm  µçÁ÷²ÉÑùµç×èµÄ×èÖµµ¥Î» Å·Ä·
+*·µ»Ø   : =0 ³É¹¦£¬<0 Ê§°Ü
 */
 int skySoft_INA226_SetRshunt(INA226_Drv *ina226_drv, float r_ohm);
 
 /*
-*å‡½æ•°å : skySoft_INA226_GetIuA
-*æè¿°   : è¯»å–ç”µæµå€¼
-*å‚æ•°   :  1. INA226_Drv *ina226_drv
-           2. ç”µæµå€¼ å•ä½ uA
-*è¿”å›   : =0 æˆåŠŸï¼Œ<0 å¤±è´¥
+*º¯ÊıÃû : skySoft_INA226_GetIuA
+*ÃèÊö   : ¶ÁÈ¡µçÁ÷Öµ
+*²ÎÊı   :  1. INA226_Drv *ina226_drv
+           2. µçÁ÷Öµ µ¥Î» uA
+*·µ»Ø   : =0 ³É¹¦£¬<0 Ê§°Ü
 */
 int skySoft_INA226_GetIuA(INA226_Drv *ina226_drv, float *uA);
 
-int skySoft_INA226_SendData(INA226_Drv *ina226_drv, uint8_t reg, uint16_t data); //å†™æ•°æ®
-int skySoft_INA226_ReadData(INA226_Drv *ina226_drv, uint8_t reg, uint16_t *rd_data);  //è¯»æ•°æ®
+int skySoft_INA226_SendData(INA226_Drv *ina226_drv, uint8_t reg, uint16_t data); //Ğ´Êı¾İ
+int skySoft_INA226_ReadData(INA226_Drv *ina226_drv, uint8_t reg, uint16_t *rd_data);  //¶ÁÊı¾İ
 
 
 #endif

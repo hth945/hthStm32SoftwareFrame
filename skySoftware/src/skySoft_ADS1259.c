@@ -39,14 +39,14 @@ void skySoft_ADS12xx_Init(ads12xx_drv *drv){
     drv->rst_set(1);
     drv->delayms(50);
                     
-    //å¼€å¯
+    //¿ªÆô
     for(i=0;i<2;i++){
         msg[i].len=1;
         msg[i].type=SPI_OnlyW|SPI_MidStop;
         msg[i].txbuf=&par[i];    
     }
                     
-    //å‘é€é…ç½®ä¿¡æ¯                   
+    //·¢ËÍÅäÖÃĞÅÏ¢                   
     skySoft_ADS1259_WrReg(drv,0,sizeof(Init_data),(uint8_t *)&drv->config);
                     
 
@@ -63,11 +63,11 @@ __weak uint8_t skySoft_ADS12xx_Get_void(void){
 __weak void skySoft_ADS12xx_Delay_ms(uint16_t us){
 }
 /*******************************************************************************
-*å‡½æ•°å : ADS1259_WrReg
-*æè¿°   : spiè¯»å†™lenä¸ªå­—èŠ‚ã€‚å†™ä¸€ä¸ªæ•°ç»„è¿›å»
-*å‚æ•°   : 
-*è¿”å›   :   
-*è°ƒç”¨   : å¤–éƒ¨è°ƒç”¨
+*º¯ÊıÃû : ADS1259_WrReg
+*ÃèÊö   : spi¶ÁĞ´len¸ö×Ö½Ú¡£Ğ´Ò»¸öÊı×é½øÈ¥
+*²ÎÊı   : 
+*·µ»Ø   :   
+*µ÷ÓÃ   : Íâ²¿µ÷ÓÃ
 *******************************************************************************/
 void skySoft_ADS1259_WrReg(ads12xx_drv *drv,uint8_t addr, uint8_t len, uint8_t* data){
     spi_msg msg[2];
@@ -86,11 +86,11 @@ void skySoft_ADS1259_WrReg(ads12xx_drv *drv,uint8_t addr, uint8_t len, uint8_t* 
 }
 
 /*******************************************************************************
-*å‡½æ•°å : ADS1259_RdADC
-*æè¿°   : è¯»å–ads1259æµ‹é‡çš„adcå€¼ï¼ŒåŒæ—¶è¿”å›
-*å‚æ•°   : 
-*è¿”å›   :   
-*è°ƒç”¨   : å¤–éƒ¨è°ƒç”¨
+*º¯ÊıÃû : ADS1259_RdADC
+*ÃèÊö   : ¶ÁÈ¡ads1259²âÁ¿µÄadcÖµ£¬Í¬Ê±·µ»Ø
+*²ÎÊı   : 
+*·µ»Ø   :   
+*µ÷ÓÃ   : Íâ²¿µ÷ÓÃ
 *******************************************************************************/
 int skySoft_ADS1259_RdADC(ads12xx_drv *drv,uint32_t *ADC_dat){
     spi_msg msg[2];
@@ -98,7 +98,7 @@ int skySoft_ADS1259_RdADC(ads12xx_drv *drv,uint32_t *ADC_dat){
     uint8_t rxbuf2[3];
     uint32_t temp;
     
-    if(!drv->drdy_read()){//ä½çš„æ—¶å€™æ‰æœ‰æ•ˆæ•°æ®
+    if(!drv->drdy_read()){//µÍµÄÊ±ºò²ÅÓĞĞ§Êı¾İ
         txbuf1[0]=ADS_CMD_RDATA; 
         msg[0].len=1;
         msg[0].type=SPI_OnlyW;

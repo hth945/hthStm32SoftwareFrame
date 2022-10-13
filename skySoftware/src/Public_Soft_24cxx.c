@@ -2,10 +2,10 @@
 #include "Public_SoftI2C.h"
 
 
-//åœ¨AT24CXXé‡Œé¢çš„æŒ‡å®šåœ°å€å¼€å§‹è¯»å‡ºæŒ‡å®šä¸ªæ•°çš„æ•°æ®
-//ReadAddr :å¼€å§‹è¯»å‡ºçš„åœ°å€ å¯¹24c02ä¸º0~255
-//pBuffer  :æ•°æ®æ•°ç»„é¦–åœ°å€
-//NumToRead:è¦è¯»å‡ºæ•°æ®çš„ä¸ªæ•°
+//ÔÚAT24CXXÀïÃæµÄÖ¸¶¨µØÖ·¿ªÊ¼¶Á³öÖ¸¶¨¸öÊıµÄÊı¾İ
+//ReadAddr :¿ªÊ¼¶Á³öµÄµØÖ· ¶Ô24c02Îª0~255
+//pBuffer  :Êı¾İÊı×éÊ×µØÖ·
+//NumToRead:Òª¶Á³öÊı¾İµÄ¸öÊı
 
 int AT24CXX_Read(i2c_adapter *adap,AT24Cxx_drv *at24cxx,uint16_t Addr,uint8_t *pBuffer,uint16_t NumToRead)
 {
@@ -37,10 +37,10 @@ int AT24CXX_Read(i2c_adapter *adap,AT24Cxx_drv *at24cxx,uint16_t Addr,uint8_t *p
     return P_I2C_transfer(adap,msg,2);
 }
 
-//åœ¨AT24CXXé‡Œé¢çš„æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šä¸ªæ•°çš„æ•°æ®
-//WriteAddr :å¼€å§‹å†™å…¥çš„åœ°å€ å¯¹24c02ä¸º0~255
-//pBuffer   :æ•°æ®æ•°ç»„é¦–åœ°å€
-//NumToWrite:è¦å†™å…¥æ•°æ®çš„ä¸ªæ•°
+//ÔÚAT24CXXÀïÃæµÄÖ¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨¸öÊıµÄÊı¾İ
+//WriteAddr :¿ªÊ¼Ğ´ÈëµÄµØÖ· ¶Ô24c02Îª0~255
+//pBuffer   :Êı¾İÊı×éÊ×µØÖ·
+//NumToWrite:ÒªĞ´ÈëÊı¾İµÄ¸öÊı
 int AT24CXX_Write(i2c_adapter *adap,AT24Cxx_drv *at24cxx,uint16_t Addr,uint8_t *pBuffer,uint16_t NumToWrite)
 {
     int ret;  

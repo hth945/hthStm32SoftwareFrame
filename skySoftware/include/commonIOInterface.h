@@ -14,24 +14,25 @@
 //    MyFIFO_t *fifo;
 //}sky_comDevice;  
 
-//å¤–éƒ¨ä¸åº”è¯¥ç›´æ¥è°ƒç”¨ç»“æ„ä½“çš„å‡½æ•°æŒ‡é’ˆ
+//Íâ²¿²»Ó¦¸ÃÖ±½Óµ÷ÓÃ½á¹¹ÌåµÄº¯ÊıÖ¸Õë
 struct _Tsky_comDriver;
 typedef struct _Tsky_comDriver
 {
-	void *userData;
-    MyFIFO_t *fifo;                        //åº”ç”¨å±‚å®ç°çš„fifoï¼Œ æœ‰æ•°æ®äº†ä¼šå‘fifoä¸­å†™å…¥æ•°æ® ä¸ç”¨å¯ä»¥ä¸ºç©º 
+	void *userData;       //bsp²ã×Ô¼ºÊ¹ÓÃµÄÖ¸Õë(¿É¸Ä±äÀàĞÍ), Íâ²¿Ó¦ÓÃ²ã¾¡Á¿²»ÒªÊ¹ÓÃ           
+	void *Parent;         //Ò»µ©ÓĞÆäËû½á¹¹Ìå°üº¬ÁË sky_comDriver,¾ÍÓ¦¸Ã¸ø´Ë±äÁ¿¸³Öµ
+    MyFIFO_t *fifo;                        //Ó¦ÓÃ²ãÊµÏÖµÄfifo£¬ ÓĞÊı¾İÁË»áÏòfifoÖĞĞ´ÈëÊı¾İ ²»ÓÃ¿ÉÒÔÎª¿Õ 
 	
-	int (*single)(struct _Tsky_comDriver *self,uint8_t *data, int len);  //æ¥æ”¶æ•°æ®ä¸­æ–­   åº”ç”¨å±‚å®ç°æ­¤å‡½æ•° ä¸ç”¨å¯ä»¥ä¸ºç©º  ï¼ˆä¸­æ–­ä¿¡å·,å‚æ•°ä¸ºè‡ªèº«çš„userDataï¼‰
-	int (*write)(struct _Tsky_comDriver *self, uint8_t *data, int len);  //å†™æ•°æ®å‡½æ•°     é©±åŠ¨ä¸­å®ç° 
+	int (*single)(struct _Tsky_comDriver *self,uint8_t *data, int len);  //½ÓÊÕÊı¾İÖĞ¶Ï   Ó¦ÓÃ²ãÊµÏÖ´Ëº¯Êı ²»ÓÃ¿ÉÒÔÎª¿Õ  £¨ÖĞ¶ÏĞÅºÅ,²ÎÊıÎª×ÔÉíµÄuserData£©
+	int (*write)(struct _Tsky_comDriver *self,uint8_t *data, int len);  //Ğ´Êı¾İº¯Êı     Çı¶¯ÖĞÊµÏÖ 
 	
-	//å‡†å¤‡å¼ƒç”¨
+	//×¼±¸ÆúÓÃ
 	//int (*write)(uint8_t *data, int len);  
-}sky_comDriver; //é©±åŠ¨ä½¿ç”¨çš„å¥æŸ„ï¼Œ
+}sky_comDriver; //Çı¶¯Ê¹ÓÃµÄ¾ä±ú£¬
 
-//åº”ç”¨å±‚ä½¿ç”¨æ­¤å‡½æ•°å‘é€æ•°æ®ï¼Œæ­¤å‡½æ•°ä¼šè°ƒç”¨åº•å±‚çš„write2
+//Ó¦ÓÃ²ãÊ¹ÓÃ´Ëº¯Êı·¢ËÍÊı¾İ£¬´Ëº¯Êı»áµ÷ÓÃµ×²ãµÄwrite2
 int devWrite(sky_comDriver *dev, uint8_t *data, int len);
 
-//é©±åŠ¨æ¥æ”¶ä¸­æ–­ä¸­è°ƒç”¨ï¼ŒæŠŠæ•°æ®å†™å…¥åˆ°devä¸­ã€‚  æ­¤å‡½æ•°ä¼šè§¦å‘devä¸­çš„singleå‡½æ•°ï¼Œä¼šå‘fifoå†™æ•°æ®
+//Çı¶¯½ÓÊÕÖĞ¶ÏÖĞµ÷ÓÃ£¬°ÑÊı¾İĞ´Èëµ½devÖĞ¡£  ´Ëº¯Êı»á´¥·¢devÖĞµÄsingleº¯Êı£¬»áÏòfifoĞ´Êı¾İ
 int Write2dev(sky_comDriver *dev, uint8_t *data, int len);
 
 #endif

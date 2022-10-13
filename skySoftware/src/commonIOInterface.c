@@ -2,6 +2,8 @@
 
 int devWrite(sky_comDriver *dev, uint8_t *data, int len)
 {
+	if ((dev == 0) || (dev->write == 0))
+		return 0;
 	return dev->write(dev, data, len);
 }
 

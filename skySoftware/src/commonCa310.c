@@ -1,9 +1,91 @@
+/********************************* SKYCODE ************************************
+* Copyright (c) 2017-2022, ÉîÛÚË¼¿­²âÊÔ¼¼ÊõÓĞÏŞ¹«Ë¾
+* All rights reserved.
+*
+* ÎÄ¼şÃû³Æ : commonCa310.c    
+* ÄÚÈİÕªÒª : ¹âÑ§Ì½Í·¹«¹²µ×²ãÇı¶¯º¯Êı¿â
+* µ±Ç°°æ±¾ : V1.8
+* ×÷    Õß : Optics group
+* Íê³ÉÈÕÆÚ : 2022-5-24
+*
+* °æ    ±¾ £ºV1.8
+* ×÷    Õß £ºOptics group
+* ĞŞ¸ÄÈÕÆÚ £º2022-5-24
+* ĞŞ¸ÄÃèÊö £ºa.Ôö¼Ó²éÑ¯CA310 TcpduvLv¹¦ÄÜ
+*           b.Ôö¼Ó²éÑ¯CA310 uvLv¹¦ÄÜ
+*           c.Ôö¼ÓÉèÖÃCA310²âÁ¿ËÙ¶È
+*           d.Ôö¼ÓÉèÖÃCA310Í¬²½ÆµÂÊ
+*           e.ÓÅ»¯×¢ÊÍ,Í»³öÖØµã          
+*
+* °æ    ±¾ £ºV1.7
+* ×÷    Õß £ºOptics group
+* ĞŞ¸ÄÈÕÆÚ £º2022-3-30
+* ĞŞ¸ÄÃèÊö £ºa.Ôö¼Ó²éÑ¯CA410 ID¹¦ÄÜ
+*           b.Ôö¼Ó²éÑ¯CA410É«ÎÂ¹¦ÄÜ
+*           c.Ôö¼Ó²éÑ¯CA410 uvLv¹¦ÄÜ
+*           d.Ôö¼Ó²éÑ¯CA410 flick dB¹¦ÄÜ
+*
+* °æ    ±¾ £ºV1.6
+* ×÷    Õß £ºOptics group
+* ĞŞ¸ÄÈÕÆÚ £º2022-2-19
+* ĞŞ¸ÄÃèÊö £ºa.Ôö¼ÓCA410²âÁ¿ËÙ¶ÈÄ£Ê½º¯Êı
+*           b.½â¾öCA310 CA410ÁãĞ£×¼Í¨ĞÅÊ§°Ü
+*
+* °æ    ±¾ £ºV1.5
+* ×÷    Õß £ºOptics group
+* ĞŞ¸ÄÈÕÆÚ £º2022-1-19
+* ĞŞ¸ÄÃèÊö £ºa.ĞŞ¸ÄÆçÒå×¢ÊÍ,É¾³ıCA410²¿·Ö¶àÓà´úÂë
+*           b.ĞŞ¸ÄCOMCA310_Init(...)Í¨ĞÅµÈ´ıÊ±¼ä
+*
+* °æ    ±¾ £ºV1.4
+* ×÷    Õß £ºOptics group
+* ĞŞ¸ÄÈÕÆÚ £º2021-11-10
+* ĞŞ¸ÄÃèÊö £ºa.Ôö¼Ó»ªĞËÔ´´´C32Çı¶¯º¯Êı
+*           b.ĞŞ¸Ä²¿·Öº¯Êı½ÓÊÕÊı¾İĞ£Ñé×Ö·û"OK00"Îª"OK"
+*
+* °æ    ±¾ £ºV1.3
+* ×÷    Õß £ºOptics group
+* ĞŞ¸ÄÈÕÆÚ £º2021-9-29
+* ĞŞ¸ÄÃèÊö £ºa.ĞŞ¸´CA410Éè¶¨Í¬²½ÆµÂÊº¯Êı£¬Ğ¡ÊıµãºóÎ»Êı¹ı¶àµ¼ÖÂ´íÎó
+*
+*
+* °æ    ±¾ £ºV1.2
+* ×÷    Õß £ºOptics group
+* ĞŞ¸ÄÈÕÆÚ £º2021-9-7
+* ĞŞ¸ÄÃèÊö £ºa.Ôö¼ÓCA410²éÑ¯,ÉèÖÃÍ¨µÀºÅº¯Êı
+*            b.Ôö¼ÓC33²éÑ¯INTÍ¬²½ÆµÂÊº¯Êı
+*            c.²¹³äËùÓĞº¯Êı×¢ÊÍ
+*            d.Ôö¼ÓCA410²éÑ¯INTÍ¬²½ÆµÂÊº¯Êı
+*
+*
+* °æ    ±¾ £ºV1.1
+* ×÷    Õß £ºOptics group
+* ĞŞ¸ÄÈÕÆÚ £º2021-9-6
+* ĞŞ¸ÄÃèÊö £ºa.ĞŞ¸ÄCA310,MSE²éÑ¯Í¨µÀº¯Êı±£´æÍ¨µÀºÅ´úÂë,ÓÅ»¯³ÌĞò
+*            b.Ôö¼ÓÉèÖÃINTÄ£Ê½Í¬²½ÆµÂÊº¯Êı
+*            c.Ôö¼Ó²¿·Öº¯Êı×¢ÊÍ
+*
+*
+* °æ    ±¾ £ºV1.0
+* ×÷    Õß £º
+* ĞŞ¸ÄÈÕÆÚ £º2021-8-30
+* ĞŞ¸ÄÃèÊö £ºa.Ôö¼ÓÉèÖÃ²âÁ¿CA310, MSEÄÚ´æÍ¨µÀ½Ó¿Úº¯Êı
+*            b.Ôö¼Ó²éÑ¯²âÁ¿CA310, MSEÄÚ´æÍ¨µÀ½Ó¿Úº¯Êı
+*               
+******************************************************************************/
+
 #include "commonCa310.h"
 #include <string.h>
 #include "delay.h"
 #include "stdlib.h"
 
-
+/**
+  * ¹¦ÄÜÃèÊö : °ó¶¨Çı¶¯ÖÁÌ½Í·ÏûÏ¢½á¹¹Ìå
+  * ÊäÈë²ÎÊı : 1. ca310 -- CA310Ì½Í·ÏûÏ¢½á¹¹
+  *            2. driver -- Çı¶¯½á¹¹Ìå
+  * ·µ »Ø Öµ : °ó¶¨×´Ì¬
+  *            1. = 1 -- ³É¹¦  2. = -1 -- Ê§°Ü
+  */
 int COMCa310InterfaceInit(Ca310Interface *ca310, sky_comDriver *driver)
 {
 	memset(ca310,0,sizeof(Ca310Interface));
@@ -14,27 +96,32 @@ int COMCa310InterfaceInit(Ca310Interface *ca310, sky_comDriver *driver)
 }
 
 
-/*æ‘˜è¦ å‘é€å‘½ä»¤å¹¶æ¥å—è¿”å›
- * å‚æ•°    com  è¦æ‰§è¡Œçš„å‘½ä»¤ ï¼ˆä¸å¸¦æ¢è¡Œç¬¦ï¼‰ 
- *         recive  æ‰§è¡Œå‘½ä»¤åè¿”å›çš„æ•°æ®ï¼Œé•¿åº¦è‡³å°‘1024
- *         time æ­¤å‘½ä»¤æœ€é•¿ç­‰å¾…æ—¶é—´  å•ä½ ms
- * è¿”å›å€¼ reciveé•¿åº¦  é”™è¯¯è¿”å›-1
- */
-static int COMRunCommond(Ca310Interface *ca310, char* com,char* rec,u32 time)
+/**
+  * ¹¦ÄÜÃèÊö : Ö´ĞĞÃüÁî·¢ËÍÓë½ÓÊÕ,½á¹û±£´æÔÚFIFO»º´æ
+  * ÊäÈë²ÎÊı : 1. ca310 -- CA310Ì½Í·ÏûÏ¢½á¹¹
+  *           2. com -- ×Ö·û´®ÃüÁî,³¤¶ÈÖÁÉÙ1024
+  *           3. rec -- FIFO¶ÁÈ¡»º´æÇø
+  *           4. time -- ³¬Ê±µÈ´ıÊ±¼ä,µ¥Î»ms
+  * ·µ »Ø Öµ : ÃüÁîÏìÓ¦×´Ì¬
+  *           1. = 1 -- ÏìÓ¦³É¹¦  2. = -1 -- ÏìÓ¦Ê§°Ü
+  */
+static int COMRunCommond(Ca310Interface *ca310, char* com,char* rec,uint32_t time)
 {
 	char *buf=com;
+	
 	if (ca310->driver == 0)
 		return -1;
 	
 	myFIFORead(&ca310->ca310FIFO, (void *)ca310->recive, sizeof(ca310->recive));
 	//ca310->driver->write((uint8_t *)buf,strlen(buf));
-	Write2dev(ca310->driver, (uint8_t *)buf,strlen(buf));
+	devWrite(ca310->driver, (uint8_t *)buf,strlen(buf));
 	
 	while(time--)
 	{
 		if(myFIFORead(&ca310->ca310FIFO, (void *)rec, 1) > 0)
 		{
-			*rec = (0x7f&(*rec));
+			*rec = (0x7f & (*rec));
+			/* Í¨ÓÃÃüÁî½áÊø·û'\r' */
 			if(*rec==0x0d)
 			{
 				rec++;
@@ -51,7 +138,16 @@ static int COMRunCommond(Ca310Interface *ca310, char* com,char* rec,u32 time)
 	return -1;
 }
 
-static int COMRunCommond_getData(Ca310Interface *ca310, char* rec,u32 time)
+/**
+  * ¹¦ÄÜÃèÊö : ¶ÁÈ¡Ì½Í·ÏûÏ¢½á¹¹FIFO»º³åÇøÏûÏ¢
+  * ÊäÈë²ÎÊı : 1. ca310 -- CA310Ì½Í·ÏûÏ¢½á¹¹
+  *            2. rec -- FIFO¶ÁÈ¡»º´æÇø
+  *            3. time -- ³¬Ê±µÈ´ıÊ±¼ä,µ¥Î»ms
+  * ·µ »Ø Öµ : ¶Á×´Ì¬
+  *            1. = 1 -- ³É¹¦  2. = -1 -- Ê§°Ü
+  * ×¢ÒâÊÂÏî : ½öÔÚ¸ÃÎÄ¼şÏÂÊ¹ÓÃ
+  */
+static int COMRunCommond_getData(Ca310Interface *ca310, char* rec,uint32_t time)
 {
 	if (ca310->driver == 0)
 		return -1;
@@ -74,29 +170,52 @@ static int COMRunCommond_getData(Ca310Interface *ca310, char* rec,u32 time)
 	return -1;
 }
 
-/********************************************************************************
-*å‡½å¾—ï¼šCA310_Init
-*æè¿°  ï¼šåˆå§‹åŒ– CA310,
-*å‚æ•°  ï¼šch   é€‰æ‹©å“ªä¸ªå†…å­˜é€šé“ -1é»˜è®¤ 0~99
-*		 sync  åŒæ­¥æ¨¡å¼  -1ï¼šé»˜è®¤  0ï¼šNTSC 1ï¼šPAL mode 2ï¼šEXT mode 3ï¼šUNIV mode
-*è¿”å›  ï¼šæ­£ç¡®è¿”å›1  è´Ÿæ•°ä¸ºé”™è¯¯ç  
-********************************************************************************/
-int COMCA310_Init(Ca310Interface *ca310, int ch,int sync)
+/**=================================================================================
+ *                      ###  CA-310Í¨ÓÃÅäÖÃ¹¦ÄÜº¯Êı  ###
+ * =================================================================================
+ * @{
+ */
+
+/**
+  * ¹¦ÄÜÃèÊö : ³õÊ¼»¯CA-310Ì½Í·
+  * ÊäÈë²ÎÊı : 1. ca310 -- CA310Ì½Í·ÏûÏ¢½á¹¹
+  *           2. ch -- ÄÚ´æÍ¨µÀ,ÖµÓò0 ~ 99
+  *           3. sync -- Í¬²½Ä£Ê½, 0£ºNTSC  1£ºPAL  2£ºEXT  3£ºUNIV
+  * ·µ »Ø Öµ : = 1 -- ³õÊ¼»¯³É¹¦,  < 0 -- ³õÊ¼»¯Ê§°Ü
+  */
+int COMCA310_Init(Ca310Interface *ca310, int ch, int sync)
 {
 	char sbuf[10];
-//    u32 id;
+	int i = 0;
+//    uint32_t id;
 	if (ca310->driver == 0)
 		return -1;
 	
-	COMRunCommond(ca310, "COM,1\r",ca310->recive,3000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}//FSC,2  OPR,1
-	COMRunCommond(ca310, "FSC,2\r",ca310->recive,3000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}//é€šä¿¡æ¨¡å¼ è‡ªåŠ¨
+	while(1)
+	{
+		COMRunCommond(ca310, "COM,1\r",ca310->recive,1000); 
+		if(ca310->recive!=strstr(ca310->recive,"OK")) 
+		{ 
+			i++;
+			if (i > 3)
+				return -1;
+		}
+		else
+		{
+			break;
+		}
+	}
 	
+	/* ¿ìÂıÄ£Ê½Ñ¡Ôñ */
+	COMRunCommond(ca310, "FSC,2\r",ca310->recive,3000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}//Í¨ĞÅÄ£Ê½ ×Ô¶¯
 	
+	/* ÄÚ´æ²âÁ¿Í¨µÀÑ¡Ôñ */
 	if (ch >= 0)
 	{
 		sprintf(sbuf,"MCH,%d\r",ch);
 		COMRunCommond(ca310, sbuf,ca310->recive,3000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;} 
 	}
+	
 	if (sync >= 0)
 	{
 		sprintf(sbuf,"SCS,%d\r",sync);
@@ -106,11 +225,17 @@ int COMCA310_Init(Ca310Interface *ca310, int ch,int sync)
 	return 1;
 }
 
-
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯CA310Ì½Í·±àºÅ
+  * ÊäÈë²ÎÊı : ca310 -- CA310Ì½Í·ÏûÏ¢½á¹¹
+  * ·µ »Ø Öµ : Êä³öÌ½Í·ºÅ
+  * ×¢ÒâÊÂÏî : ½öÊÊÓÃCA-310¶àÌ½Í·²âÁ¿        
+  */
 int COMCA310_QueryPNumber(Ca310Interface *ca310)
 {
 	uint8_t PNumber = 0;
 	uint8_t i;
+	
 	if (ca310->driver == 0)
 		return -1;
 	
@@ -132,18 +257,50 @@ int COMCA310_QueryPNumber(Ca310Interface *ca310)
 	return PNumber;
 }
 
-
+/**
+  * ¹¦ÄÜÃèÊö : Ğ£ÁãCA-310Ì½Í·
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  * ·µ »Ø Öµ : = 1 -- Ğ£Áã³É¹¦,  < 0 -- Ğ£ÁãÊ§°Ü
+  */
 int COMCA310_Cal0(Ca310Interface *ca310)
 {
+	int comm_cnt = 0;
+	
 	if (ca310->driver == 0)
 		return -1;
-	COMRunCommond(ca310, "COM,1\r",ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
-	COMRunCommond(ca310, "ZRC\r",ca310->recive,5000);  if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2;}
+	
+	/* ¿ªÊ¼Ô¶³ÌÍ¨ĞÅ */
+	while(1)
+	{
+		COMRunCommond(ca310, "COM,1\r",ca310->recive,3000); 
+		if(ca310->recive!=strstr(ca310->recive,"OK")) { 
+			comm_cnt++;
+			if (comm_cnt > 3)
+				return -1;
+		}
+		else {
+			break;
+		}
+	}
+	/* Ğ£Áã */
+    COMRunCommond(ca310, "ZRC\r",ca310->recive,5000);  
+    if(ca310->recive!=strstr(ca310->recive,"OK")) 
+    { 
+    	return -2;
+    }
 	
 	return 1;
 }
 
-
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯x, y, Lv
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- Ä¬ÈÏÎª1,CA310¶àÌ½Í·Êä³öÊ±,Ñ¡Ôñbit[x](x = 0..5) = 1Ö¸¶¨Ì½Í·Êä³ö
+  * Êä³ö²ÎÊı : 1. Lv -- ÁÁ¶ÈÖµ
+  *           2. X -- XYÉ«¶ÈÍ¼ÖĞX×ø±ê  
+  *           3. Y -- XYÉ«¶ÈÍ¼ÖĞY×ø±ê
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
 int COMCA310_GetLvXY(Ca310Interface *ca310, uint8_t PN,float* Lv,float* X,float* Y)
 {
 	char* buf;
@@ -185,7 +342,7 @@ int COMCA310_GetLvXY(Ca310Interface *ca310, uint8_t PN,float* Lv,float* X,float*
 	
 	len--;
 	buf=strtok(ca310->recive+7,";");
-	*X=(float)atof(buf)/10000;  //Xä¸Yæ”¾å¤§äº†ä¸€ä¸‡å€ä¼ é€’å›æ¥çš„
+	*X=(float)atof(buf)/10000;  //XÓëY·Å´óÁËÒ»Íò±¶´«µİ»ØÀ´µÄ
 	buf=strtok(NULL,";");
 	*Y=(float)atof(buf)/10000;
 	buf=strtok(NULL,";");
@@ -199,7 +356,7 @@ int COMCA310_GetLvXY(Ca310Interface *ca310, uint8_t PN,float* Lv,float* X,float*
 		Lv++;
 		len--;
 		buf=strtok(ca310->recive+7,";");
-		*X=(float)atof(buf)/10000;  //Xä¸Yæ”¾å¤§äº†ä¸€ä¸‡å€ä¼ é€’å›æ¥çš„
+		*X=(float)atof(buf)/10000;  //XÓëY·Å´óÁËÒ»Íò±¶´«µİ»ØÀ´µÄ
 		buf=strtok(NULL,";");
 		*Y=(float)atof(buf)/10000;
 		buf=strtok(NULL,";");
@@ -208,7 +365,161 @@ int COMCA310_GetLvXY(Ca310Interface *ca310, uint8_t PN,float* Lv,float* X,float*
 	return 1;	
 }
 
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯Tcp, duv, Lv
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- Ä¬ÈÏÎª1,CA310¶àÌ½Í·Êä³öÊ±,Ñ¡Ôñbit[x](x = 0..5) = 1Ö¸¶¨Ì½Í·Êä³ö
+  * Êä³ö²ÎÊı : 1. Tcp -- É«ÎÂ
+  *           2. duV -- É«Æ«²îÖµ
+  *           3. Lv -- ÁÁ¶ÈÖµ
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA310_GetTcpduvLv(Ca310Interface *ca310, uint8_t PN, float* Tcp, float* duv, float* Lv)
+{
+	char* buf;
+	int len = 0;
+	char sbuf[10];
+	int i;
+	if (ca310->driver == 0)
+		return -1;
+	
+	for (i = 0; i < 5;i++)
+	{
+		if (PN & (1 << i))
+		{
+			Tcp[len] = 0;
+			duv[len] = 0;
+			Lv[len] = 0;
+			len++;
+		}
+	}
+		
+	if (PN != ca310->PNumberFlag)
+	{
+		COMRunCommond(ca310, "COM,1\r",ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
+		sprintf(sbuf,"OPR,");
+		for (i = 0; i < 5;i++)
+		{
+			if (PN & (1 << i))
+			{
+				sprintf(sbuf+strlen(sbuf),"%d",i+1);
+			}
+		}
+		sprintf(sbuf+strlen(sbuf),"\r");
+		COMRunCommond(ca310, sbuf,ca310->recive,3000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
+		ca310->PNumberFlag = PN;
+	}
+	
+	COMRunCommond(ca310, "MDS,1\r",ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
+	COMRunCommond(ca310, "MES\r",ca310->recive,3000);  if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2;}
+	
+	len--;
+	buf=strtok(ca310->recive+7,";");
+	*Tcp=(float)atof(buf);  
+	buf=strtok(NULL,";");
+	*duv=(float)atof(buf)/10000;
+	buf=strtok(NULL,";");
+	*Lv=(float)atof(buf);
+		
+	while(len > 0)
+	{
+		COMRunCommond_getData(ca310, ca310->recive,3000);if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2;}
+		Tcp++;
+		duv++;
+		Lv++;
+		len--;
+		buf=strtok(ca310->recive+7,";");
+		*Tcp=(float)atof(buf)/10000;  //XÓëY·Å´óÁËÒ»Íò±¶´«µİ»ØÀ´µÄ
+		buf=strtok(NULL,";");
+		*duv=(float)atof(buf)/10000;
+		buf=strtok(NULL,";");
+		*Lv=(float)atof(buf);
+	}
+	return 1;	
+}
 
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯u, v, Lv
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- Ä¬ÈÏÎª1,CA310¶àÌ½Í·Êä³öÊ±,Ñ¡Ôñbit[x](x = 0..5) = 1Ö¸¶¨Ì½Í·Êä³ö
+  * Êä³ö²ÎÊı : 1. u  -- uÖµ
+  *           2. v  -- vÖµ
+  *           3. Lv -- ÁÁ¶ÈÖµ
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA310_GetuvLv(Ca310Interface *ca310, uint8_t PN, float* u, float* v, float* Lv)
+{
+	char* buf;
+	int len = 0;
+	char sbuf[10];
+	int i;
+	if (ca310->driver == 0)
+		return -1;
+	
+	for (i = 0; i < 5;i++)
+	{
+		if (PN & (1 << i))
+		{
+			u[len] = 0;
+			v[len] = 0;
+			Lv[len] = 0;
+			len++;
+		}
+	}
+		
+	if (PN != ca310->PNumberFlag)
+	{
+		COMRunCommond(ca310, "COM,1\r",ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
+		sprintf(sbuf,"OPR,");
+		for (i = 0; i < 5;i++)
+		{
+			if (PN & (1 << i))
+			{
+				sprintf(sbuf+strlen(sbuf),"%d",i+1);
+			}
+		}
+		sprintf(sbuf+strlen(sbuf),"\r");
+		COMRunCommond(ca310, sbuf,ca310->recive,3000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
+		ca310->PNumberFlag = PN;
+	}
+	
+	COMRunCommond(ca310, "MDS,5\r",ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
+	COMRunCommond(ca310, "MES\r",ca310->recive,3000);  if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2;}
+	
+	len--;
+	buf=strtok(ca310->recive+7,";");
+	*u=(float)atof(buf)/10000;  //XÓëY·Å´óÁËÒ»Íò±¶´«µİ»ØÀ´µÄ
+	buf=strtok(NULL,";");
+	*v=(float)atof(buf)/10000;
+	buf=strtok(NULL,";");
+	*Lv=(float)atof(buf);
+		
+	while(len > 0)
+	{
+		COMRunCommond_getData(ca310, ca310->recive,3000);if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2;}
+		u++;
+		v++;
+		Lv++;
+		len--;
+		buf=strtok(ca310->recive+7,";");
+		*u=(float)atof(buf)/10000;  //XÓëY·Å´óÁËÒ»Íò±¶´«µİ»ØÀ´µÄ
+		buf=strtok(NULL,";");
+		*v=(float)atof(buf)/10000;
+		buf=strtok(NULL,";");
+		*Lv=(float)atof(buf);
+	}
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯X, Y, Z 
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2.PN -- Ä¬ÈÏÎª1,CA310¶àÌ½Í·Êä³öÊ±,Ñ¡Ôñbit[x](x = 0..5) = 1Ö¸¶¨Ì½Í·Êä³ö
+  * Êä³ö²ÎÊı : 1. X -- Èı´Ì¼¤ÖµÖ®X
+  *           2. Y -- Èı´Ì¼¤ÖµÖ®Y 
+  *           3. Z -- Èı´Ì¼¤ÖµÖ®Z
+  * ·µ »Ø Öµ := 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
 int COMCA310_GetXYZ(Ca310Interface *ca310, uint8_t PN,float* X,float* Y,float* Z)
 {
 	char* buf;
@@ -250,7 +561,7 @@ int COMCA310_GetXYZ(Ca310Interface *ca310, uint8_t PN,float* X,float* Y,float* Z
 	
 	len--;
 	buf=strtok(ca310->recive+7,";");
-	*X=(float)atof(buf);  //Xä¸Yæ”¾å¤§äº†ä¸€ä¸‡å€ä¼ é€’å›æ¥çš„
+	*X=(float)atof(buf);  //XÓëY·Å´óÁËÒ»Íò±¶´«µİ»ØÀ´µÄ
 	buf=strtok(NULL,";");
 	*Y=(float)atof(buf);
 	buf=strtok(NULL,";");
@@ -264,7 +575,7 @@ int COMCA310_GetXYZ(Ca310Interface *ca310, uint8_t PN,float* X,float* Y,float* Z
 		Z++;
 		len--;
 		buf=strtok(ca310->recive+7,";");
-		*X=(float)atof(buf);  //Xä¸Yæ”¾å¤§äº†ä¸€ä¸‡å€ä¼ é€’å›æ¥çš„
+		*X=(float)atof(buf);  //XÓëY·Å´óÁËÒ»Íò±¶´«µİ»ØÀ´µÄ
 		buf=strtok(NULL,";");
 		*Y=(float)atof(buf);
 		buf=strtok(NULL,";");
@@ -273,8 +584,14 @@ int COMCA310_GetXYZ(Ca310Interface *ca310, uint8_t PN,float* X,float* Y,float* Z
 	return 1;
 }
 
-
-int COMCA310_GetFMA(Ca310Interface *ca310, uint8_t PN,float* FMA)
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯ÉÁË¸Öµ
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- Ä¬ÈÏÎª1,CA310¶àÌ½Í·Êä³öÊ±,Ñ¡Ôñbit[x](x = 0..5) = 1Ö¸¶¨Ì½Í·Êä³ö
+  * Êä³ö²ÎÊı : 1. FMA -- flickÖµ
+  * ·µ »Ø Öµ := 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA310_GetFMA(Ca310Interface *ca310, uint8_t PN, float* FMA)
 {
 	int len=0;
 	char sbuf[10];
@@ -324,9 +641,1273 @@ int COMCA310_GetFMA(Ca310Interface *ca310, uint8_t PN,float* FMA)
 	return 1;	
 }
 
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯CA310Ì½Í·Î¨Ò»ĞòÁĞºÅ
+  * ÊäÈë²ÎÊı : 1.ca310 -- CA310Ì½Í·ÏûÏ¢½á¹¹
+  *           2.PN -- Ä¬ÈÏÎª1,CA310¶àÌ½Í·Êä³öÊ±,Ñ¡Ôñbit[x](x = 0..5) = 1Ö¸¶¨Ì½Í·Êä³ö
+  * Êä³ö²ÎÊı : 1.id -- Ì½Í·Î¨Ò»ID
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA310_GetSerialNO(Ca310Interface *ca310, uint8_t PN,int* id)
+{
+	if (ca310->driver == 0)
+		return -1;
+	int len = 0;
+	char sbuf[10];
+	int i;
+	
+	for (i = 0; i < 5;i++)
+	{
+		if (PN & (1 << i))
+		{
+			id[len] = 0;
+			len++;
+		}
+	}
+		
+	COMRunCommond(ca310, "COM,1\r",ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
+	sprintf(sbuf,"RPR,");
+	for (i = 0; i < 5;i++)
+	{
+		if (PN & (1 << i))
+		{
+			sprintf(sbuf+strlen(sbuf),"%d",i+1);
+		}
+	}
+	sprintf(sbuf+strlen(sbuf),"\r");
+	COMRunCommond(ca310, sbuf,ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
+	
+	*id = atof(ca310->recive+5);
+	return 1;
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊı
+  * Êä³ö²ÎÊı : 1. CH -- CA310Ì½Í·Í¨µÀºÅ»º´æÇø
+  *              ²éÑ¯Í¨µÀÖµÓòÎª0 ~ 99,¶ÔÓ¦Í¨µÀCH00 ~ CH99
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA310_GetMeasureCH(Ca310Interface *ca310, uint8_t PN, int* CH)
+{
+	int i;
+	int len = 0;
+	char str_ch[10];
+
+	memset(str_ch, 0, 10);
+    if (ca310->driver == 0)
+	{
+        return -1;
+	}
+	
+	for (i = 0; i < 5;i++)
+	{
+		if (PN & (1 << i))
+		{
+			CH[len] = 0;
+			len++;
+		}
+	}
+	
+	if (PN != ca310->PNumberFlag)
+	{
+	}
+	
+	/* ²éÑ¯µ±Ç°²âÁ¿Í¨µÀºÅ */
+	COMRunCommond(ca310, "STR,3\r", ca310->recive, 3000);
+	if (ca310->recive != strstr(ca310->recive, "OK")) 
+    { 
+	    return -1;
+	}
+	
+	/* ½ØÈ¡»Ø¸´ÏûÏ¢ÖĞÍ¨µÀºÅ */
+	*CH = atoi(ca310->recive + 5);
+
+    return 1;
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊı
+  *           3. CH -- CA310Ì½Í·Í¨µÀºÅ,ÖµÓòÎª0 ~ 99,´ú±íÍ¨µÀCH00 ~ CH99
+  * ·µ »Ø Öµ : = 1 -- ÉèÖÃ³É¹¦,  < 0 -- ÉèÖÃÊ§°Ü
+  */
+int COMCA310_SetMeasureCH(Ca310Interface *ca310, uint8_t PN, int CH)
+{
+	char str_buff[10];
+
+	memset(str_buff, 0, 10);
+	if (ca310->driver == 0) 
+	{
+		return -1;
+	}
+	
+	/* ÏŞÖÆÍ¨µÀÊı */
+	if (CH >= 100 || CH < 0)
+	{
+		return -1;
+	}
+	
+	/* ²âÁ¿Í¨µÀÉèÖÃ */
+	sprintf(str_buff, "MCH,%d\r", CH);
+	COMRunCommond(ca310, str_buff, ca310->recive, 3000);
+    if (ca310->recive != strstr(ca310->recive, "OK"))  
+	{
+	    return -1;
+	}
+	
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿¿ìÂıÄ£Ê½
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊı
+  *           3. speed -- 0:SLOW  1:FAST 2:AUTO 
+  * ·µ »Ø Öµ : = 1 -- ÉèÖÃ³É¹¦,  < 0 -- ÉèÖÃÊ§°Ü
+  */
+int COMCA310_SetMeasureSpeed(Ca310Interface *ca310, uint8_t PN, int speed)
+{
+	char str_buff[10];
+
+	memset(str_buff, 0, 10);
+	if (ca310->driver == 0) 
+	{
+		return -1;
+	}
+	
+	/* ÏŞÖÆÊäÈë²ÎÊı */
+	if (speed >= 3 || speed < 0)
+	{
+		return -2;
+	}
+	
+	/* ²âÁ¿¿ìÂıÉèÖÃ */
+	sprintf(str_buff, "FSC,%d\r", speed);
+	COMRunCommond(ca310, str_buff, ca310->recive, 3000);
+    if (ca310->recive != strstr(ca310->recive, "OK"))  
+	{
+	    return -3;
+	}
+	
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ÉèÖÃÍ¬²½ÆµÂÊ
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN  -- ±£Áô²ÎÊı
+  *           3. fre -- Í¬²½ÆµÂÊ,Öµ·¶Î§40.0 ~ 200.0,¾«¶ÈÎªĞ¡ÊıµãºóÒ»Î»
+  * ·µ »Ø Öµ : = 1 -- ÉèÖÃ³É¹¦,  < 0 -- ÉèÖÃÊ§°Ü
+  */
+int COMCA310_SetINTFrequency(Ca310Interface *ca310, uint8_t PN, float fre)
+{
+	char str_buff[10];
+
+	memset(str_buff, 0, 10);
+	if (ca310->driver == 0) 
+	{
+		return -1;
+	}
+	
+	/* ÏŞÖÆÊäÈë²ÎÊı */
+	if (fre > 200.0 || fre < 40.0)
+	{
+		return -1;
+	}
+	
+	/* ÉèÖÃÍ¬²½ÆµÂÊ */
+	sprintf(str_buff, "SCS,%.1f\r", fre);
+	COMRunCommond(ca310, str_buff, ca310->recive, 3000);
+    if (ca310->recive != strstr(ca310->recive, "OK"))  
+	{
+	    return -2;
+	}
+	
+	return 1;	
+}
+/** @}
+  * @end of CA-310
+  */
+
+/**=================================================================================
+ *                      ###  CA-410Í¨ÓÃÅäÖÃ¹¦ÄÜº¯Êı  ###
+ * =================================================================================
+ * @{
+ */
+
+/**
+  * ¹¦ÄÜÃèÊö : ³õÊ¼»¯CA-410Ì½Í·
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. ch -- ÄÚ´æÍ¨µÀ,ÖµÓò0 ~ 99
+  *           3. sync -- Í¬²½Ä£Ê½, 0£ºNTSC  1£ºPAL  2£ºEXT  3£ºUNIV
+  * ·µ »Ø Öµ : = 1 -- ÉèÖÃ³É¹¦,  < 0 -- ÉèÖÃÊ§°Ü
+  */
+int COMCA410_Init(Ca310Interface *ca410, int ch,int sync)
+{
+	char sbuf[10];
+	int i = 0;
+	
+	if (ca410->driver == 0)
+		return -1;
+	
+	while(1)
+	{
+		COMRunCommond(ca410, "COM,1\r",ca410->recive,3000); 
+		if(ca410->recive!=strstr(ca410->recive,"OK")) { 
+			i++;
+			if (i > 3)
+				return -1;
+		}
+		else {
+			break;
+		}
+	}
+	
+	/* ¿ìÂıÄ£Ê½Ñ¡Ôñ */
+	COMRunCommond(ca410, "FSC,2\r",ca410->recive,3000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -1;}//Í¨ĞÅÄ£Ê½ ×Ô¶¯
+	
+	/* ÄÚ´æ²âÁ¿Í¨µÀÑ¡Ôñ */
+	if (ch >= 0)
+	{
+		sprintf(sbuf,"MCH,%d\r",ch);
+		COMRunCommond(ca410, sbuf,ca410->recive,3000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -1;} 
+	}
+	
+	if (sync >= 0)
+	{
+		sprintf(sbuf,"SCS,%d\r",sync);
+		COMRunCommond(ca410, sbuf,ca410->recive,3000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -1;} 
+	}
+	
+	return 1;
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : Ğ£ÁãCA410Ì½Í·
+  * ÊäÈë²ÎÊı : 1. ca410 -- CA410Ì½Í·ÏûÏ¢½á¹¹
+  * ·µ »Ø Öµ : = 1 -- Ğ£Áã³É¹¦,  < 0 -- Ğ£ÁãÊ§°Ü
+  */
+int COMCA410_Cal0(Ca310Interface *ca410)
+{
+	int comm_cnt = 0;
+	
+	if (ca410->driver == 0)
+		return -1;
+	
+	/* ¿ªÊ¼Ô¶³ÌÍ¨ĞÅ */
+	while(1)
+	{
+		COMRunCommond(ca410, "COM,1\r",ca410->recive,3000); 
+		if(ca410->recive!=strstr(ca410->recive,"OK")) { 
+			comm_cnt++;
+			if (comm_cnt > 3)
+				return -1;
+		}
+		else {
+			break;
+		}
+	}
+
+	/* Ğ£Áã */
+    COMRunCommond(ca410, "ZRC\r",ca410->recive,20000);  
+    if(ca410->recive!=strstr(ca410->recive,"OK")) 
+    { 
+    	return -2;
+    }
+	
+	return 1;
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯CA410Î¨Ò»ID
+  * ÊäÈë²ÎÊı : 1. ca410 -- CA410Ì½Í·ÏûÏ¢½á¹¹
+  *           2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. id -- ÁÁ¶ÈÖµ,µ¥Î»cd/m^2
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetSerialNO(Ca310Interface *ca410, uint8_t PN, int* id)
+{
+	char* buf;
+	uint8_t cnt = 0;
+	
+	if (ca410->driver == 0)
+		return -1;
+	
+	/* Ô¶³ÌÍ¨ĞÅ */
+	COMRunCommond(ca410, "COM,1\r",ca410->recive,1000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -1; }
+	/* »ñÈ¡Ì½Í·ĞÅÏ¢ */
+    COMRunCommond(ca410, "IDO,1,1\r",ca410->recive,1000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -2; }
+	
+	buf = strtok(ca410->recive, ",");
+	while(cnt < 4)
+	{
+        cnt++;
+        buf = strtok(NULL, ",");
+	}
+	buf = strtok(NULL, ",");
+	*id = (int)atoi(buf);  
+	return 1;
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯x, y, Lv
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. Lv -- ÁÁ¶ÈÖµ,µ¥Î»cd/m^2
+  *            2. X -- XYÉ«¶ÈÍ¼ÖĞX×ø±ê  
+  *            3. Y -- XYÉ«¶ÈÍ¼ÖĞY×ø±ê
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetLvXY(Ca310Interface *ca410, uint8_t PN,float* Lv,float* X,float* Y)
+{
+	char* buf;
+	
+	if (ca410->driver == 0)
+		return -1;
+	
+	COMRunCommond(ca410, "MMS,1\r",ca410->recive,1000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -1;}
+	COMRunCommond(ca410, "MDS,0\r",ca410->recive,1000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -1;}
+	COMRunCommond(ca410, "MES,2\r",ca410->recive,3000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -2;}
+	
+	buf=strtok(ca410->recive+9,",");
+	*X=(float)atof(buf);  
+	buf=strtok(NULL,",");
+	*Y=(float)atof(buf);
+	buf=strtok(NULL,",");
+	*Lv=(float)atof(buf);
+		
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯Tcp, duv, Lv
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. Tcp -- É«ÎÂ
+  *            2. duV -- É«Æ«²îÖµ
+  *            3. Lv -- ÁÁ¶ÈÖµ,µ¥Î»cd/m^2
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetTcpduvLv(Ca310Interface *ca410, uint8_t PN,float* Tcp,float* duv,float* Lv)
+{
+	char* buf;
+	uint8_t cnt = 0;
+
+	
+	if (ca410->driver == 0)
+		return -1;
+	
+	COMRunCommond(ca410, "MMS,1\r",ca410->recive,1000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -1;}
+	COMRunCommond(ca410, "MDS,1\r",ca410->recive,1000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -2;}
+	COMRunCommond(ca410, "MES,2\r",ca410->recive,3000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -3;}
+	
+	buf = strtok(ca410->recive, ",");
+	//ÔÙÇĞ¸îÁ½´Î
+	while(cnt < 2)
+	{
+        cnt++;
+        buf = strtok(NULL, ",");
+	}
+	buf = strtok(NULL, ",");
+	*Tcp = (float)atof(buf);  
+	buf = strtok(NULL, ",");
+	*duv = (float)atof(buf);
+	buf = strtok(NULL, ",");
+	*Lv = (float)atof(buf);
+		
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯u, v, Lv
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. u -- É«¶ÈuÖµ
+  *           2. v -- É«¶ÈvÖµ
+  *           3. Lv -- ÁÁ¶ÈÖµ,µ¥Î»cd/m^2
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetuvLv(Ca310Interface *ca410, uint8_t PN, float* u, float* v, float* Lv)
+{
+	char* buf;
+	uint8_t cnt = 0;
+
+	
+	if (ca410->driver == 0)
+		return -1;
+	
+	COMRunCommond(ca410, "MMS,1\r",ca410->recive,1000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -1;}
+	COMRunCommond(ca410, "MDS,5\r",ca410->recive,1000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -2;}
+	COMRunCommond(ca410, "MES,2\r",ca410->recive,3000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -3;}
+	
+	buf = strtok(ca410->recive, ",");
+	//ÔÙÇĞ¸îÁ½´Î
+	while(cnt < 2)
+	{
+        cnt++;
+        buf = strtok(NULL, ",");
+	}
+	buf = strtok(NULL, ",");
+	*u = (float)atof(buf);  
+	buf = strtok(NULL, ",");
+	*v = (float)atof(buf);
+	buf = strtok(NULL, ",");
+	*Lv = (float)atof(buf);
+		
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯X, Y, Z
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. X -- Èı´Ì¼¤ÖµÖ®X
+  *            2. Y -- Èı´Ì¼¤ÖµÖ®Y 
+  *            3. Z -- Èı´Ì¼¤ÖµÖ®Z
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetXYZ(Ca310Interface *ca410, uint8_t PN,float* X,float* Y,float* Z)
+{
+	char* buf;
+	
+	if (ca410->driver == 0)
+		return -1;
+	
+	COMRunCommond(ca410, "MMS,1\r",ca410->recive,1000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -1;}
+	COMRunCommond(ca410, "MDS,7\r",ca410->recive,1000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -1;}
+	COMRunCommond(ca410, "MES,2\r",ca410->recive,3000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -2;}
+	
+	buf=strtok(ca410->recive+9,",");
+	*X=(float)atof(buf);  
+	buf=strtok(NULL,",");
+	*Y=(float)atof(buf);
+	buf=strtok(NULL,",");
+	*Z=(float)atof(buf);
+		
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯flick °Ù·ÖÖµ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. FMA -- flickÖµ
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetFMA(Ca310Interface *ca410, uint8_t PN,float* FMA)
+{
+	char* buf;
+	
+	if (ca410->driver == 0)
+		return -1;
+	
+	COMRunCommond(ca410, "MMS,2\r",ca410->recive,1000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -1;}
+	COMRunCommond(ca410, "FCS,0,0\r",ca410->recive,1000); if(ca410->recive!=strstr(ca410->recive,"OK")) { return -2;}
+	COMRunCommond(ca410, "MES,1\r",ca410->recive,3000);  if(ca410->recive!=strstr(ca410->recive,"OK")) { return -3;}
+	
+	
+	buf=strtok(ca410->recive,",");
+	for (uint8_t i = 0; i< 7; i++) {
+		
+		buf=strtok(NULL,",");
+	}	
+	*FMA=(float)atof(buf);
+
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯flick dBÖµ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. FMA -- flickÖµ
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetdB(Ca310Interface *ca410, uint8_t PN, float* dB)
+{
+	char* buf;
+	
+	if (ca410->driver == 0)
+		return -1;
+	COMRunCommond(ca410, "MMS,2\r", ca410->recive, 1000); 	if(ca410->recive!=strstr(ca410->recive,"OK")) { return -1;}
+	COMRunCommond(ca410, "FMS,1\r", ca410->recive, 1000); 	if(ca410->recive!=strstr(ca410->recive,"OK")) { return -2;}
+	COMRunCommond(ca410, "MDS,6\r", ca410->recive, 1000); 	if(ca410->recive!=strstr(ca410->recive,"OK")) { return -3;}
+	COMRunCommond(ca410, "FCS,1,1\r", ca410->recive, 1000); 	if(ca410->recive!=strstr(ca410->recive,"OK")) { return -4;}
+	COMRunCommond(ca410, "JCS,1,10\r", ca410->recive, 1000); 	if(ca410->recive!=strstr(ca410->recive,"OK")) { return -5;}
+	COMRunCommond(ca410, "MES,1\r", ca410->recive, 5000); 	if(ca410->recive!=strstr(ca410->recive,"OK")) { return -6;}
+	COMRunCommond(ca410, "JDR,1,0\r", ca410->recive, 10000);  	if(ca410->recive!=strstr(ca410->recive,"OK")) { return -7;}
+	
+	
+	buf = strtok(ca410->recive,",");
+	/* ½ØÈ¡µÚÈı¸ö²ÎÊı */ 
+	for (uint8_t i = 0; i< 3; i++) {
+		buf=strtok(NULL,",");
+	}	
+	*dB = (float)atof(buf);
+
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ÉèÖÃINTÄ£Ê½ÏÂµÄÍ¬²½ÆµÂÊ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  *            3. fre -- Í¬²½ÆµÂÊ,×î¶àÖ§³ÖĞ¡ÊıµãºóÁ½Î»
+  * ·µ »Ø Öµ : = 1 -- ÉèÖÃ³É¹¦,  < 0 -- ÉèÖÃÊ§°Ü
+  */
+int COMCA410_SetINTFrequency(Ca310Interface *ca410, uint8_t PN, float fre)
+{
+	char str_buff[20];
+
+	memset(str_buff, 0, 10);
+	if (ca410->driver == 0) 
+	{
+		return -1;
+	}
+	/* ¿ªÊ¼Ô¶³ÌÍ¨ĞÅ */
+	COMRunCommond(ca410, "COM,1\r", ca410->recive, 3000);
+	if (ca410->recive != strstr(ca410->recive, "OK"))  
+	{
+	    return -1;
+	}
+    /* INTÄ£Ê½ÉèÖÃÍ¬²½ÆµÂÊ */
+	sprintf(str_buff, "SCS,4,%.2f\r", fre);
+	COMRunCommond(ca410, str_buff, ca410->recive, 3000);
+    if (ca410->recive != strstr(ca410->recive, "OK"))  
+	{
+	    return -2;
+	}
+	
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯INTÄ£Ê½ÏÂµÄÍ¬²½ÆµÂÊ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. fre -- Í¬²½ÆµÂÊ
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetINTFrequency(Ca310Interface *ca410, uint8_t PN, float* fre)
+{
+
+	if (ca410->driver == 0) 
+	{
+		return -1;
+	}
+	/* ¿ªÊ¼Ô¶³ÌÍ¨ĞÅ */
+	COMRunCommond(ca410, "COM,1\r", ca410->recive, 3000);
+	if (ca410->recive != strstr(ca410->recive, "OK"))  
+	{
+	    return -1;
+	}
+    /* ²éÑ¯Í¬²½ÆµÂÊ */
+	COMRunCommond(ca410, "STR,28\r", ca410->recive, 3000);
+    if (ca410->recive != strstr(ca410->recive, "OK¡¢"))  
+	{
+	    return -2;
+	}
+	
+	/* ½ØÈ¡»Ø¸´ÏûÏ¢ÖĞÆµÂÊ */
+	*fre = atof(ca410->recive + 5);
+
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯INTÄ£Ê½ÏÂµÄÍ¬²½ÆµÂÊ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. fre -- Í¬²½ÆµÂÊ
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  * ×¢ÒâÊÂÏî : ´Ëº¯Êı½öÄÜC33Ê¹ÓÃ
+  */
+int COMCA410_OnlyC33_GetINTFrequency(Ca310Interface *ca410, uint8_t PN, float* fre)
+{
+	char* str_buff;
+
+	if (ca410->driver == 0) 
+	{
+		return -1;
+	}
+	/* ¿ªÊ¼Ô¶³ÌÍ¨ĞÅ */
+	COMRunCommond(ca410, "COM,1\r", ca410->recive, 3000);
+	if (ca410->recive != strstr(ca410->recive, "OK"))  
+	{
+	    return -1;
+	}
+    /* ²éÑ¯Í¬²½ÆµÂÊ */
+	COMRunCommond(ca410, "STR,1\r", ca410->recive, 3000);
+    if (ca410->recive != strstr(ca410->recive, "OK"))  
+	{
+	    return -2;
+	}
+	
+	/* ½ØÈ¡»Ø¸´ÏûÏ¢ÖĞÆµÂÊ */
+	str_buff = strtok(ca410->recive + 5, ",");
+	str_buff = strtok(NULL, ",");
+	str_buff = strtok(NULL, ",");
+	*fre = (float)atof(str_buff);
+
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ²éÑ¯²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. CH -- CA410Ì½Í·Í¨µÀºÅ»º´æÇø
+  *               ²éÑ¯Í¨µÀÖµÓòÎª0 ~ 99,¶ÔÓ¦Í¨µÀCH00 ~ CH99
+  * ·µ »Ø Öµ : = 1 -- ²éÑ¯³É¹¦,  < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMCA410_GetMeasureCH(Ca310Interface *ca410, uint8_t PN, int* CH)
+{
+	char str_ch[10];
+
+	memset(str_ch, 0, 10);
+    if (ca410->driver == 0)
+	{
+        return -1;
+	}
+	
+	if (PN != ca410->PNumberFlag)
+	{
+	}
+	
+	/* ²éÑ¯µ±Ç°²âÁ¿Í¨µÀºÅ */
+	COMRunCommond(ca410, "STR,3\r", ca410->recive, 3000);
+	if (ca410->recive != strstr(ca410->recive, "OK")) 
+    { 
+	    return -1;
+	}
+	
+	/* ½ØÈ¡»Ø¸´ÏûÏ¢ÖĞÍ¨µÀºÅ */
+	*CH = atoi(ca410->recive + 5);
+
+    return 1;
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  *            3. CH -- CA410Ì½Í·Í¨µÀºÅ,ÖµÓòÎª0 ~ 99,´ú±íÍ¨µÀCH00 ~ CH99
+  * ·µ »Ø Öµ : = 1 -- ÉèÖÃ³É¹¦,  < 0 -- ÉèÖÃÊ§°Ü
+  */
+int COMCA410_SetMeasureCH(Ca310Interface *ca410, uint8_t PN, int CH)
+{
+	char str_buff[10];
+
+	memset(str_buff, 0, 10);
+	if (ca410->driver == 0) 
+	{
+		return -1;
+	}
+	
+	/* ÏŞÖÆÍ¨µÀÊı */
+	if (CH >= 100 || CH < 0)
+	{
+		return -1;
+	}
+	
+	/* ²âÁ¿Í¨µÀÉèÖÃ */
+	sprintf(str_buff, "MCH,%d\r", CH);
+	COMRunCommond(ca410, str_buff, ca410->recive, 3000);
+    if (ca410->recive != strstr(ca410->recive, "OK"))  
+	{
+	    return -1;
+	}
+	
+	return 1;	
+}
+
+/**
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿ËÙ¶È
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  *            3. speedmode -- CA410²âÁ¿ËÙ¶ÈÄ£Ê½
+  *               0.SLOW 1.FAST 2.LTD.AUTO 3.AUTO
+  * ·µ »Ø Öµ : = 1 -- ÉèÖÃ³É¹¦,  < 0 -- ÉèÖÃÊ§°Ü
+  */
+int COMCA410_SetMeasureSpeed(Ca310Interface *ca410, uint8_t PN, int speedmode)
+{
+	char str_buff[10];
+
+	memset(str_buff, 0, 10);
+	if (ca410->driver == 0) 
+	{
+		return -1;
+	}
+	
+	/* ÏŞÖÆËÙ¶ÈÄ£Ê½²ÎÊı */
+	if (speedmode > 3 || speedmode < 0)
+	{
+		return -1;
+	}
+	
+	/* ²âÁ¿ËÙ¶ÈÉèÖÃ */
+	sprintf(str_buff, "FSC,%d\r", speedmode);
+	COMRunCommond(ca410, str_buff, ca410->recive, 3000);
+    if (ca410->recive != strstr(ca410->recive, "OK"))  
+	{
+	    return -1;
+	}
+	
+	return 1;	
+}
+
+/** @}
+  * @end of CA-410
+  */
 
 
+/**=================================================================================
+ *                      ###  MSEÍ¨ÓÃÅäÖÃ¹¦ÄÜº¯Êı  ###
+ * =================================================================================
+ * @{
+ */
+
+/**
+  * º¯Êı¶¨Òå : COMMSE_Init(Ca310Interface *ca310, int ch,int sync)
+  * ¹¦ÄÜÃèÊö : ³õÊ¼»¯ºÉÀ¼MSEÌ½Í·
+  * ÊäÈë²ÎÊı : 1. ca310 -- CA410Ì½Í·ÏûÏ¢½á¹¹
+  *            2. ch -- Î´Ê¹ÓÃ
+  *            3. sync -- Î´Ê¹ÓÃ
+  * ·µ »Ø Öµ : ÉèÖÃ×´Ì¬
+  *            1. = 1 -- ³É¹¦  2. < 0 -- Ê§°Ü
+  */
+int COMMSE_Init(Ca310Interface *ca310, int ch,int sync)
+{
+	int i = 0;
+//    uint32_t id;
+	
+	if (ca310->driver == 0)
+		return -1;
+	while(1)
+	{
+		COMRunCommond(ca310, "COM\r",ca310->recive,300); //·¢ËÍÈÎÒâÊı¾İ£¬ÓĞ·´À¡ËµÃ÷ÏßÂ·Í¨
+		if(ca310->recive!=strstr(ca310->recive,">>")) 
+		{ 
+			i++;
+			if (i > 3)
+				return -1;
+		}else
+		{
+			break;
+		}
+	}
+	return 1;
+}
+
+/**
+  * º¯Êı¶¨Òå : COMMSE_GetLvXY(Ca310Interface *ca410, uint8_t PN,float* Lv,float* X,float* Y)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯É«×ø±ê¼°ÁÁ¶ÈÖµ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. Lv -- ÁÁ¶ÈÖµ,µ¥Î»cd/m^2
+  *            2. X -- XYÉ«¶ÈÍ¼ÖĞX×ø±ê  
+  *            3. Y -- XYÉ«¶ÈÍ¼ÖĞY×ø±ê
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *            1. = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMMSE_GetLvXY(Ca310Interface *ca410, uint8_t PN,float* Lv,float* X,float* Y)
+{
+	char* buf;
+
+	
+	if (ca410->driver == 0)
+		return -1;
+	
+	if(COMRunCommond(ca410, ":MEASure:Yxy\r",ca410->recive,3000)<=0){ return -1;}
+	
+	buf=strtok(ca410->recive,",");
+	*Lv=(float)atof(buf);  
+	buf=strtok(NULL,",");
+	*X=(float)atof(buf);
+	buf=strtok(NULL,",");
+	*Y=(float)atof(buf);
+	
+	return 1;	
+}
+
+/**
+  * º¯Êı¶¨Òå : COMMSE_GetXYZ(Ca310Interface *ca410, uint8_t PN,float* X,float* Y,float* Z)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯Èı´Ì¼¤Öµ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. X -- Èı´Ì¼¤ÖµÖ®X
+  *            2. Y -- Èı´Ì¼¤ÖµÖ®Y 
+  *            3. Z -- Èı´Ì¼¤ÖµÖ®Z
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *            1. = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMMSE_GetXYZ(Ca310Interface *ca410, uint8_t PN,float* X,float* Y,float* Z)
+{
+	char* buf;
+	
+	if (ca410->driver == 0)
+		return -1;
+
+	if(COMRunCommond(ca410, ":MEASure:XYZ\r",ca410->recive,3000)<=0){ return -1;}
+	
+	buf=strtok(ca410->recive,",");
+	*X=(float)atof(buf);  
+	buf=strtok(NULL,",");
+	*Y=(float)atof(buf);
+	buf=strtok(NULL,",");
+	*Z=(float)atof(buf);
+	return 1;	
+}
+
+/**
+  * º¯Êı¶¨Òå : COMMSE_GetFMA(Ca310Interface *ca410, uint8_t PN,float* FMA)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯ÉÁË¸Öµ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. FMA -- flickÖµ
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *            1. = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMMSE_GetFMA(Ca310Interface *ca410, uint8_t PN,float* FMA)
+{
+	if (ca410->driver == 0)
+		return -1;
+	
+	
+	if(COMRunCommond(ca410, ":MEASure:FLICker 512 \r",ca410->recive,3000)>0)
+	
+//	buf=strtok(ca410->recive,",");
+//	for (uint8_t i = 0; i< 7; i++) {
+//		
+//		buf=strtok(NULL,",");
+//	}	
+	*FMA=(float)atof(ca410->recive);
+	
+
+	return 1;	
+}
+
+/**
+  * º¯Êı¶¨Òå : COMMSE_GetSN(Ca310Interface *ca410, uint8_t PN,char* SN)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯ĞòÁĞºÅ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 3. SN -- MSEÌ½Í·Î¨Ò»ĞòÁĞºÅ
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *            1. = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  */
+int COMMSE_GetSN(Ca310Interface *ca410, uint8_t PN,char* SN)
+{
+	
+	memset(SN, 0, 7);
+	
+	if (ca410->driver == 0)
+		return -1;
+	
+	if(COMRunCommond(ca410, ":EEPROM:READ:SN \r",ca410->recive,3000)>0)	
+	memcpy(SN, ca410->recive, 7);
+
+	return 1;	
+}
+
+/**
+  * º¯Êı¶¨Òå : COMMSE_GetCH(Ca310Interface *ca410, uint8_t PN,char* CH)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 3. CH -- MSEÌ½Í·Í¨µÀºÅ×Ö·û´®
+  *                     a."factory"   b."user1" ~ "user30"  c."off" 
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *             1. = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  * ×¢ÒâÊÂÏî : ´Ëº¯ÊıÓëCOMMSE_GetMeasureCH³åÍ»,²»ÄÜÍ¬Ê±Ê¹ÓÃ,½¨ÒéÊ¹ÓÃ
+  *            COMMSE_GetMeasureCH()
+  */
+int COMMSE_GetCH(Ca310Interface *ca410, uint8_t PN,char* CH)
+{
+	memset(CH, 0, 8);
+	
+	if (ca410->driver == 0)
+		return -1;
+	
+	if(COMRunCommond(ca410, ":SENSe:SBW? \r",ca410->recive,3000)>0)	
+	memcpy(CH, ca410->recive, strlen(ca410->recive)+1);
+	return 1;	
+}
+
+/**
+  * º¯Êı¶¨Òå : COMMSE_SetCH(Ca310Interface *ca410, uint8_t PN,char* CH)
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  *            3. CH -- MSEÌ½Í·Í¨µÀºÅ×Ö·û´®
+  *                     a."factory\r"   b."user1\r" ~ "user30\r"  c."off\r" 
+  * ·µ »Ø Öµ : ÉèÖÃ×´Ì¬
+  *            1. = 1 -- ÉèÖÃ³É¹¦  2. < 0 -- ÉèÖÃÊ§°Ü
+  * ×¢ÒâÊÂÏî : ´Ëº¯ÊıÓëCOMMSE_SetMeasureCH³åÍ»,²»ÄÜÍ¬Ê±Ê¹ÓÃ,½¨ÒéÊ¹ÓÃ
+  *            COMMSE_SetMeasureCH()
+  */
+int COMMSE_SetCH(Ca310Interface *ca410, uint8_t PN, char* CH)
+{
+	char str1[50]=":SENSe:SBW ";
+	
+	memset(CH, 0, 8);
+	
+	if (ca410->driver == 0)
+		return -1;
+	
+	
+	strcat(str1,CH);
+	strcat(str1,"\r");
+	
+	if(COMRunCommond(ca410, str1,ca410->recive,3000)>0)	
+	memcpy(CH, ca410->recive, strlen(ca410->recive)+1);
+	return 1;	
+}
+
+/**
+  * º¯Êı¶¨Òå : COMMSE_SetMeasureCH(Ca310Interface *ca410, uint8_t PN, int CH)
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  *            3. CH -- MSEÌ½Í·Í¨µÀºÅ
+  *                     a.0 -- factoryÍ¨µÀÄ£Ê½    b.1 ~ 30 -- userÍ¨µÀÄ£Ê½
+  *                     c.31 -- offÍ¨µÀÄ£Ê½
+  * ·µ »Ø Öµ : ÉèÖÃ×´Ì¬
+  *            1. = 1 -- ÉèÖÃ³É¹¦  2. < 0 -- ÉèÖÃÊ§°Ü
+  * ×¢ÒâÊÂÏî : ´Ëº¯ÊıÓëCOMMSE_SetCH()³åÍ»,²»ÄÜÍ¬Ê±Ê¹ÓÃ
+  */
+int COMMSE_SetMeasureCH(Ca310Interface *ca410, uint8_t PN, int CH)
+{
+	char buff[10];
+	char fixed_str[20] = ":SENSe:SBW ";
+	char *str_match[10] = {"factory\r", "off\r", "user"};
+	char match_number = 0;    /* Ä¬ÈÏÎª"factory"Ä£Ê½*/
+
+	/* Çı¶¯°ó¶¨×´Ì¬ */
+	if (ca410->driver == 0) 
+	{
+		return -1;
+	}
+	
+	/* ÏŞÖÆÍ¨µÀÊı */
+	if (CH > 31)
+	{
+		return -1;
+	}
+	
+	/* Æ¥ÅäÍ¨µÀ,ÉèÖÃÃüÁî */
+	if (CH == 0)
+	{
+		match_number = 0;
+        strcat(fixed_str, str_match[match_number]);
+	}	
+    else if ((CH > 0) && (CH < 31))
+	{
+		match_number = 2;
+        strcat(fixed_str, str_match[match_number]);
+		sprintf(buff, "%d\r", CH);
+        strcat(fixed_str, buff);
+	}
+	else if (CH == 31)
+	{
+		match_number = 1;
+        strcat(fixed_str, str_match[match_number]);
+	}
+	
+	/* Í¨µÀÉèÖÃ */
+    if (COMRunCommond(ca410, fixed_str, ca410->recive, 3000) < 0)  
+	{
+	    return -1;
+	}
+	
+	return 1;	
+}
+
+/**
+  * º¯Êı¶¨Òå : COMMSE_GetMeasureCH(Ca310Interface *ca410, uint8_t PN, int* CH)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊı : 1. ca410 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *            2. PN -- ±£Áô²ÎÊı,ÖµÎŞĞ§
+  * Êä³ö²ÎÊı : 1. CH -- MSEÌ½Í·Í¨µÀºÅ
+  *                    a.0 -- factoryÍ¨µÀÄ£Ê½    b.1 ~ 30 -- userÍ¨µÀÄ£Ê½
+  *                    c.31 -- offÍ¨µÀÄ£Ê½
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *            1. = 1 -- ²éÑ¯³É¹¦  2. < 0 -- ²éÑ¯Ê§°Ü
+  * ×¢ÒâÊÂÏî : ´Ëº¯ÊıÓëCOMMSE_GetCH()³åÍ»,²»ÄÜÍ¬Ê±Ê¹ÓÃ
+  */
+int COMMSE_GetMeasureCH(Ca310Interface *ca410, uint8_t PN, int* CH)
+{
+	char str_ch[10];
+	char *str_match[10] = { "factory", "off", "user"};
+	int ch_num = 0;    	/* Í¨µÀºÅ0: factory */
+
+	/* Çå¿Õ»º³åÇø  */
+	memset(str_ch, 0, 10);
+	if (ca410->driver == 0)
+	{
+		return -1;
+	}
+	
+	if (PN != ca410->PNumberFlag)
+	{
+	}
+	
+	/* ²éÑ¯µ±Ç°Í¨µÀ */
+	if (COMRunCommond(ca410, ":SENSe:SBW? \r",ca410->recive,3000) > 0)	
+	{
+	    memcpy(str_ch, ca410->recive, strlen(ca410->recive) + 1);
+	}
+    /* Æ¥ÅäÍ¨µÀ */
+	if (str_ch == strstr(str_ch, str_match[0]))
+	{
+		/* factory */
+	    *CH = 0; 
+	}
+	else if (str_ch == strstr(str_ch, str_match[1]))
+	{
+		/* off */
+	    *CH = 31; 
+	}
+	else if (str_ch == strstr(str_ch, str_match[2]))
+	{
+		/* ½ØÈ¡Í¨µÀºÅ user1 ~ user30 */
+		memset(str_ch, '0', 4);
+		ch_num = atoi(str_ch);
+		*CH = ch_num;
+	}
+	else 
+	{
+		*CH = -1;
+		return -1;
+	}
+	 
+	return 1;	
+}
 
 
+/** @}
+  * @}end of MSE
+  */
 
 
+/**=================================================================================
+ *                      ###  C32Í¨ÓÃÅäÖÃ¹¦ÄÜº¯Êı  ###
+ * =================================================================================
+ * @{
+ */
+
+/**
+  * º¯Êı¶¨Òå : COMC32_Init(Ca310Interface *ca310, int ch,int sync)
+  * ¹¦ÄÜÃèÊö : ³õÊ¼»¯CA-310Ì½Í·
+  * ÊäÈë²ÎÊı : 1. ca310 -- CA310Ì½Í·ÏûÏ¢½á¹¹
+  *            2. ch -- ÄÚ´æÍ¨µÀ,ÖµÓò0 ~ 31
+  *            3. sync -- ±£Áô
+  * ·µ »Ø Öµ : ÉèÖÃ×´Ì¬
+  *            1. = 1 -- ³É¹¦  2. = -1 -- Ê§°Ü
+  */
+int COMC32_Init(Ca310Interface *ca310, int ch,int sync)
+{
+	char sbuf[10];
+	int i = 0;
+
+	if (ca310->driver == 0)
+		return -1;
+	while(1)
+	{
+		COMRunCommond(ca310, "COM,1\r",ca310->recive,3000); 
+		if(ca310->recive!=strstr(ca310->recive,"OK")) 
+		{ 
+			i++;
+			if (i > 3)
+				return -1;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	/* ÄÚ´æ²âÁ¿Í¨µÀÑ¡Ôñ */
+	if (ch >= 0 && ch <= 31)
+	{
+		/* C32¹æ¶¨,Í¨µÀºÅ±ØĞëÊäÈëÁ½Î»×Ö·û */
+		if(ch < 10)
+			sprintf(sbuf,"MCH,0%d\r",ch);
+		else
+			sprintf(sbuf,"MCH,%d\r",ch);
+		COMRunCommond(ca310, sbuf,ca310->recive,3000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1; } 
+	}
+	COMRunCommond(ca310, "COM,0\r",ca310->recive,3000);  if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2;}
+
+	return 1;
+}
+
+/**
+  * º¯Êı¶¨Òå : COMC32_GetLvXY(Ca310Interface *ca310, uint8_t PN,float* Lv,float* X,float* Y)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯É«×ø±ê¼°ÁÁ¶ÈÖµ
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô
+  * Êä³ö²ÎÊı : 1. Lv -- ÁÁ¶ÈÖµ,µ¥Î»cd/m^2
+  *           2. X -- XYÉ«¶ÈÍ¼ÖĞX×ø±ê  
+  *           3. Y -- XYÉ«¶ÈÍ¼ÖĞY×ø±ê
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. = -1 -- ²éÑ¯Ê§°Ü
+  */
+int COMC32_GetLvXY(Ca310Interface *ca310, uint8_t PN,float* Lv,float* X,float* Y)
+{
+	char* buf;
+	
+	if (ca310->driver == 0)
+		return -1;
+
+	COMRunCommond(ca310, "COM,1\r",ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
+	COMRunCommond(ca310, "MDS,0\r",ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
+	COMRunCommond(ca310, "MES\r",ca310->recive,3000);  if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2;}
+	COMRunCommond(ca310, "COM,0\r",ca310->recive,3000);  if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2;}
+
+	buf=strtok(ca310->recive+7,";");
+	*X=(float)atof(buf)/10000;  //XÓëY·Å´óÁËÒ»Íò±¶´«µİ»ØÀ´µÄ
+	buf=strtok(NULL,";");
+	*Y=(float)atof(buf)/10000;
+	buf=strtok(NULL,";");
+	*Lv=(float)atof(buf);
+		
+	return 1;	
+}
+
+/**
+  * º¯Êı¶¨Òå : COMC32_GetXYZ(Ca310Interface *ca310, uint8_t PN,float* X,float* Y,float* Z)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯Èı´Ì¼¤Öµ
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô
+  * Êä³ö²ÎÊı : 1. X -- Èı´Ì¼¤ÖµÖ®X
+  *           2. Y -- Èı´Ì¼¤ÖµÖ®Y 
+  *           3. Z -- Èı´Ì¼¤ÖµÖ®Z
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. = -1 -- ²éÑ¯Ê§°Ü
+  */
+int COMC32_GetXYZ(Ca310Interface *ca310, uint8_t PN,float* X,float* Y,float* Z)
+{
+	char* buf;
+
+	if (ca310->driver == 0)
+		return -1;
+
+	COMRunCommond(ca310, "COM,1\r",ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
+	COMRunCommond(ca310, "MDS,7\r",ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1;}
+	COMRunCommond(ca310, "MES\r",ca310->recive,3000);  if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2;}
+	COMRunCommond(ca310, "COM,0\r",ca310->recive,3000);  if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2;}
+	
+	buf=strtok(ca310->recive+7,";");
+	*X=(float)atof(buf);  //XÓëY·Å´óÁËÒ»Íò±¶´«µİ»ØÀ´µÄ
+	buf=strtok(NULL,";");
+	*Y=(float)atof(buf);
+	buf=strtok(NULL,";");
+	*Z=(float)atof(buf);
+		
+	return 1;
+}
+
+/**
+  * º¯Êı¶¨Òå : COMC32_GetFMA(Ca310Interface *ca310, uint8_t PN, float* FMA)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯ÉÁË¸Öµ
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô
+  * Êä³ö²ÎÊı : 1. FMA -- flickÖµ
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. = -1 -- ²éÑ¯Ê§°Ü
+  */
+int COMC32_GetFMA(Ca310Interface *ca310, uint8_t PN, float* FMA)
+{
+	
+	if (ca310->driver == 0)
+		return -1;
+
+	COMRunCommond(ca310, "COM,1\r",ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1; }
+	COMRunCommond(ca310, "MDS,6\r",ca310->recive,1000); if(ca310->recive!=strstr(ca310->recive,"OK")) { return -1; }
+	COMRunCommond(ca310, "MES\r",ca310->recive,3000);   if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2; }
+	COMRunCommond(ca310, "COM,0\r",ca310->recive,3000);  if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2;}
+	
+	*FMA=(float)atof(ca310->recive+7);
+
+	return 1;	
+}
+
+
+/**
+  * º¯Êı¶¨Òå : COMC32_GetMeasureCH(Ca310Interface *ca310, uint8_t PN, int* CH)
+  * ¹¦ÄÜÃèÊö : ²éÑ¯²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô
+  * Êä³ö²ÎÊı : 1. CH -- CA310Ì½Í·Í¨µÀºÅ
+  *               ²éÑ¯Í¨µÀÖµÓòÎª0~31
+  * ·µ »Ø Öµ : ²éÑ¯×´Ì¬
+  *           1. = 1 -- ²éÑ¯³É¹¦  2. = -1 -- ²éÑ¯Ê§°Ü
+  */
+int COMC32_GetMeasureCH(Ca310Interface *ca310, uint8_t PN, int* CH)
+{
+
+    if (ca310->driver == 0)
+	{
+        return -1;
+	}
+	
+	
+	/* ²éÑ¯µ±Ç°²âÁ¿Í¨µÀºÅ */
+	COMRunCommond(ca310, "STR,3\r", ca310->recive, 3000);
+	if (ca310->recive != strstr(ca310->recive, "OK")) 
+    { 
+	    return -1;
+	}
+	
+	/* ½ØÈ¡»Ø¸´ÏûÏ¢ÖĞÍ¨µÀºÅ */
+	*CH = atoi(ca310->recive + 5);
+	COMRunCommond(ca310, "COM,0\r",ca310->recive,3000);  if(ca310->recive!=strstr(ca310->recive,"OK")) { return -2;}
+
+
+    return 1;
+}
+
+/**
+  * º¯Êı¶¨Òå : COMC32_SetMeasureCH(Ca310Interface *ca310, uint8_t PN, int CH)
+  * ¹¦ÄÜÃèÊö : ÉèÖÃ²âÁ¿Í¨µÀºÅ
+  * ÊäÈë²ÎÊı : 1. ca310 -- Ca310InterfaceÀàĞÍ½á¹¹Ìå
+  *           2. PN -- ±£Áô
+  *           3. CH -- CA310Ì½Í·Í¨µÀºÅ,ÖµÓòÎª0~31
+  * ·µ »Ø Öµ : ÉèÖÃ×´Ì¬
+  *           1. = 1 -- ÉèÖÃ³É¹¦  2. = -1 -- ÉèÖÃÊ§°Ü
+  */
+int COMC32_SetMeasureCH(Ca310Interface *ca310, uint8_t PN, int CH)
+{
+	char str_buff[10];
+
+	memset(str_buff, 0, 10);
+	if (ca310->driver == 0) 
+	{
+		return -1;
+	}
+	
+	/* ÏŞÖÆÍ¨µÀÊı */
+	if (CH > 31 || CH < 0)
+	{
+		return -1;
+	}
+
+	/* C32¹æ¶¨,Í¨µÀºÅ±ØĞëÊäÈëÁ½Î»×Ö·û */
+	if(CH < 10)
+		sprintf(str_buff, "MCH,0%d\r", CH);
+	else
+		sprintf(str_buff, "MCH,%d\r", CH);
+	COMRunCommond(ca310, str_buff, ca310->recive, 3000); if (ca310->recive != strstr(ca310->recive, "OK"))  { return -1; }
+	COMRunCommond(ca310, "COM,0\r",ca310->recive,3000);  if (ca310->recive!=strstr(ca310->recive,"OK"))     { return -2;}
+
+	
+	return 1;	
+}
+
+/** @}
+  * @}end of C32
+  */

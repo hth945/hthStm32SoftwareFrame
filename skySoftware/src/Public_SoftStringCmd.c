@@ -11,8 +11,8 @@ int P_StringCmdBindFifo(stringCMD_t *scmd,sky_comDriver* driver, uint8_t *fifoBu
 	
 	myFIFOInit(&scmd->fifo,fifoBuf, fifolen);
 	driver->fifo = &scmd->fifo;
-	
-	scmd->dev = driver;
+	scmd->dev=driver;
+	driver->Parent=scmd;
 	scmd->CMDBuf = data;
 	scmd->CMDBufLen = len;
 
@@ -27,7 +27,7 @@ int P_StringCmdReadCMD(stringCMD_t *scmd)
 	
 	while (myFIFORead(&scmd->fifo,&res,1) > 0)
 	{
-		if (scmd->cmdNum > (scmd->CMDBufLen-1))
+		if (scmd->cmdNum > (scmd->CMDBufLen-2))
 		{
 			scmd->CMDBuf[scmd->cmdNum] = 0;
 			scmd->cmdNum = 0;

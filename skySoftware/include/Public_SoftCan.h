@@ -5,33 +5,43 @@
 #include "commonIOInterface.h"
 
 
-/*Busæ€»çº¿ä¸­å„ç§æ¨¡å—ç±»å‹å®šä¹‰*/
-#define BUS_MAIN        1 //æµ‹è¯•æœºä¸»æœº
-#define BUS_POWER       2 //ç”µæºæ¿
-#define BUS_KEYBOARD    3 //æŒ‰é”®ç›’
-#define BUS_MONITOR     4 //æŒ‰é”®ç›’ä¸Šçš„æ˜¾ç¤ºå™¨
-#define BUS_CCD         5 //é•œ^
-#define BUS_RS232       6 //Busè½¬ä¸²å£(RS232)
-#define BUS_MOTOR       7 //ç”µæœºé©±åŠ¨
+/*Bus×ÜÏßÖĞ¸÷ÖÖÄ£¿éÀàĞÍ¶¨Òå*/
+#define BUS_MAIN        1 //²âÊÔ»úÖ÷»ú
+#define BUS_POWER       2 //µçÔ´°å
+#define BUS_KEYBOARD    3 //°´¼üºĞ
+#define BUS_MONITOR     4 //°´¼üºĞÉÏµÄÏÔÊ¾Æ÷
+#define BUS_CCD         5 //¾µî^
+#define BUS_RS232       6 //Bus×ª´®¿Ú(RS232)
+#define BUS_MOTOR       7 //µç»úÇı¶¯
 #define BUS_WAVE        8
 #define BUS_LED         9
 #define BUS_VOL         10
-#define BUS_S10POWER    11 //ç”µæºæ¿
-#define BUS_CFL    		12 //æ–°é•œå¤´
-#define BUS_SCAN    	13 //æ‰«ææª
-#define BUS_KEY    	    14 //ä¸€æ‹–äº”æŒ‰é”®ç›’å­
-#define BUS_FORWARD	    15 //ä¸€æ‹–åäº”æŠ“æ¿
-#define BUS_CE48CORE    16 //ce48æ ¸å¿ƒæ¿
-#define BUS_CE48KEY	    17 //ce48æŒ‰é”®æ¿
+#define BUS_S10POWER    11 //µçÔ´°å
+#define BUS_CFL    		12 //ĞÂ¾µÍ·
+#define BUS_SCAN    	13 //É¨ÃèÇ¹
+#define BUS_KEY    	    14 //Ò»ÍÏÎå°´¼üºĞ×Ó
+#define BUS_FORWARD	    15 //Ò»ÍÏÊ®Îå×¥°å
+#define BUS_CFL2    	16 //ĞÂ¾µÍ·
+#define BUS_CE48KEY	    17 //ce48°´¼ü°å
 #define BUS_CE48C8T6    18 //ce48FPAGc8t6
-#define BUS_DHCP        19 //è‡ªåŠ¨åˆ†é…IDæ€»é€šä¿¡æ¿
-#define BUS_SD250       20 //è‡ªåŠ¨åˆ†é…IDæ€»é€šä¿¡æ¿
+#define BUS_DHCP        19 //×Ô¶¯·ÖÅäID×ÜÍ¨ĞÅ°å
+#define BUS_SD250       20 //Ê±ÖÓÄ£¿é
+#define BUS_MC_100      21 //²âÆÁÄ»±ßÔµÑÕÉ«
+#define BUS_ML100       22 //²âÂ©¹â°å
+#define BUS_BL20        23 //50Â·±³¹â
+#define BUS_BL20MAIN    24 //50Â·±³¹âºËĞÄ°å
+#define BUS_LX          25 //²âµç¸Ğ°å
+#define BUS_CE48CORE    26 //ce48 ºËĞÄ°å
+#define BUS_3DPOWER     27 //¸ß¾«¶ÈµçÔ´Ä£¿éºËĞÄ°å
+#define BUS_SMALLBL     28//¸ß¾«¶È±³¹âµçÁ÷±³¹â°å
+#define BUS_CE48AMMETER 29 //ce48µç±í
+#define BUS_A30EXP      30 //A30µçÔ´°å
 
 
-//æ³¨æ„ éƒ½ä½¿ç”¨æ‰©å±•å¸§ï¼Œidæœ‰29ä½ï¼Œ åŒæ—¶ç¦æ­¢é«˜7ä½è¿ç»­ä¸º1
+//×¢Òâ ¶¼Ê¹ÓÃÀ©Õ¹Ö¡£¬idÓĞ29Î»£¬ Í¬Ê±½ûÖ¹¸ß7Î»Á¬ĞøÎª1
 
-struct _Tcan_node;      //å£°æ˜
-struct _Tcan_adapter;    //å£°æ˜
+struct _Tcan_node;      //ÉùÃ÷
+struct _Tcan_adapter;    //ÉùÃ÷
 
 
 //typedef struct
@@ -48,34 +58,34 @@ struct _Tcan_adapter;    //å£°æ˜
 
 typedef struct _Tcan_node
 {
-	//ç”¨æˆ·è®¾ç½®
-	//è¦æ¥æ”¶å“ªäº›idçš„æ•°æ® åŒ¹é…æˆåŠŸçš„æ•°æ®ä¼šæ”¾åœ¨ devä¸­
+	//ÓÃ»§ÉèÖÃ
+	//Òª½ÓÊÕÄÄĞ©idµÄÊı¾İ Æ¥Åä³É¹¦µÄÊı¾İ»á·ÅÔÚ devÖĞ
 	uint32_t maskId;
 	uint32_t mask;  
 	
-	uint32_t sendId; //å‘é€æ•°æ®ä½¿ç”¨çš„id
+	uint32_t sendId; //·¢ËÍÊı¾İÊ¹ÓÃµÄid
 	
 	
-	//addæ—¶è‡ªåŠ¨è®¾ç½®è®¾ç½®
-	//æ­¤èŠ‚ç‚¹çš„é€šç”¨è¾“å…¥è¾“å‡º(åˆå§‹åŒ–ä¹‹å å¤–éƒ¨åªéœ€ä½¿ç”¨å®ƒ) 
-	//ps:userDataä¸ºå½“å‰èŠ‚ç‚¹çš„åœ°å€
-	//  :write2ä¸ºå‘é€å‡½æ•° æŒ‡å‘ S_CAN_write
+	//addÊ±×Ô¶¯ÉèÖÃÉèÖÃ
+	//´Ë½ÚµãµÄÍ¨ÓÃÊäÈëÊä³ö(³õÊ¼»¯Ö®ºó Íâ²¿Ö»ĞèÊ¹ÓÃËü) 
+	//ps:userDataÎªµ±Ç°½ÚµãµÄµØÖ·
+	//  :write2Îª·¢ËÍº¯Êı Ö¸Ïò S_CAN_write
 	sky_comDriver dev; 
 	struct _Tcan_adapter *adap;
-	struct _Tcan_node *nextNode;  //èŠ‚ç‚¹è¦ç»„æˆé“¾è¡¨
+	struct _Tcan_node *nextNode;  //½ÚµãÒª×é³ÉÁ´±í
 	
 }can_node; 
 
 
 typedef struct _Tcan_adapter
 {
-	//ç”¨æˆ·è®¾ç½®
-    int (*sendMsg)(uint32_t id, uint8_t *data, int len);  //canæ€»çº¿å‘é€æ•°æ® bspå®ç°
-	int (*addFilter)(int filterN, uint32_t id, uint32_t mask);      //å¢åŠ ä¸€ä¸ªè¿‡æ»¤å™¨  bspå®ç°
+	//ÓÃ»§ÉèÖÃ
+    int (*sendMsg)(uint32_t id, uint8_t *data, int len);  //can×ÜÏß·¢ËÍÊı¾İ bspÊµÏÖ
+	int (*addFilter)(int filterN, uint32_t id, uint32_t mask);      //Ôö¼ÓÒ»¸ö¹ıÂËÆ÷  bspÊµÏÖ
 	
-	//åˆå§‹åŒ–æ—¶è‡ªåŠ¨è®¾ç½®è®¾ç½®
-	int filterN;       //å·²ç»æ·»åŠ çš„filterä¸ªæ•°
-	can_node *srcNode; //èŠ‚ç‚¹é“¾è¡¨èµ·å§‹æŒ‡é’ˆï¼Œä¹‹åæ¯æ·»åŠ ä¸€ä¸ªèŠ‚ç‚¹ä¼šæ·»åŠ åˆ°æ­¤é“¾è¡¨ä¸­
+	//³õÊ¼»¯Ê±×Ô¶¯ÉèÖÃÉèÖÃ
+	int filterN;       //ÒÑ¾­Ìí¼ÓµÄfilter¸öÊı
+	can_node *srcNode; //½ÚµãÁ´±íÆğÊ¼Ö¸Õë£¬Ö®ºóÃ¿Ìí¼ÓÒ»¸ö½Úµã»áÌí¼Óµ½´ËÁ´±íÖĞ
 	
 }can_adapter;
 
@@ -84,20 +94,20 @@ typedef struct
 //	union _data{
 //		uint32_t id;
 //		struct {
-		uint32_t resev:3;   //ä½3ä½å›ºå®šä½b100ï¼Œ ä½2è¡¨ç¤ºæ‰©å±•å¸§  ä½1è¡¨ç¤ºæ•°æ®å¸§ï¼Œ ä½0ä¸ºæ§åˆ¶å‘é€ä½ç¡¬ä»¶è‡ªåŠ¨æ¸…é›¶ 
-		uint32_t index:8;    //8bit åŠŸèƒ½ç´¢å¼•
-		uint32_t src_id:3;   //3bit æºæ¨¡å—ID
-		uint32_t src_type:6; //6bit æºæ¨¡å—ç±»å‹
-		uint32_t dst_id:3;   //3bit ç›®æ ‡æ¨¡å—ID
-		uint32_t dst_type:6; //6bit ç›®æ ‡æ¨¡å—ç±»å‹
-		uint32_t resev2:3;   //é«˜3ä½å›ºå®šä¸ºb001ï¼Œå› ä¸ºé«˜7ä½ä¸èƒ½å…¨ä¸º1ï¼Œå…¼å®¹ä¹‹å‰çš„ç¨‹åº
+		uint32_t resev:3;   //µÍ3Î»¹Ì¶¨Î»b100£¬ Î»2±íÊ¾À©Õ¹Ö¡  Î»1±íÊ¾Êı¾İÖ¡£¬ Î»0Îª¿ØÖÆ·¢ËÍÎ»Ó²¼ş×Ô¶¯ÇåÁã 
+		uint32_t index:8;    //8bit ¹¦ÄÜË÷Òı
+		uint32_t src_id:3;   //3bit Ô´Ä£¿éID
+		uint32_t src_type:6; //6bit Ô´Ä£¿éÀàĞÍ
+		uint32_t dst_id:3;   //3bit Ä¿±êÄ£¿éID
+		uint32_t dst_type:6; //6bit Ä¿±êÄ£¿éÀàĞÍ
+		uint32_t resev2:3;   //¸ß3Î»¹Ì¶¨Îªb001£¬ÒòÎª¸ß7Î»²»ÄÜÈ«Îª1£¬¼æÈİÖ®Ç°µÄ³ÌĞò
 //		}bits;
 //	}data;
 	
 	uint8_t filt_src;  
-	uint8_t filt_dst;  // =0 ä¸è¿‡æ»¤dst_typeã€dst_idï¼Œ=1éƒ½è¿‡æ»¤  =2åªè¿‡æ»¤type =3åªè¿‡æ»¤id
+	uint8_t filt_dst;  // =0 ²»¹ıÂËdst_type¡¢dst_id£¬=1¶¼¹ıÂË  =2Ö»¹ıÂËtype =3Ö»¹ıÂËid
 	
-}bus_config;   //skyå†…éƒ¨å®šä¹‰èŠ‚ç‚¹
+}bus_config;   //skyÄÚ²¿¶¨Òå½Úµã
 
 
 int P_CAN_DeInit(can_adapter *adap);
@@ -112,13 +122,13 @@ int P_CAN_SetNodeByBus(can_node *node, bus_config *bc);
 
 
 
-//åŠŸèƒ½ï¼šæ ¹æ®msgçš„idï¼Œéå†åŒ¹é…srcNodeé“¾è¡¨ä¸­çš„èŠ‚ç‚¹ï¼ŒåŒ¹é…ä¸Šäº†å°±æŠŠæ•°æ®è¾“å…¥åˆ°devä¸­çš„æ¥æ”¶ä¸­
-//void P_CAN_IRQHandler(can_adapter *adap,can_msg *msg); //æ¥æ”¶ä¸­æ–­ä¸­è°ƒç”¨æ­¤å‡½æ•°ï¼ŒæŠŠæ•°æ®å‘é€åˆ°åè®®ä¸­  
-int P_CAN_IRQHandler(can_adapter *adap,uint32_t id, uint8_t *data, int len); //æ¥æ”¶ä¸­æ–­ä¸­è°ƒç”¨æ­¤å‡½æ•°ï¼ŒæŠŠæ•°æ®å‘é€åˆ°åè®®ä¸­  
+//¹¦ÄÜ£º¸ù¾İmsgµÄid£¬±éÀúÆ¥ÅäsrcNodeÁ´±íÖĞµÄ½Úµã£¬Æ¥ÅäÉÏÁË¾Í°ÑÊı¾İÊäÈëµ½devÖĞµÄ½ÓÊÕÖĞ
+//void P_CAN_IRQHandler(can_adapter *adap,can_msg *msg); //½ÓÊÕÖĞ¶ÏÖĞµ÷ÓÃ´Ëº¯Êı£¬°ÑÊı¾İ·¢ËÍµ½Ğ­ÒéÖĞ  
+int P_CAN_IRQHandler(can_adapter *adap,uint32_t id, uint8_t *data, int len); //½ÓÊÕÖĞ¶ÏÖĞµ÷ÓÃ´Ëº¯Êı£¬°ÑÊı¾İ·¢ËÍµ½Ğ­ÒéÖĞ  
 
-//å†…éƒ¨ ä¸å¯¹å¤–æš´éœ²(staticå£°æ˜)
-//ps:userDataä¸ºå½“å‰èŠ‚ç‚¹çš„åœ°å€
-//éœ€è¦è€ƒè™‘çº¿ç¨‹åŒæ­¥
-//static int S_CAN_write(can_node *userData,uint8_t *data, int len);   //ç»™èŠ‚ç‚¹å®ç°å‘é€æ•°æ®å‡½æ•°(é€šç”¨è¾“å…¥è¾“å‡ºåŠŸèƒ½)
+//ÄÚ²¿ ²»¶ÔÍâ±©Â¶(staticÉùÃ÷)
+//ps:userDataÎªµ±Ç°½ÚµãµÄµØÖ·
+//ĞèÒª¿¼ÂÇÏß³ÌÍ¬²½
+//static int S_CAN_write(can_node *userData,uint8_t *data, int len);   //¸ø½ÚµãÊµÏÖ·¢ËÍÊı¾İº¯Êı(Í¨ÓÃÊäÈëÊä³ö¹¦ÄÜ)
 
 #endif

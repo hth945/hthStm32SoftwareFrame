@@ -6,7 +6,7 @@
 #include "commonIOInterface.h"
 
 
-#define OFFSETOF(TYPE, MEMBER) ((int)(&((TYPE *)0)->MEMBER))  //æ±‚åç§»åœ°å€
+#define OFFSETOF(TYPE, MEMBER) ((int)(&((TYPE *)0)->MEMBER))  //ÇóÆ«ÒÆµØÖ·
 typedef int (*sky_conmmunicationSend)(uint8_t *data,int len);
 typedef void (*sky_conmmunicationSendCallback)(void*);
 typedef uint32_t (*sky_conmmunicationGetTime)(void);
@@ -14,113 +14,127 @@ typedef uint32_t (*sky_conmmunicationGetTime)(void);
 
 typedef struct
 {
-	uint8_t startc;     //èµ·å§‹å­—ç¬¦
+	uint8_t startc;     //ÆğÊ¼×Ö·û
 	uint8_t cmd;
 }DataHead;
 	
 
 typedef struct
 {
-	uint8_t saveFlag;	//é€šä¿¡æ ‡å¿—0 æ­£åœ¨ç­‰å¾…  
-						//	1 æ­£åœ¨æ¥æ”¶æ•°æ®å¤´éƒ¨æå–æ•°æ®é•¿åº¦  
-						//	2 æ­£åœ¨æ ¡éªŒæ•°æ®  
-						//	3 æ¥æ”¶åˆ°ä¸€å¸§å®Œæ•´çš„æ•°æ®
+	void *userData;       //bsp²ã×Ô¼ºÊ¹ÓÃµÄÖ¸Õë(¿É¸Ä±äÀàĞÍ), Íâ²¿Ó¦ÓÃ²ã¾¡Á¿²»ÒªÊ¹ÓÃ           
+	void *Parent;         //Ò»µ©ÓĞÆäËû½á¹¹Ìå°üº¬ÁË sky_comDriver,¾ÍÓ¦¸Ã¸ø´Ë±äÁ¿¸³Öµ
+	uint8_t saveFlag;	//Í¨ĞÅ±êÖ¾0 ÕıÔÚµÈ´ı  
+						//	1 ÕıÔÚ½ÓÊÕÊı¾İÍ·²¿ÌáÈ¡Êı¾İ³¤¶È  
+						//	2 ÕıÔÚĞ£ÑéÊı¾İ  
+						//	3 ½ÓÊÕµ½Ò»Ö¡ÍêÕûµÄÊı¾İ
 	
-	uint8_t startc;       //èµ·å§‹å­—ç¬¦
-	uint8_t endc;         //ç»“æŸå­—ç¬¦
-	uint32_t maxlen;      //ç¼“å†²åŒºæœ€å¤§é•¿åº¦
-	uint32_t dataLen;     //ä¸€å¸§æ•°æ®ä¸­ æ•°æ®æ®µçš„é•¿åº¦
-	uint32_t saveNum;     //æ¥æ”¶ä¸€å¸§æ•°æ®è¿‡ç¨‹ä¸­  å½“å‰æ¥æ”¶é•¿åº¦
-	uint8_t *data;        //ç¼“å†²åŒºåœ°å€
-	uint32_t oldTime;     //ä¸Šä¸€æ¬¡æ¥æ”¶åˆ°æ•°æ®çš„æ—¶é—´
-	uint32_t waitTimeT;   //ç­‰å¾…æ—¶é—´çš„ç²¾åº¦
+	uint8_t startc;       //ÆğÊ¼×Ö·û
+	uint8_t endc;         //½áÊø×Ö·û
+	uint32_t maxlen;      //»º³åÇø×î´ó³¤¶È
+	uint32_t dataLen;     //Ò»Ö¡Êı¾İÖĞ Êı¾İ¶ÎµÄ³¤¶È
+	uint32_t saveNum;     //½ÓÊÕÒ»Ö¡Êı¾İ¹ı³ÌÖĞ  µ±Ç°½ÓÊÕ³¤¶È
+	uint8_t *data;        //»º³åÇøµØÖ·
+	uint32_t oldTime;     //ÉÏÒ»´Î½ÓÊÕµ½Êı¾İµÄÊ±¼ä
+	uint32_t waitTimeT;   //µÈ´ıÊ±¼äµÄ¾«¶È
 	
-	sky_comDriver *dev;   //é€šç”¨è¾“å…¥è¾“å‡ºç»“æ„ä½“å¥æŸ„ï¼ˆé»˜è®¤ä½¿ç”¨ï¼Œè‹¥ä¸ºç©º åˆ™ä½¿ç”¨æ—§çš„sendï¼‰
+	sky_comDriver *dev;   //Í¨ÓÃÊäÈëÊä³ö½á¹¹Ìå¾ä±ú£¨Ä¬ÈÏÊ¹ÓÃ£¬ÈôÎª¿Õ ÔòÊ¹ÓÃ¾ÉµÄsend£©
 	
-	//sky_conmmunicationSend send;  //å‘é€æ•°æ®åŒ…ï¼Œå®ç°è¿™ä¸ªå‡½æ•°ä¹‹åï¼Œæ‰èƒ½ä½¿ç”¨å†…éƒ¨å‘é€å®Œæ•´å¸§çš„å‡½æ•°
-									 //data è¦å‘é€çš„æ•°æ®
-									 //len  è¦å‘é€çš„æ•°æ®é•¿åº¦
-									 //è¿”å›å€¼  æ­£æ•°æˆ–0ä»£è¡¨æˆåŠŸ  è´Ÿæ•°ä»£è¡¨å‘é€å¤±è´¥
-	sky_conmmunicationSendCallback completeCallback; //æ¥æ”¶åˆ°ä¸€å¸§å®Œæ•´æ•°æ®æ—¶çš„å›è°ƒå‡½æ•°
-													 //æ­¤å‡½æ•°åœ¨æ¥æ”¶å‡½æ•°sky_receivePactä¸­è¢«æ‰§è¡Œ
+	//sky_conmmunicationSend send;  //·¢ËÍÊı¾İ°ü£¬ÊµÏÖÕâ¸öº¯ÊıÖ®ºó£¬²ÅÄÜÊ¹ÓÃÄÚ²¿·¢ËÍÍêÕûÖ¡µÄº¯Êı
+									 //data Òª·¢ËÍµÄÊı¾İ
+									 //len  Òª·¢ËÍµÄÊı¾İ³¤¶È
+									 //·µ»ØÖµ  ÕıÊı»ò0´ú±í³É¹¦  ¸ºÊı´ú±í·¢ËÍÊ§°Ü
+	sky_conmmunicationSendCallback completeCallback; //½ÓÊÕµ½Ò»Ö¡ÍêÕûÊı¾İÊ±µÄ»Øµ÷º¯Êı
+													 //´Ëº¯ÊıÔÚ½ÓÊÕº¯Êısky_receivePactÖĞ±»Ö´ĞĞ
 	
-	sky_conmmunicationGetTime getTime;//è·å–å½“å‰ç³»ç»Ÿæ—¶é’Ÿï¼Œå•ä½ms
+	sky_conmmunicationGetTime getTime;//»ñÈ¡µ±Ç°ÏµÍ³Ê±ÖÓ£¬µ¥Î»ms
 	
 	
-//	/*ä»¥ä¸‹å‡½æ•°æŒ‡é’ˆå·²èˆå¼ƒï¼Œæ—§å·¥ç¨‹è‹¥æŠ¥é”™ å–æ¶ˆæ³¨é‡Š*/
-//	int (*receivePact)(void *this,uint8_t c);           					//ä¼ å…¥æ¥æ”¶æ•°æ®  åº•å±‚æ ¡éªŒ
-//	int (*sendPact)(void *this,uint8_t cmd,uint8_t *data,uint32_t len);  			//å‘é€æ•°æ®åŒ…
-//	int (*runCmdPact)(void *this,uint8_t cmd,uint8_t *data,uint32_t len,uint32_t time);	//è¿è¡Œå‘½ä»¤ è¿”å›æ•°æ®æ”¾åœ¨ç¼“å†²åŒºä¸­
+//	/*ÒÔÏÂº¯ÊıÖ¸ÕëÒÑÉáÆú£¬¾É¹¤³ÌÈô±¨´í È¡Ïû×¢ÊÍ*/
+//	int (*receivePact)(void *this,uint8_t c);           					//´«Èë½ÓÊÕÊı¾İ  µ×²ãĞ£Ñé
+//	int (*sendPact)(void *this,uint8_t cmd,uint8_t *data,uint32_t len);  			//·¢ËÍÊı¾İ°ü
+//	int (*runCmdPact)(void *this,uint8_t cmd,uint8_t *data,uint32_t len,uint32_t time);	//ÔËĞĞÃüÁî ·µ»ØÊı¾İ·ÅÔÚ»º³åÇøÖĞ
 }sky_MyByteReceiveDataTypeDef;
 
 
 int sky_ConmBindDriver(sky_MyByteReceiveDataTypeDef *myRecType,sky_comDriver *driver);
-void sky_ConmmunicationInit(sky_MyByteReceiveDataTypeDef *myRecType, uint8_t *data,uint32_t len,uint8_t startC,uint8_t endC,uint32_t waitTimeT);
+void sky_ConmmunicationInit(sky_MyByteReceiveDataTypeDef *myRecType,uint8_t *data,uint32_t len,uint8_t startC,uint8_t endC,uint32_t waitTimeT,sky_conmmunicationGetTime getTime);
 	
 int sky_receivePactData(sky_MyByteReceiveDataTypeDef *myRecType,uint8_t *data, int len);
 /********************************************************************************
-*å‡½å¾—ï¼šreceivePact
-*æè¿°  ï¼šæŒ‰åè®®æ¥æ”¶ä¸€å¸§æ•°æ®ï¼Œæ”¾å…¥æ¥æ”¶ä¸­æ–­ä¸­ï¼Œæ¯æ¬¡ä¼ å…¥ä¸€ä¸ªå­—èŠ‚ï¼Œå¸¦æ ¡éªŒä¸è¶…æ—¶åˆ¤æ–­50ms
-		è‹¥ä¸Šä¸€å¸§æ•°æ®æ²¡æœ‰å¤„ç†å®Œï¼ˆæ ‡å¿—ä½æ²¡æœ‰æ¸…0ï¼‰ï¼Œåˆ™ä¸æ¥æ”¶æ–°æ•°æ®ã€‚
-*å‚æ•°  ï¼š1.myRecType  é€šä¿¡çš„ä¸Šä¸‹æ–‡ç»“æ„ä½“ï¼Œå†…éƒ¨æœ‰ç¼“å†²åŒºï¼Œé€šä¿¡çŠ¶æ€æ ‡å¿—ç­‰ä¿¡æ¯
-		 2.newc       æ­¤æ—¶æ¥æ”¶åˆ°çš„ä¸€ä¸ªå­—èŠ‚
-*è¿”å›  ï¼šè¿”å›é€šä¿¡çŠ¶æ€æ ‡å¿—  0 æ­£åœ¨ç­‰å¾…  
-						1 æ­£åœ¨æ¥æ”¶æ•°æ®å¤´éƒ¨æå–æ•°æ®é•¿åº¦  
-						2 æ­£åœ¨æ ¡éªŒæ•°æ®  
-						3 æ¥æ”¶åˆ°ä¸€å¸§å®Œæ•´çš„æ•°æ®
+*º¯”µÃû£ºreceivePact
+*ÃèÊö  £º°´Ğ­Òé½ÓÊÕÒ»Ö¡Êı¾İ£¬·ÅÈë½ÓÊÕÖĞ¶ÏÖĞ£¬Ã¿´Î´«ÈëÒ»¸ö×Ö½Ú£¬´øĞ£ÑéÓë³¬Ê±ÅĞ¶Ï50ms
+		ÈôÉÏÒ»Ö¡Êı¾İÃ»ÓĞ´¦ÀíÍê£¨±êÖ¾Î»Ã»ÓĞÇå0£©£¬Ôò²»½ÓÊÕĞÂÊı¾İ¡£
+*²ÎÊı  £º1.myRecType  Í¨ĞÅµÄÉÏÏÂÎÄ½á¹¹Ìå£¬ÄÚ²¿ÓĞ»º³åÇø£¬Í¨ĞÅ×´Ì¬±êÖ¾µÈĞÅÏ¢
+		 2.newc       ´ËÊ±½ÓÊÕµ½µÄÒ»¸ö×Ö½Ú
+*·µ»Ø  £º·µ»ØÍ¨ĞÅ×´Ì¬±êÖ¾  0 ÕıÔÚµÈ´ı  
+						1 ÕıÔÚ½ÓÊÕÊı¾İÍ·²¿ÌáÈ¡Êı¾İ³¤¶È  
+						2 ÕıÔÚĞ£ÑéÊı¾İ  
+						3 ½ÓÊÕµ½Ò»Ö¡ÍêÕûµÄÊı¾İ
 ********************************************************************************/
 int sky_receivePact(sky_MyByteReceiveDataTypeDef *myRecType,uint8_t newc);
 
 /********************************************************************************
-*å‡½å¾—ï¼šsendData
-*æè¿°  ï¼šæŒ‰åè®®å‘é€ä¸€å¸§æ•°æ®,ç»“æ„ä½“ä¸­sendå‡½æ•°æŒ‡é’ˆå®ç°ä¹‹åæ‰å¯ä»¥ä½¿ç”¨
-*å‚æ•°  ï¼š1.recType  é€šä¿¡çš„ä¸Šä¸‹æ–‡ç»“æ„ä½“ï¼Œå†…éƒ¨æœ‰ç¼“å†²åŒºï¼Œé€šä¿¡çŠ¶æ€æ ‡å¿—ç­‰ä¿¡æ¯
-		 2.cmd       å‘é€æ•°æ®åŒ…çš„å‘½ä»¤
-		 3.data     å‘é€çš„æ•°æ®
-		 4.len       å‘é€çš„æ•°æ®é•¿åº¦
-*è¿”å›  ï¼šæ­£æ•° å‘é€çš„æ•°æ®é•¿åº¦  -1å‘é€é”™è¯¯
+*º¯”µÃû£ºsendData
+*ÃèÊö  £º°´Ğ­Òé·¢ËÍÒ»Ö¡Êı¾İ,½á¹¹ÌåÖĞsendº¯ÊıÖ¸ÕëÊµÏÖÖ®ºó²Å¿ÉÒÔÊ¹ÓÃ
+*²ÎÊı  £º1.recType  Í¨ĞÅµÄÉÏÏÂÎÄ½á¹¹Ìå£¬ÄÚ²¿ÓĞ»º³åÇø£¬Í¨ĞÅ×´Ì¬±êÖ¾µÈĞÅÏ¢
+		 2.cmd       ·¢ËÍÊı¾İ°üµÄÃüÁî
+		 3.data     ·¢ËÍµÄÊı¾İ
+		 4.len       ·¢ËÍµÄÊı¾İ³¤¶È
+*·µ»Ø  £ºÕıÊı ·¢ËÍµÄÊı¾İ³¤¶È  -1·¢ËÍ´íÎó
 ********************************************************************************/
 int sky_sendData(sky_MyByteReceiveDataTypeDef *recType,uint8_t cmd,uint8_t *data,uint32_t len);
 
+/*******************************************************************************
+ * º¯ÊıÃû : pcui_sendData
+ * Ãè  Êö : pcui·¢ËÍÊı¾İ
+ * ²Î  Êı : *recType:Í¨Ñ¶Ğ­Òé½á¹¹Ìå
+ * ²Î  Êı : cmd:Ö¸Áî
+ * ²Î  Êı : **str:×Ö·û´®Ö¸Õë
+ * ²Î  Êı : strLen:×Ö·û´®¸öÊı
+ * ·µ  »Ø : >=0:·¢ËÍ³É¹¦
+            -1:·¢ËÍÊ§°Ü
+*******************************************************************************/
+int sky_sendStrNData(sky_MyByteReceiveDataTypeDef *recType, uint8_t cmd, char **str, int strLen);
+
 /********************************************************************************
-*å‡½å¾—ï¼šsend2Data
-*æè¿°  ï¼šæŒ‰åè®®å‘é€ä¸€å¸§æ•°æ®,æ•°æ®æ®µåˆ†ä¸ºä¸¤æ®µ,ç»“æ„ä½“ä¸­sendå‡½æ•°æŒ‡é’ˆå®ç°ä¹‹åæ‰å¯ä»¥ä½¿ç”¨
-*å‚æ•°  ï¼š1.recType  é€šä¿¡çš„ä¸Šä¸‹æ–‡ç»“æ„ä½“ï¼Œå†…éƒ¨æœ‰ç¼“å†²åŒºï¼Œé€šä¿¡çŠ¶æ€æ ‡å¿—ç­‰ä¿¡æ¯
-		 2.cmd       å‘é€æ•°æ®åŒ…çš„å‘½ä»¤
-		 3.data1     å‘é€çš„ç¬¬ä¸€æ®µæ•°æ®
-		 4.len1       å‘é€çš„ç¬¬ä¸€æ®µæ•°æ®é•¿åº¦
-		 5.data2     å‘é€çš„ç¬¬äºŒæ®µæ•°æ®
-		 6.len2       å‘é€çš„ç¬¬äºŒæ®µæ•°æ®é•¿åº¦
-*è¿”å›  ï¼šæ­£æ•° å‘é€çš„æ•°æ®é•¿åº¦  -1å‘é€é”™è¯¯
+*º¯”µÃû£ºsend2Data
+*ÃèÊö  £º°´Ğ­Òé·¢ËÍÒ»Ö¡Êı¾İ,Êı¾İ¶Î·ÖÎªÁ½¶Î,½á¹¹ÌåÖĞsendº¯ÊıÖ¸ÕëÊµÏÖÖ®ºó²Å¿ÉÒÔÊ¹ÓÃ
+*²ÎÊı  £º1.recType  Í¨ĞÅµÄÉÏÏÂÎÄ½á¹¹Ìå£¬ÄÚ²¿ÓĞ»º³åÇø£¬Í¨ĞÅ×´Ì¬±êÖ¾µÈĞÅÏ¢
+		 2.cmd       ·¢ËÍÊı¾İ°üµÄÃüÁî
+		 3.data1     ·¢ËÍµÄµÚÒ»¶ÎÊı¾İ
+		 4.len1       ·¢ËÍµÄµÚÒ»¶ÎÊı¾İ³¤¶È
+		 5.data2     ·¢ËÍµÄµÚ¶ş¶ÎÊı¾İ
+		 6.len2       ·¢ËÍµÄµÚ¶ş¶ÎÊı¾İ³¤¶È
+*·µ»Ø  £ºÕıÊı ·¢ËÍµÄÊı¾İ³¤¶È  -1·¢ËÍ´íÎó
 ********************************************************************************/
 int sky_send2Data(sky_MyByteReceiveDataTypeDef *recType,uint8_t cmd,uint8_t *data1,uint32_t len1,uint8_t *data2,uint32_t len2);
 
 /********************************************************************************
-*å‡½å¾—ï¼šrunCmdPact
-*æè¿°  ï¼šè¿è¡Œä¸€æ¡å‘½ä»¤ï¼Œå¹¶ç­‰å¾…åé¦ˆ,åé¦ˆæ•°æ®åœ¨ç»“æ„ä½“ä¸­,ç»“æ„ä½“ä¸­sendå‡½æ•°æŒ‡é’ˆå®ç°ä¹‹åæ‰å¯ä»¥ä½¿ç”¨
-*æ³¨æ„  ï¼šå‘½ä»¤è¿è¡Œåæ•°æ®åœ¨ç»“æ„ä½“ä¸­ï¼Œè‹¥åç»­æƒ³ä¸€ç›´æ¥æ”¶ï¼Œè¯·ä¸»åŠ¨æ¸…0 ç»“æ„ä½“ä¸­çš„æ ‡å¿—
-*å‚æ•°  ï¼š1.recType  é€šä¿¡çš„ä¸Šä¸‹æ–‡ç»“æ„ä½“ï¼Œå†…éƒ¨æœ‰ç¼“å†²åŒºï¼Œé€šä¿¡çŠ¶æ€æ ‡å¿—ç­‰ä¿¡æ¯
-		 2.cmd       å‘é€æ•°æ®åŒ…çš„å‘½ä»¤
-		 3.data     å‘é€çš„æ•°æ®
-		 4.len       å‘é€çš„æ•°æ®é•¿åº¦
-		 5.time     è¶…æ—¶æ—¶é—´
-*è¿”å›  ï¼š1 æ‰§è¡ŒæˆåŠŸ  -1 è¶…æ—¶   -2 æ‰§è¡Œé”™è¯¯
+*º¯”µÃû£ºrunCmdPact
+*ÃèÊö  £ºÔËĞĞÒ»ÌõÃüÁî£¬²¢µÈ´ı·´À¡,·´À¡Êı¾İÔÚ½á¹¹ÌåÖĞ,½á¹¹ÌåÖĞsendº¯ÊıÖ¸ÕëÊµÏÖÖ®ºó²Å¿ÉÒÔÊ¹ÓÃ
+*×¢Òâ  £ºÃüÁîÔËĞĞºóÊı¾İÔÚ½á¹¹ÌåÖĞ£¬ÈôºóĞøÏëÒ»Ö±½ÓÊÕ£¬ÇëÖ÷¶¯Çå0 ½á¹¹ÌåÖĞµÄ±êÖ¾
+*²ÎÊı  £º1.recType  Í¨ĞÅµÄÉÏÏÂÎÄ½á¹¹Ìå£¬ÄÚ²¿ÓĞ»º³åÇø£¬Í¨ĞÅ×´Ì¬±êÖ¾µÈĞÅÏ¢
+		 2.cmd       ·¢ËÍÊı¾İ°üµÄÃüÁî
+		 3.data     ·¢ËÍµÄÊı¾İ
+		 4.len       ·¢ËÍµÄÊı¾İ³¤¶È
+		 5.time     ³¬Ê±Ê±¼ä
+*·µ»Ø  £º1 Ö´ĞĞ³É¹¦  -1 ³¬Ê±   -2 Ö´ĞĞ´íÎó
 ********************************************************************************/
 int sky_runCmdPact(sky_MyByteReceiveDataTypeDef *recType,uint8_t cmd,uint8_t *data,uint32_t len,uint32_t time);
 
 
 /********************************************************************************
-*å‡½å¾—ï¼šrecOffsetType
-*æè¿°  ï¼šæŒ‰åè®®å‘é€ä¸€å¸§æ•°æ®,æ•°æ®æ®µåˆ†ä¸¤å­—èŠ‚åç§»ï¼Œä¸¤å­—èŠ‚é•¿åº¦ï¼Œç¬¬ä¸‰æ®µæ ¹æ®tpyeåˆ¤æ–­ä¹¦å¦åŒ…å«æ•°æ®
-		å³åŠŸèƒ½ä¸º è¯·æ±‚æ•°æ® è¿˜æ˜¯å‘é€æ•°æ®,ç»“æ„ä½“ä¸­sendå‡½æ•°æŒ‡é’ˆå®ç°ä¹‹åæ‰å¯ä»¥ä½¿ç”¨
-*æ³¨æ„  ï¼šæ­¤å‡½æ•°åªå‘é€  æ¥æ”¶åˆ°çš„æ•°æ®æ€ä¹ˆå¤„ç†ä¸è¶…æ—¶ è¯·å¤–éƒ¨å¤„ç†
-*å‚æ•°  ï¼š1.recType  é€šä¿¡çš„ä¸Šä¸‹æ–‡ç»“æ„ä½“ï¼Œå†…éƒ¨æœ‰ç¼“å†²åŒºï¼Œé€šä¿¡çŠ¶æ€æ ‡å¿—ç­‰ä¿¡æ¯
-		 2.data      æ•°æ®çš„åŸºåœ°å€
-		 4.offset    è¦å‘é€æ•°æ®çš„åç§»
-		 5.len       è¦å‘é€æ•°æ®çš„é•¿åº¦
-		 5.cmd       å‘é€æ•°æ®åŒ…çš„å‘½ä»¤
-		 6.type      æ˜¯å¦å‘é€å…·ä½“çš„æ•°æ®  1å‘é€  0ä¸å‘é€
-*è¿”å›  ï¼šæ­£æ•° å‘é€çš„æ•°æ®é•¿åº¦  -1å‘é€é”™è¯¯
+*º¯”µÃû£ºrecOffsetType
+*ÃèÊö  £º°´Ğ­Òé·¢ËÍÒ»Ö¡Êı¾İ,Êı¾İ¶Î·ÖÁ½×Ö½ÚÆ«ÒÆ£¬Á½×Ö½Ú³¤¶È£¬µÚÈı¶Î¸ù¾İtpyeÅĞ¶ÏÊé·ñ°üº¬Êı¾İ
+		¼´¹¦ÄÜÎª ÇëÇóÊı¾İ »¹ÊÇ·¢ËÍÊı¾İ,½á¹¹ÌåÖĞsendº¯ÊıÖ¸ÕëÊµÏÖÖ®ºó²Å¿ÉÒÔÊ¹ÓÃ
+*×¢Òâ  £º´Ëº¯ÊıÖ»·¢ËÍ  ½ÓÊÕµ½µÄÊı¾İÔõÃ´´¦ÀíÓë³¬Ê± ÇëÍâ²¿´¦Àí
+*²ÎÊı  £º1.recType  Í¨ĞÅµÄÉÏÏÂÎÄ½á¹¹Ìå£¬ÄÚ²¿ÓĞ»º³åÇø£¬Í¨ĞÅ×´Ì¬±êÖ¾µÈĞÅÏ¢
+		 2.data      Êı¾İµÄ»ùµØÖ·
+		 4.offset    Òª·¢ËÍÊı¾İµÄÆ«ÒÆ
+		 5.len       Òª·¢ËÍÊı¾İµÄ³¤¶È
+		 5.cmd       ·¢ËÍÊı¾İ°üµÄÃüÁî
+		 6.type      ÊÇ·ñ·¢ËÍ¾ßÌåµÄÊı¾İ  1·¢ËÍ  0²»·¢ËÍ
+*·µ»Ø  £ºÕıÊı ·¢ËÍµÄÊı¾İ³¤¶È  -1·¢ËÍ´íÎó
 ********************************************************************************/
 int sky_recOffsetType(sky_MyByteReceiveDataTypeDef *recType,uint8_t *data, uint16_t offset, uint16_t len,uint8_t cmd, uint8_t type);
 
@@ -131,6 +145,13 @@ int sky_extractData(sky_MyByteReceiveDataTypeDef *recType,uint8_t *data);
 int sky_runCmdType(sky_MyByteReceiveDataTypeDef *recType,uint8_t *data, uint16_t offset, uint16_t len,uint8_t cmd, uint8_t type,int time);
 int sky_runOffsetCMD(sky_MyByteReceiveDataTypeDef *recType, uint8_t PN,uint8_t cmd,uint8_t **dataAdress, uint16_t offset, uint16_t len,uint8_t type,uint16_t time);
 int sky_recSetVirTypePN(uint8_t PN,sky_MyByteReceiveDataTypeDef *recType, uint8_t cmd, int time, uint16_t offset, uint16_t olen,uint8_t *data, uint8_t *data2,int len2);
+int sky_runNFun(int group, sky_MyByteReceiveDataTypeDef *recType,
+					uint8_t cmd,uint8_t *data,uint32_t len,uint32_t time,
+					uint8_t *outData,uint32_t outOnelen);
+int sky_waitNData(uint8_t PN,sky_MyByteReceiveDataTypeDef *recType,uint8_t cmd,int time);
+int sky_Delay_ms(sky_MyByteReceiveDataTypeDef *myRecType, int ms);
+
+unsigned int sky_GetMeasureTime_ms(sky_MyByteReceiveDataTypeDef *myRecType, unsigned int ts);
 
 #endif
 
